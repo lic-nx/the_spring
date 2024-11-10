@@ -8,20 +8,22 @@ public class frigger_checker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("An object entered.");
+
+        player_move._instance.stop();
+        // Debug.Log("An object entered.");
     }
     private void OnTriggerStay2D(Collider2D other)
     {
 
         OnTriggerEnter_ = true;
-        Debug.Log("An object is still inside of the trigger");
+        // Debug.Log("An object is still inside of the trigger");
     }
     private void OnTriggerExit2D(Collider2D other)
     {
    
         OnTriggerEnter_ = false;
 
-        Debug.Log("An object left.");
+        // Debug.Log("An object left.");
     }
 
 
