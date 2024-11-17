@@ -32,16 +32,21 @@ public class player_move : MonoBehaviour
     public Vector3 nextPosition;
     float position;
     Vector3 body_position;
+    
+    
     // Start is called before the first frame update
     void Start()
     { Debug.Log("Start game");
         body_position = body.transform.position;
         nextPosition =   body.transform.position;
+        
+        Debug.Log(body_position+" "+nextPosition);
         position = 1;
         if (_instance == null){
         _instance = this;
         }
     }
+
     public void stop(){
         nextPosition = body.transform.position;
         position = 60;
@@ -88,9 +93,18 @@ public class player_move : MonoBehaviour
         }
         
         if (position < 60){
+            for (int i = 0; i < pathCreator.bezierPath.NumPoints; i++)
+            {
+                Vector3 pointPosition = pathCreator.bezierPath.GetPoint(i);
+                Debug.Log("Point " + i + ": " + pointPosition);
+            }
             // x1 y1, x2 y2; (y2 - y1) / (x2 - x1) = K (x2 - x1 / 60) = x y = k * x + y1
+            body_position = body.transform.position;
             body.transform.position +=  position/60 * (nextPosition - body_position);
-            pathCreator.bezierPath.MovePoint(pathCreator.bezierPath.NumPoints - 1, body_position + position/60 * (nextPosition - body_position));
+            Debug.Log("position " + position + "body  " +( body_position + position/60 * (nextPosition - body_position)));
+            Debug.Log("next position "+nextPosition +" "+ body_position +" "+ (nextPosition - body_position));
+            pathCreator.bezierPath.MovePoint(pathCreator.bezierPath.NumPoints - 1, body_position +  position/60 * (nextPosition - body_position) );
+            Debug.Log(" pathCreator.TriggerPathUpdate();");
             pathCreator.TriggerPathUpdate();
             position++;
         }
