@@ -105,6 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af28d52f2334b15428e75ba8ff9fb87f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canCrush: 1
+  breakEffect: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
   obj_name: cr
   count: 2
   max_count: 0
