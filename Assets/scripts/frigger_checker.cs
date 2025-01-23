@@ -14,7 +14,12 @@ public class frigger_checker : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D other)
     {
-
+    //     if (GetComponent<Collider>().CompareTag("trigger"))
+    // {
+    //     Debug.Log("There is an object with tag stem in the trigger");
+        
+    // }
+    //  else
         OnTriggerEnter_ = true;
         // Debug.Log("An object is still inside of the trigger");
     }

@@ -1,20 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PathCreation;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 65d96d2 (add new scen)
 
 public class player_move : MonoBehaviour
 {
+    // public Vector3 first_dot;
     public static player_move _instance;
+<<<<<<< HEAD
     [SerializeField] private Transform[] points;
     [SerializeField] private Line_rendered line;
     public GameObject body;
     // public GameObject body_trace;
+=======
+    public GameObject body;
+    // ответсвенное за рисование стебля цветка 
+    public Line_rendered line_render;  
+    public GameObject body_trace;
+>>>>>>> 65d96d2 (add new scen)
     public frigger_checker[] Triggers;
     public Vector3 nextPosition;
     float position;
     Vector3 body_position;
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 =======
@@ -22,8 +34,14 @@ public class player_move : MonoBehaviour
     
 >>>>>>> 993d3230a67285e85586b5842c41bd4c87b9e262
     // Start is called before the first frame update
+=======
+
+>>>>>>> 65d96d2 (add new scen)
     void Start()
     { Debug.Log("Start game");
+     // add new dot in lineRenderer
+        // line_render.SetLastPoint(first_dot); // первая точка роста вне 
+        line_render.SetLastPoint(body_position);
         body_position = body.transform.position;
         nextPosition =   body.transform.position;
 <<<<<<< HEAD
@@ -50,13 +68,20 @@ public class player_move : MonoBehaviour
             foreach (frigger_checker tag in Triggers)
             {
                 if (tag.OnTriggerEnter_ == false){
-                    position = 1;
+                    position = 0;
                     Debug.Log("move to new pos");
+<<<<<<< HEAD
 
                     body_position = body.transform.position;
                     Debug.Log(tag.OnTriggerEnter_);
 
                     nextPosition =  tag.transform.position;
+=======
+                    body_position = body.transform.position; // то где сейчас тело
+                    line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
+                    Debug.Log(tag.OnTriggerEnter_);
+                    nextPosition =  tag.transform.position; // То куда тело должно прийти 
+>>>>>>> 65d96d2 (add new scen)
                     
                     break;
                 }
@@ -71,6 +96,7 @@ public class player_move : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+<<<<<<< HEAD
         
         if (position >= 60){
             StartCoroutine(Reset());         
@@ -93,6 +119,17 @@ public class player_move : MonoBehaviour
             Debug.Log(" pathCreator.TriggerPathUpdate();");
             pathCreator.TriggerPathUpdate();
 >>>>>>> 993d3230a67285e85586b5842c41bd4c87b9e262
+=======
+        if (position >= 60){
+            StartCoroutine(Reset());
+   
+            
+        }
+        
+        if (position < 60){
+            body.transform.position +=  position/600 * (nextPosition - body_position);
+            line_render.SetLastPoint(body.transform.position); // двигаем последнюю точку вместе с цветком 
+>>>>>>> 65d96d2 (add new scen)
             position++;
         }
         

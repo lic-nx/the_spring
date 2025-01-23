@@ -29,7 +29,11 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
+<<<<<<< HEAD
   m_CustomRenderQueue: -1
+=======
+  m_CustomRenderQueue: 2000
+>>>>>>> 65d96d2 (add new scen)
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
