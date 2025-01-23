@@ -5,6 +5,7 @@ using UnityEngine;
 public class Line_rendered : MonoBehaviour
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     private LineRenderer lr;
     private Transform[] points;
     private void Awake(){
@@ -20,6 +21,8 @@ public class Line_rendered : MonoBehaviour
         }
     }
 =======
+=======
+>>>>>>> develop
      public EdgeCollider2D edgeCollider;
     private LineRenderer lr;
     private List<Vector3> points;
@@ -37,11 +40,16 @@ public class Line_rendered : MonoBehaviour
         if (points.Count > 0)
         {
             points[points.Count-1] = point;
+<<<<<<< HEAD
+=======
+            lr.SetPosition(lr.positionCount-1, point);
+>>>>>>> develop
         }
     }
 
 // добавляет точку
     public void SetUpLine(Vector3 point)
+<<<<<<< HEAD
     {   Debug.Log("lr before change" + lr.positionCount);
         lr.positionCount++;
         Debug.Log("lr after");
@@ -49,6 +57,18 @@ public class Line_rendered : MonoBehaviour
 
         points.Add(point);
         Debug.Log(points.Count);
+=======
+    {   
+    // Debug.Log("lr before change" + lr.positionCount);
+        
+    //     Debug.Log("lr after");
+    //     Debug.Log(lr.positionCount);
+
+        points.Add(point);
+        Debug.Log(points.Count);
+        lr.positionCount++;
+        lr.SetPosition(lr.positionCount-1, points[points.Count-1]);
+>>>>>>> develop
     }
 
     private void Update()
@@ -57,12 +77,20 @@ public class Line_rendered : MonoBehaviour
         for (int i = 0; i < points.Count; i++)
         {   
             pointsArray[i] = new Vector2(points[i].x, points[i].y);
+<<<<<<< HEAD
             lr.SetPosition(i, points[i]);
             // edgeCollider.SetPosition(i, new Vector2(points[i].x, points[i].y));
+=======
+        //     lr.SetPosition(i, points[i]);
+        //     // edgeCollider.SetPosition(i, new Vector2(points[i].x, points[i].y));
+>>>>>>> develop
             
         
         }
         edgeCollider.points = pointsArray;
     }
+<<<<<<< HEAD
 >>>>>>> 65d96d2 (add new scen)
+=======
+>>>>>>> develop
 }

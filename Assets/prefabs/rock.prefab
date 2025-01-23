@@ -11,14 +11,20 @@ GameObject:
   - component: {fileID: 3647079097092790514}
   - component: {fileID: 2198603798657856315}
 <<<<<<< HEAD
+<<<<<<< HEAD
   - component: {fileID: 5632924872922581548}
 =======
+=======
+>>>>>>> develop
   - component: {fileID: 8199158380845267352}
   - component: {fileID: 6580758000841631181}
   - component: {fileID: 3140114301776396161}
   - component: {fileID: 4679675679791095330}
   - component: {fileID: 2969571667179148898}
+<<<<<<< HEAD
 >>>>>>> 65d96d2 (add new scen)
+=======
+>>>>>>> develop
   m_Layer: 0
   m_Name: rock
   m_TagString: Untagged
@@ -38,11 +44,15 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_Children:
   - {fileID: 8579049563193057016}
 =======
   m_Children: []
 >>>>>>> 65d96d2 (add new scen)
+=======
+  m_Children: []
+>>>>>>> develop
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -71,10 +81,14 @@ SpriteRenderer:
   m_RendererPriority: 0
   m_Materials:
 <<<<<<< HEAD
+<<<<<<< HEAD
   - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
 =======
   - {fileID: 2100000, guid: 4d571c4b2d5a9a34396365ffe3ea96d3, type: 2}
 >>>>>>> 65d96d2 (add new scen)
+=======
+  - {fileID: 2100000, guid: 4d571c4b2d5a9a34396365ffe3ea96d3, type: 2}
+>>>>>>> develop
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96,14 +110,19 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_Sprite: {fileID: 0}
 =======
   m_Sprite: {fileID: 21300000, guid: 944d85eadc7a3f646b844d3c570f2203, type: 3}
 >>>>>>> 65d96d2 (add new scen)
+=======
+  m_Sprite: {fileID: 21300000, guid: 944d85eadc7a3f646b844d3c570f2203, type: 3}
+>>>>>>> develop
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
+<<<<<<< HEAD
 <<<<<<< HEAD
   m_Size: {x: 6, y: 4.41}
   m_AdaptiveModeThreshold: 0.5
@@ -114,6 +133,8 @@ SpriteRenderer:
 --- !u!331 &5632924872922581548
 SpriteMask:
 =======
+=======
+>>>>>>> develop
   m_Size: {x: 6.7, y: 4.93}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -122,13 +143,17 @@ SpriteMask:
   m_SpriteSortPoint: 0
 --- !u!114 &8199158380845267352
 MonoBehaviour:
+<<<<<<< HEAD
 >>>>>>> 65d96d2 (add new scen)
+=======
+>>>>>>> develop
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3882460531174193346}
   m_Enabled: 1
+<<<<<<< HEAD
 <<<<<<< HEAD
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -176,20 +201,31 @@ MonoBehaviour:
 --- !u!1 &6310332011241748197
 GameObject:
 =======
+=======
+>>>>>>> develop
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af28d52f2334b15428e75ba8ff9fb87f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
+=======
+  canCrush: 1
+  breakEffect: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
+>>>>>>> develop
   obj_name: cr
   count: 2
   max_count: 0
 --- !u!114 &6580758000841631181
 MonoBehaviour:
+<<<<<<< HEAD
 >>>>>>> 65d96d2 (add new scen)
+=======
+>>>>>>> develop
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
 <<<<<<< HEAD
   serializedVersion: 6
   m_Component:
@@ -274,6 +310,8 @@ SpriteRenderer:
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
 =======
+=======
+>>>>>>> develop
   m_GameObject: {fileID: 3882460531174193346}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -421,4 +459,7 @@ PolygonCollider2D:
       - {x: 2.8737855, y: 1.2381239}
       - {x: 2.6304, y: 1.7544127}
   m_UseDelaunayMesh: 0
+<<<<<<< HEAD
 >>>>>>> 65d96d2 (add new scen)
+=======
+>>>>>>> develop

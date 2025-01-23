@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 65d96d2 (add new scen)
+=======
+
+>>>>>>> develop
 
 public class player_move : MonoBehaviour
 {
     // public Vector3 first_dot;
     public static player_move _instance;
+<<<<<<< HEAD
 <<<<<<< HEAD
     [SerializeField] private Transform[] points;
     [SerializeField] private Line_rendered line;
@@ -18,6 +23,9 @@ public class player_move : MonoBehaviour
     // public GameObject body_trace;
 =======
     public GameObject body;
+=======
+    public GameObject body;
+>>>>>>> develop
     // ответсвенное за рисование стебля цветка 
     public Line_rendered line_render;  
     public GameObject body_trace;
@@ -26,6 +34,7 @@ public class player_move : MonoBehaviour
     public Vector3 nextPosition;
     float position;
     Vector3 body_position;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -37,6 +46,9 @@ public class player_move : MonoBehaviour
 =======
 
 >>>>>>> 65d96d2 (add new scen)
+=======
+
+>>>>>>> develop
     void Start()
     { Debug.Log("Start game");
      // add new dot in lineRenderer
@@ -71,6 +83,7 @@ public class player_move : MonoBehaviour
                     position = 0;
                     Debug.Log("move to new pos");
 <<<<<<< HEAD
+<<<<<<< HEAD
 
                     body_position = body.transform.position;
                     Debug.Log(tag.OnTriggerEnter_);
@@ -82,6 +95,12 @@ public class player_move : MonoBehaviour
                     Debug.Log(tag.OnTriggerEnter_);
                     nextPosition =  tag.transform.position; // То куда тело должно прийти 
 >>>>>>> 65d96d2 (add new scen)
+=======
+                    body_position = body.transform.position; // то где сейчас тело
+                    line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
+                    Debug.Log(tag.OnTriggerEnter_);
+                    nextPosition =  tag.transform.position; // То куда тело должно прийти 
+>>>>>>> develop
                     
                     break;
                 }
@@ -96,6 +115,7 @@ public class player_move : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+<<<<<<< HEAD
 <<<<<<< HEAD
         
         if (position >= 60){
@@ -120,6 +140,8 @@ public class player_move : MonoBehaviour
             pathCreator.TriggerPathUpdate();
 >>>>>>> 993d3230a67285e85586b5842c41bd4c87b9e262
 =======
+=======
+>>>>>>> develop
         if (position >= 60){
             StartCoroutine(Reset());
    
@@ -129,7 +151,10 @@ public class player_move : MonoBehaviour
         if (position < 60){
             body.transform.position +=  position/600 * (nextPosition - body_position);
             line_render.SetLastPoint(body.transform.position); // двигаем последнюю точку вместе с цветком 
+<<<<<<< HEAD
 >>>>>>> 65d96d2 (add new scen)
+=======
+>>>>>>> develop
             position++;
         }
         
