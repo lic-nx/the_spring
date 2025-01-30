@@ -2,53 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> 65d96d2 (add new scen)
-=======
-
->>>>>>> develop
 
 public class player_move : MonoBehaviour
 {
     // public Vector3 first_dot;
     public static player_move _instance;
-<<<<<<< HEAD
-<<<<<<< HEAD
-    [SerializeField] private Transform[] points;
-    [SerializeField] private Line_rendered line;
     public GameObject body;
-    // public GameObject body_trace;
-=======
-    public GameObject body;
-=======
-    public GameObject body;
->>>>>>> develop
     // ответсвенное за рисование стебля цветка 
     public Line_rendered line_render;  
     public GameObject body_trace;
->>>>>>> 65d96d2 (add new scen)
     public frigger_checker[] Triggers;
     public Vector3 nextPosition;
     float position;
     Vector3 body_position;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-    
-    
->>>>>>> 993d3230a67285e85586b5842c41bd4c87b9e262
-    // Start is called before the first frame update
-=======
-
->>>>>>> 65d96d2 (add new scen)
-=======
-
->>>>>>> develop
     void Start()
     { Debug.Log("Start game");
      // add new dot in lineRenderer
@@ -56,18 +24,11 @@ public class player_move : MonoBehaviour
         line_render.SetLastPoint(body_position);
         body_position = body.transform.position;
         nextPosition =   body.transform.position;
-<<<<<<< HEAD
-        line.SetUpLine(body.transform);
-=======
-        
-        Debug.Log(body_position+" "+nextPosition);
->>>>>>> 993d3230a67285e85586b5842c41bd4c87b9e262
         position = 1;
         if (_instance == null){
         _instance = this;
         }
     }
-
     public void stop(){
         nextPosition = body.transform.position;
         position = 60;
@@ -82,25 +43,10 @@ public class player_move : MonoBehaviour
                 if (tag.OnTriggerEnter_ == false){
                     position = 0;
                     Debug.Log("move to new pos");
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-                    body_position = body.transform.position;
-                    Debug.Log(tag.OnTriggerEnter_);
-
-                    nextPosition =  tag.transform.position;
-=======
                     body_position = body.transform.position; // то где сейчас тело
                     line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
                     Debug.Log(tag.OnTriggerEnter_);
                     nextPosition =  tag.transform.position; // То куда тело должно прийти 
->>>>>>> 65d96d2 (add new scen)
-=======
-                    body_position = body.transform.position; // то где сейчас тело
-                    line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
-                    Debug.Log(tag.OnTriggerEnter_);
-                    nextPosition =  tag.transform.position; // То куда тело должно прийти 
->>>>>>> develop
                     
                     break;
                 }
@@ -115,33 +61,6 @@ public class player_move : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        
-        if (position >= 60){
-            StartCoroutine(Reset());         
-        }
-        
-        if (position < 60){
-            for (int i = 0; i < pathCreator.bezierPath.NumPoints; i++)
-            {
-                Vector3 pointPosition = pathCreator.bezierPath.GetPoint(i);
-                Debug.Log("Point " + i + ": " + pointPosition);
-            }
-            // x1 y1, x2 y2; (y2 - y1) / (x2 - x1) = K (x2 - x1 / 60) = x y = k * x + y1
-            body_position = body.transform.position;
-            body.transform.position +=  position/60 * (nextPosition - body_position);
-<<<<<<< HEAD
-=======
-            Debug.Log("position " + position + "body  " +( body_position + position/60 * (nextPosition - body_position)));
-            Debug.Log("next position "+nextPosition +" "+ body_position +" "+ (nextPosition - body_position));
-            pathCreator.bezierPath.MovePoint(pathCreator.bezierPath.NumPoints - 1, body_position +  position/60 * (nextPosition - body_position) );
-            Debug.Log(" pathCreator.TriggerPathUpdate();");
-            pathCreator.TriggerPathUpdate();
->>>>>>> 993d3230a67285e85586b5842c41bd4c87b9e262
-=======
-=======
->>>>>>> develop
         if (position >= 60){
             StartCoroutine(Reset());
    
@@ -151,10 +70,6 @@ public class player_move : MonoBehaviour
         if (position < 60){
             body.transform.position +=  position/600 * (nextPosition - body_position);
             line_render.SetLastPoint(body.transform.position); // двигаем последнюю точку вместе с цветком 
-<<<<<<< HEAD
->>>>>>> 65d96d2 (add new scen)
-=======
->>>>>>> develop
             position++;
         }
         

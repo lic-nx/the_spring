@@ -29,15 +29,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-  m_CustomRenderQueue: -1
-=======
   m_CustomRenderQueue: 2000
->>>>>>> 65d96d2 (add new scen)
-=======
-  m_CustomRenderQueue: 2000
->>>>>>> develop
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -48,13 +40,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: cc09ce5f7526be94b9845d9df1064e7e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-<<<<<<< HEAD
-=======
     - _layer2:
         m_Texture: {fileID: 2800000, guid: dffef66376be4fa480fb02b19edbe903, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
->>>>>>> develop
     m_Ints: []
     m_Floats:
     - _BUILTIN_QueueControl: 0

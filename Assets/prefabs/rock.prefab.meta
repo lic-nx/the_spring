@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/prefabs/rock.prefab.meta
 guid: 831d58f8eaea74846b2b08fe709bf9f2
-========
-guid: 2f8b4a06eb5983042aea89416dfe61eb
->>>>>>>> develop:Assets/prefabs/moving_platform.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 
