@@ -362,10 +362,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 46.399986267089847,
-            "y": -237.59999084472657,
-            "width": 208.0,
-            "height": 359.20001220703127
+            "x": 47.19999313354492,
+            "y": -239.20001220703126,
+            "width": 208.00003051757813,
+            "height": 359.1999816894531
         }
     },
     "m_Slots": [
@@ -411,7 +411,7 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     },
-    "m_BlendMode": 6
+    "m_BlendMode": 9
 }
 
 {
