@@ -6,6 +6,7 @@ TagManager:
   tags:
   - trigger
   - stem
+  - sun
   layers:
   - Default
   - TransparentFX

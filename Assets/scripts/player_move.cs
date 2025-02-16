@@ -11,12 +11,15 @@ public class player_move : MonoBehaviour
     public GameObject body;
     // ответсвенное за рисование стебля цветка 
     public Line_rendered line_render;  
-    public GameObject body_trace;
     public frigger_checker[] Triggers;
     public Vector3 nextPosition;
     float position;
     Vector3 body_position;
-
+    public bool enabled = false;
+    
+    public void set_enabled(bool new_station){
+        enabled = new_station;
+    }
     void Start()
     { Debug.Log("Start game");
      // add new dot in lineRenderer
@@ -34,6 +37,7 @@ public class player_move : MonoBehaviour
         position = 60;
     }
 
+
     IEnumerator Reset() {
         
         yield return new WaitForSeconds(0);
@@ -47,7 +51,6 @@ public class player_move : MonoBehaviour
                     line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
                     Debug.Log(tag.OnTriggerEnter_);
                     nextPosition =  tag.transform.position; // То куда тело должно прийти 
-                    
                     break;
                 }
                 else{
@@ -60,14 +63,11 @@ public class player_move : MonoBehaviour
 
     // Update is called once per frame
     void FixedUpdate()
-    {
-        if (position >= 60){
+    { 
+        if (position >= 60 && enabled == true){
             StartCoroutine(Reset());
-   
-            
-        }
-        
-        if (position < 60){
+        }      
+        if (position < 60 && enabled == true){
             body.transform.position +=  position/600 * (nextPosition - body_position);
             line_render.SetLastPoint(body.transform.position); // двигаем последнюю точку вместе с цветком 
             position++;

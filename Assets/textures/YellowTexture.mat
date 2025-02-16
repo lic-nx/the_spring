@@ -44,9 +44,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: a566be26c4c6d7a4db1d2c191d9b0326, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _layer2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
+    - _Scale: 0
     m_Colors: []
   m_BuildTextureStacks: []
