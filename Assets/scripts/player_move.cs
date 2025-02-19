@@ -17,8 +17,13 @@ public class player_move : MonoBehaviour
     Vector3 body_position;
     public bool enabled = false;
     
-    public void set_enabled(bool new_station){
-        enabled = new_station;
+    public void change_enabled(){
+        if (enabled == true){
+            enabled = false;
+        }
+        else{
+            enabled = true;
+        }
     }
     void Start()
     { Debug.Log("Start game");

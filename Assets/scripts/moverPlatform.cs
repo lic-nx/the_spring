@@ -11,6 +11,7 @@ public class moverPlatform : MonoBehaviour
     private Vector3 movementVector;
     private Vector3 initialPosition;
     private bool isDragging = false;
+    private bool isEnter = false;
 
     void Start()
     {
@@ -21,9 +22,21 @@ public class moverPlatform : MonoBehaviour
         initialPosition = pointA.transform.position;
     }
 
+    void OnMouseEnter()
+    {
+        isEnter = true;
+        Debug.Log("mouse is enter");
+    }
+
+    void OnMouseExit()
+    {
+        isEnter = false;
+        Debug.Log("mouse is out");
+    }
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && isEnter)
         {
             isDragging = true;
         }
@@ -41,14 +54,36 @@ public class moverPlatform : MonoBehaviour
             Vector3 direction = mousePosition - initialPosition;
             direction = Vector3.Project(direction, movementVector);
             Vector3 objNextPosition = Vector3.MoveTowards(transform.position, initialPosition + direction, speed * Time.deltaTime);
-           
-           
-            objNextPosition = ClampPosition(objNextPosition, pointA.position, pointB.position);
 
-            transform.position = objNextPosition;
-                
+            // Проверяем, будет ли коллизия в новой позиции
+            if (!WillCollide(objNextPosition))
+            {
+                objNextPosition = ClampPosition(objNextPosition, pointA.position, pointB.position);
+                transform.position = objNextPosition;
+            }
+            else
+            {
+                Debug.Log("Пересечение обнаружено!");
+            }
         }
     }
+
+    bool WillCollide(Vector3 position)
+    {
+        // Создаем временный коллайдер для проверки пересечения
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(position, transform.lossyScale, 0);
+
+        // Проверяем, есть ли пересечения с другими коллайдерами
+        foreach (var collider in colliders)
+        {
+            if (collider != GetComponent<Collider2D>())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     Vector3 ClampPosition(Vector3 position, Vector3 min, Vector3 max)
     {
         float x = Mathf.Clamp(position.x, Mathf.Min(min.x, max.x), Mathf.Max(min.x, max.x));
