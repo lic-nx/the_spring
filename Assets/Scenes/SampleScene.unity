@@ -850,10 +850,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6410811505928428107, guid: 88e793a217b48424d906ef14d198a0f6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1215548860}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88e793a217b48424d906ef14d198a0f6, type: 3}
 --- !u!1 &1021366944 stripped
 GameObject:
@@ -1000,28 +997,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41ebf60f72f0c714c94be784a8efe9e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1215548859 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6410811505928428107, guid: 88e793a217b48424d906ef14d198a0f6, type: 3}
-  m_PrefabInstance: {fileID: 989150281}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1215548860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1215548859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af28d52f2334b15428e75ba8ff9fb87f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canCrush: 1
-  breakEffect: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
-  obj_name: 
-  count: 0
-  max_count: 1
 --- !u!1001 &1297237743
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1044,7 +1019,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 818384237969075827, guid: 2f8b4a06eb5983042aea89416dfe61eb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.8
+      value: 4.25
       objectReference: {fileID: 0}
     - target: {fileID: 1220601461371314403, guid: 2f8b4a06eb5983042aea89416dfe61eb, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
@@ -1240,6 +1215,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2198603798657856315, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 37016a0a7d9b74c4f896d1575962a07e, type: 2}
     - target: {fileID: 3647079097092790514, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1323,6 +1302,18 @@ PrefabInstance:
     - target: {fileID: 3882460531174193346, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       propertyPath: m_Name
       value: rock
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: count
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: obj_name
+      value: Yellow
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: max_count
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

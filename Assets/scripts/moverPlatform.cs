@@ -76,7 +76,8 @@ public class moverPlatform : MonoBehaviour
         // Проверяем, есть ли пересечения с другими коллайдерами
         foreach (var collider in colliders)
         {
-            if (collider != GetComponent<Collider2D>())
+            // Исключаем триггеры и текущий коллайдер
+            if (collider != GetComponent<Collider2D>() && !collider.isTrigger)
             {
                 return true;
             }
