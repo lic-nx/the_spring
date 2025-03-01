@@ -12,11 +12,11 @@ public class player_move : MonoBehaviour
     // ответсвенное за рисование стебля цветка 
     public Line_rendered line_render;  
     public frigger_checker[] Triggers;
-    public Vector3 nextPosition;
+    private Vector3 nextPosition;
     float position;
     Vector3 body_position;
     public bool enabled = false;
-    
+    public GameObject first_dot;
     public void change_enabled(){
         if (enabled == true){
             enabled = false;
@@ -26,12 +26,15 @@ public class player_move : MonoBehaviour
         }
     }
     void Start()
-    { Debug.Log("Start game");
-     // add new dot in lineRenderer
-        // line_render.SetLastPoint(first_dot); // первая точка роста вне 
-        line_render.SetLastPoint(body_position);
+    { 
+        Debug.Log("Start game");
+        Debug.Log(first_dot.transform.position);
+        line_render.SetUpLine(first_dot.transform.position);
+        // line_render.SetLastPoint(first_dot.transform.position);
         body_position = body.transform.position;
-        nextPosition =   body.transform.position;
+        line_render.SetUpLine(body_position);
+        body_position = body.transform.position;
+        nextPosition = body.transform.position;
         position = 1;
         if (_instance == null){
         _instance = this;
