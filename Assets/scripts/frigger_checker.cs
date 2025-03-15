@@ -20,6 +20,8 @@ public class frigger_checker : MonoBehaviour
         }
         else{
             player_move._instance.stop();
+            player_move._instance.is_sun();
+
         }
     }
     private void OnTriggerExit2D(Collider2D other)

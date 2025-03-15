@@ -9,6 +9,7 @@ public class player_move : MonoBehaviour
     // public Vector3 first_dot;
     public static player_move _instance;
     public GameObject body;
+    private Animator animator;
     // ответсвенное за рисование стебля цветка 
     public Line_rendered line_render;  
     public frigger_checker[] Triggers;
@@ -27,6 +28,7 @@ public class player_move : MonoBehaviour
     }
     void Start()
     { 
+        animator = GetComponent<Animator>();
         Debug.Log("Start game");
         Debug.Log(first_dot.transform.position);
         line_render.SetUpLine(first_dot.transform.position);
@@ -45,7 +47,9 @@ public class player_move : MonoBehaviour
         position = 60;
     }
 
-
+    public void is_sun(){
+        animator.SetBool("End", true);
+    }
     IEnumerator Reset() {
         
         yield return new WaitForSeconds(0);

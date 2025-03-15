@@ -25,11 +25,11 @@ AnimationClip:
     - time: 0.083333336
       value: {fileID: 562682761, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - time: 0.15
-      value: {fileID: -1313465915, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+      value: {fileID: -2136635446, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - time: 0.23333333
       value: {fileID: 1224705141, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - time: 0.31666666
-      value: {fileID: -1196712000, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+      value: {fileID: -2136635446, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - time: 0.38333333
       value: {fileID: 663680526, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - time: 0.46666667
@@ -39,7 +39,7 @@ AnimationClip:
     - time: 0.6166667
       value: {fileID: 2028036208, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - time: 0.7
-      value: {fileID: 197861945, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+      value: {fileID: -2136635446, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - time: 0.78333336
       value: {fileID: 593511375, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - time: 0.85
@@ -70,14 +70,14 @@ AnimationClip:
     pptrCurveMapping:
     - {fileID: -2136635446, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: 562682761, guid: eee214d7d91850f44a281b12d885e640, type: 3}
-    - {fileID: -1313465915, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+    - {fileID: -2136635446, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: 1224705141, guid: eee214d7d91850f44a281b12d885e640, type: 3}
-    - {fileID: -1196712000, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+    - {fileID: -2136635446, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: 663680526, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: -1966310128, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: -2114890831, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: 2028036208, guid: eee214d7d91850f44a281b12d885e640, type: 3}
-    - {fileID: 197861945, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+    - {fileID: -2136635446, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: 593511375, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: 1634139610, guid: eee214d7d91850f44a281b12d885e640, type: 3}
     - {fileID: 307744277, guid: eee214d7d91850f44a281b12d885e640, type: 3}
