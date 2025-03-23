@@ -10,7 +10,7 @@ public class frigger_checker : MonoBehaviour
     {
         
         player_move._instance.stop();
-        // Debug.Log("An object entered.");
+        Debug.Log("An object entered.");
     }
     private void OnTriggerStay2D(Collider2D other)
     {

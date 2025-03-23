@@ -7,6 +7,7 @@ using UnityEngine;
 public class player_move : MonoBehaviour
 {
     // public Vector3 first_dot;
+    public float maxRotationSpeed = 100f;
     public static player_move _instance;
     public GameObject body;
     private Animator animator;
@@ -33,10 +34,10 @@ public class player_move : MonoBehaviour
         Debug.Log(first_dot.transform.position);
         line_render.SetUpLine(first_dot.transform.position);
         // line_render.SetLastPoint(first_dot.transform.position);
-        body_position = body.transform.position;
+        body_position = transform.position;
         line_render.SetUpLine(body_position);
-        body_position = body.transform.position;
-        nextPosition = body.transform.position;
+        body_position = transform.position;
+        nextPosition = transform.position;
         position = 1;
         if (_instance == null){
         _instance = this;
@@ -59,7 +60,7 @@ public class player_move : MonoBehaviour
                 if (tag.OnTriggerEnter_ == false){
                     position = 0;
                     Debug.Log("move to new pos");
-                    body_position = body.transform.position; // то где сейчас тело
+                    body_position = transform.position; // то где сейчас тело
                     line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
                     Debug.Log(tag.OnTriggerEnter_);
                     nextPosition =  tag.transform.position; // То куда тело должно прийти 
@@ -80,8 +81,14 @@ public class player_move : MonoBehaviour
             StartCoroutine(Reset());
         }      
         if (position < 60 && enabled == true){
-            body.transform.position +=  position/600 * (nextPosition - body_position);
-            line_render.SetLastPoint(body.transform.position); // двигаем последнюю точку вместе с цветком 
+                Vector3 direction = nextPosition - body.transform.position;
+                float rotateZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                Quaternion targetRotation = Quaternion.Euler(0f, 0f, rotateZ - 90);
+
+                // Rotate towards the target rotation at a constant speed
+                body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, targetRotation, maxRotationSpeed * Time.deltaTime);
+            transform.position +=  position/600 * (nextPosition - body_position);
+            line_render.SetLastPoint(transform.position); // двигаем последнюю точку вместе с цветком 
             position++;
         }
         
