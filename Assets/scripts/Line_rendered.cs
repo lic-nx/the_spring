@@ -39,6 +39,11 @@ public class Line_rendered : MonoBehaviour
         lr.SetPosition(lr.positionCount-1, points[points.Count-1]);
     }
 
+    public Vector3 GetLastPoint()
+    {
+        return points[points.Count-2];
+
+    }
     private void Update()
     {   Vector2[] pointsArray = new Vector2[points.Count];
         

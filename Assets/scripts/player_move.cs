@@ -9,7 +9,6 @@ public class player_move : MonoBehaviour
     // public Vector3 first_dot;
     public float maxRotationSpeed = 100f;
     public static player_move _instance;
-    public GameObject body;
     private Animator animator;
     // ответсвенное за рисование стебля цветка 
     public Line_rendered line_render;  
@@ -28,7 +27,7 @@ public class player_move : MonoBehaviour
         }
     }
     void Start()
-    { 
+    {  
         animator = GetComponent<Animator>();
         Debug.Log("Start game");
         Debug.Log(first_dot.transform.position);
@@ -44,7 +43,7 @@ public class player_move : MonoBehaviour
         }
     }
     public void stop(){
-        nextPosition = body.transform.position;
+        nextPosition = transform.position;
         position = 60;
     }
 
@@ -61,7 +60,9 @@ public class player_move : MonoBehaviour
                     position = 0;
                     Debug.Log("move to new pos");
                     body_position = transform.position; // то где сейчас тело
-                    line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
+                    if (Vector3.Distance(line_render.GetLastPoint(), body_position) > 1.5){
+                        line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
+                    }
                     Debug.Log(tag.OnTriggerEnter_);
                     nextPosition =  tag.transform.position; // То куда тело должно прийти 
                     break;
@@ -80,15 +81,12 @@ public class player_move : MonoBehaviour
         if (position >= 60 && enabled == true){
             StartCoroutine(Reset());
         }      
-        if (position < 60 && enabled == true){
-                Vector3 direction = nextPosition - body.transform.position;
-                float rotateZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                Quaternion targetRotation = Quaternion.Euler(0f, 0f, rotateZ - 90);
-
-                // Rotate towards the target rotation at a constant speed
-                body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, targetRotation, maxRotationSpeed * Time.deltaTime);
-            transform.position +=  position/600 * (nextPosition - body_position);
-            line_render.SetLastPoint(transform.position); // двигаем последнюю точку вместе с цветком 
+        if (position < 60 && enabled == true ){
+            if (Vector3.Distance(nextPosition, transform.position) > 0.2){
+                flower._instance.rotate_flower(nextPosition); // Вызываем метод поворота
+                transform.position +=  position/600 * (nextPosition - body_position);
+                line_render.SetLastPoint(transform.position); // двигаем последнюю точку вместе с цветком
+            } 
             position++;
         }
         

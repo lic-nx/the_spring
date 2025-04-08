@@ -14,14 +14,18 @@ public class frigger_checker : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (!other.CompareTag("sun"))
+        if (other.CompareTag("sun"))
         {
-            OnTriggerEnter_ = true;
-        }
-        else{
+
+            Debug.Log("is sun");
+            Debug.Log("Object name: " + other.name);
+            Debug.Log("find sun = " + other.transform.position );
+            flower._instance.rotate_flower(other.transform.position);
             player_move._instance.stop();
             player_move._instance.is_sun();
-
+        }
+        else{    
+            OnTriggerEnter_ = true;
         }
     }
     private void OnTriggerExit2D(Collider2D other)
