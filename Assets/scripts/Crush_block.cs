@@ -21,14 +21,11 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
             GameObject explosion = Instantiate(breakEffect, this.gameObject.transform.position, Quaternion.identity);
             explosion.GetComponent<ParticleSystem>().Play();
             count += 1;
-
-            // Изменяем материал на новый
-            ChangeMaterial();
-
             if (count >= max_count)
             {
                 Destroy(gameObject);
             }
+            ChangeMaterial();
             Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.startLifetime.constantMax);
         }
     }
