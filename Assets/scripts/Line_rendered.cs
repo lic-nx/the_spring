@@ -28,11 +28,6 @@ public class Line_rendered : MonoBehaviour
 // добавляет точку
     public void SetUpLine(Vector3 point)
     {   
-    // Debug.Log("lr before change" + lr.positionCount);
-        
-    //     Debug.Log("lr after");
-    //     Debug.Log(lr.positionCount);
-
         points.Add(point);
         Debug.Log(points.Count);
         lr.positionCount++;
