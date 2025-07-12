@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.UI;
+using TMPro;
 
 public class SceneSerings : MonoBehaviour
 {
     public GameObject PausePanel;
-    public int level;
     private PostProcessVolume ppVolume;
+    public TextMeshProUGUI level_number;
 
     void Start() {
         ppVolume = Camera.main.gameObject.GetComponent<PostProcessVolume>();
+        level_number.text = "Уровень " + (SceneManager.GetActiveScene().buildIndex - 2);
     }
     public void PauseButtonPressed()
     {

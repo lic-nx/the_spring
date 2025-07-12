@@ -17,6 +17,13 @@ public class WinPanel : MonoBehaviour
 
     public void OnEventTriggered()
     {
+        Debug.Log("Игра завершена! идет расчет");
+        if (SceneManager.GetActiveScene().buildIndex >= PlayerPrefs.GetInt("ReachedIndex"))
+        {
+            PlayerPrefs.SetInt("ReachedIndex", SceneManager.GetActiveScene().buildIndex + 1);
+            PlayerPrefs.SetInt("UnlockedLevel", PlayerPrefs.GetInt("UnlockedLevel", 1) + 1);
+            PlayerPrefs.Save();
+        }
         ppVolume = Camera.main.GetComponent<PostProcessVolume>();
         ppVolume.enabled = true;
         Debug.LogWarning("PostProcessVolume не найден. Эффект блюра не применён.");
