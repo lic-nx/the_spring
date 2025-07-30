@@ -19,7 +19,10 @@ public class player_move : MonoBehaviour
     Vector3 body_position;
     public bool enabled = false;
     public GameObject first_dot;
+
     public void change_enabled(){
+        Debug.Log("change enabled");
+
         if (enabled == true){
             enabled = false;
         }
@@ -49,10 +52,12 @@ public class player_move : MonoBehaviour
     }
 
     public void is_sun(){
+        Debug.Log("take sun");
         animator.SetBool("End", true);
         Destroy(Sun);
         enabled = false;
     }
+
     IEnumerator Reset() {
         
         yield return new WaitForSeconds(0);

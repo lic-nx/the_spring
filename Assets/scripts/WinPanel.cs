@@ -39,24 +39,5 @@ public class WinPanel : MonoBehaviour
         Debug.Log("Игра завершена! Панель победы показана.");
     }
 
-    public void Restart()
-    {
-        //ppVolume.enabled = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        Time.timeScale = 1f;
-    }
 
-    public void Mainmenu()
-    {
-        ppVolume.enabled = false;
-        SceneManager.LoadScene(0);
-        Time.timeScale = 1f;
-    }
-
-    public void NextLevel()
-    {
-        ppVolume.enabled = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        Time.timeScale = 1f;
-    }
 }

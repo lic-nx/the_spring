@@ -14,7 +14,7 @@ public class SceneSerings : MonoBehaviour
 
     void Start() {
         ppVolume = Camera.main.gameObject.GetComponent<PostProcessVolume>();
-        level_number.text = "Уровень " + (SceneManager.GetActiveScene().buildIndex - 2);
+        level_number.text = "Уровень " + (SceneManager.GetActiveScene().buildIndex - 1);
     }
     public void PauseButtonPressed()
     {
@@ -40,17 +40,4 @@ public class SceneSerings : MonoBehaviour
         Time.timeScale = 1f; 
     }
 
-    public void RestartButtonPressed()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        ppVolume.enabled = false;
-        Time.timeScale = 1f; 
-    }
-
-    public void NextLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        ppVolume.enabled = false;
-
-    }
 }

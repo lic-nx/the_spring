@@ -1,33 +1,104 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class music_contriller : MonoBehaviour
+public class MusicController : MonoBehaviour
 {
-    [SerializeField] AudioSource BackgroundMusic;
-    private bool isEnadle = true;
+    [SerializeField] private Toggle musicToggle; // UI Toggle вместо кнопки
 
-    public void Update()
+    private bool isEnabled = true;
+    private AudioSource[] musicSources;
+
+    private static readonly string MUSIC_ENABLED_KEY = "MusicEnabled"; // Ключ в PlayerPrefs
+
+    void Start()
     {
-        if (isEnadle)
+        // Загружаем сохранённое состояние (по умолчанию — включено)
+        isEnabled = PlayerPrefs.GetInt(MUSIC_ENABLED_KEY, 1) == 1;
+
+        // Находим все источники музыки на сцене
+        FindMusicSources();
+
+        // Применяем текущее состояние (воспроизведение или пауза)
+        ApplyMusicState();
+
+        // Настраиваем UI Toggle
+        if (musicToggle != null)
         {
-            BackgroundMusic.enabled = true;
-        }
-        else
-        {
-            BackgroundMusic.enabled = false;
+            musicToggle.isOn = isEnabled; // Устанавливаем положение тумблера
+            musicToggle.onValueChanged.AddListener(OnToggleValueChanged);
         }
     }
 
-    public void EnableMusic()
+    // Поиск всех объектов с тегом "Music" и получение их AudioSource
+    private void FindMusicSources()
     {
-        if (isEnadle)
+        GameObject[] musicObjects = GameObject.FindGameObjectsWithTag("Music");
+        musicSources = new AudioSource[musicObjects.Length];
+
+        for (int i = 0; i < musicObjects.Length; i++)
         {
-            isEnadle = false;
+            musicSources[i] = musicObjects[i].GetComponent<AudioSource>();
+            if (musicSources[i] == null)
+            {
+                Debug.LogWarning($"Объект {musicObjects[i].name} имеет тег 'Music', но не имеет компонента AudioSource.");
+            }
+        }
+    }
+
+    // Применить состояние музыки: включить или поставить на паузу
+    private void ApplyMusicState()
+    {
+        if (!isEnabled)
+        {
+            ResumeAll();
         }
         else
         {
-            isEnadle = true;
+            PauseAll();
+        }
+    }
+
+    // Обработчик изменения состояния Toggle
+    private void OnToggleValueChanged(bool isOn)
+    {
+        isEnabled = isOn;
+
+        if (!isEnabled)
+        {
+            ResumeAll();
+        }
+        else
+        {
+            PauseAll();
+        }
+
+        // Сохраняем новое состояние
+        PlayerPrefs.SetInt(MUSIC_ENABLED_KEY, isEnabled ? 1 : 0);
+        PlayerPrefs.Save(); // Надёжное сохранение
+    }
+
+    // Продолжить воспроизведение всех источников
+    private void ResumeAll()
+    {
+        foreach (AudioSource source in musicSources)
+        {
+            if (source != null && !source.isPlaying)
+            {
+                source.UnPause();
+            }
+        }
+    }
+
+    // Поставить на паузу все источники
+    private void PauseAll()
+    {
+        foreach (AudioSource source in musicSources)
+        {
+            if (source != null && source.isPlaying)
+            {
+                source.Pause();
+            }
         }
     }
 }
