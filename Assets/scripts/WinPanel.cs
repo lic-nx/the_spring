@@ -22,6 +22,8 @@ public class WinPanel : MonoBehaviour
         {
             PlayerPrefs.SetInt("ReachedIndex", SceneManager.GetActiveScene().buildIndex + 1);
             PlayerPrefs.SetInt("UnlockedLevel", PlayerPrefs.GetInt("UnlockedLevel", 1) + 1);
+            PlayerPrefs.SetInt("CompletedLevel", PlayerPrefs.GetInt("CompletedLevel", 0) + 1);
+            Debug.Log($"new CompletedLevel {PlayerPrefs.GetInt("CompletedLevel", 0)}");
             PlayerPrefs.Save();
         }
         ppVolume = Camera.main.GetComponent<PostProcessVolume>();

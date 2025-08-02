@@ -6,6 +6,7 @@ using TMPro;
 public class LevelMenu : MonoBehaviour
 {
     public Button[] buttons;
+    public Image Complite;
     public Image Lock;         // Объект с компонентом Image
     public Image Unlock;
     public GameObject levelButtons;
@@ -15,7 +16,9 @@ public class LevelMenu : MonoBehaviour
     {
         ButtonsToArray();
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+        int CompletedLevel = PlayerPrefs.GetInt("CompletedLevel", 0);
         Debug.Log($"unlockedLevel {unlockedLevel}");
+        Debug.Log($"CompletedLevel {CompletedLevel}");
         Debug.Log($"buttons.Length {buttons.Length}");
         for (int i = unlockedLevel; i < buttons.Length; i++)
         {
@@ -24,10 +27,16 @@ public class LevelMenu : MonoBehaviour
             buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
         }
 
-        for (int i = 0; i < unlockedLevel; i++)
+        for (int i = CompletedLevel; i < unlockedLevel; i++)
         {
             buttons[i].enabled = true;
             buttons[i].GetComponent<Image>().sprite = Unlock.sprite; // ✅ Здесь тоже
+            buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = "" + (i + 1);
+        }
+        for (int i = 0; i < CompletedLevel; i++)
+        {
+            buttons[i].enabled = true;
+            buttons[i].GetComponent<Image>().sprite = Complite.sprite; // ✅ Здесь тоже
             buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = "" + (i + 1);
         }
     }
