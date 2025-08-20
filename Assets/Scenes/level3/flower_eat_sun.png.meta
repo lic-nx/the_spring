@@ -1,0 +1,577 @@
+fileFormatVersion: 2
+guid: 21ad5b989102b444da5cb1361c264b86
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: 0
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: flower_eat_sun_0
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 1437
+        width: 446
+        height: 582
+      alignment: 9
+      pivot: {x: 0.49526238, y: 0.04620613}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d29aa42b561d97c499cb14e2c2fa31cc
+      internalID: -1993460403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_1
+      rect:
+        serializedVersion: 2
+        x: 518
+        y: 1439
+        width: 426
+        height: 566
+      alignment: 9
+      pivot: {x: 0.49503997, y: 0.054234806}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6dc775faa986d2498c10efa6e432619
+      internalID: -468692978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_2
+      rect:
+        serializedVersion: 2
+        x: 1018
+        y: 1450
+        width: 420
+        height: 547
+      alignment: 9
+      pivot: {x: 0.50503045, y: 0.028757712}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7e36f25148917a48b2cca68db271dad
+      internalID: 821119584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_3
+      rect:
+        serializedVersion: 2
+        x: 1518
+        y: 1401
+        width: 427
+        height: 605
+      alignment: 9
+      pivot: {x: 0.51979226, y: 0.10536565}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af25a095a89724c42a0adbac03eb25ae
+      internalID: -224947966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_6
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 824
+        width: 440
+        height: 528
+      alignment: 9
+      pivot: {x: 0.5, y: 0.011800014}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f1b84f6cad6b4747a4ef23cf92ed912
+      internalID: -349422756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_7
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 823
+        width: 503
+        height: 531
+      alignment: 9
+      pivot: {x: 0.5210024, y: 0.0066001876}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a20d166bd878d140bd5cc9fab3c44cc
+      internalID: 1488366467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_8
+      rect:
+        serializedVersion: 2
+        x: 1114
+        y: 827
+        width: 481
+        height: 518
+      alignment: 9
+      pivot: {x: 0.53514075, y: 0.014612147}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24196f6b2377e6e479bb82c9d2c37150
+      internalID: 615384062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_9
+      rect:
+        serializedVersion: 2
+        x: 1690
+        y: 837
+        width: 276
+        height: 362
+      alignment: 9
+      pivot: {x: 0.49234408, y: 0.01555857}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dda89c32ace03d042a68677fc844013c
+      internalID: 1314741629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_10
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 142
+        width: 489
+        height: 628
+      alignment: 9
+      pivot: {x: 0.50864136, y: 0.008792658}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19478722f89185045a792c54afd3de86
+      internalID: 1110998329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_11
+      rect:
+        serializedVersion: 2
+        x: 736
+        y: 717
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 240eae27c8a876a479b88f50923c8fba
+      internalID: -2077168100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_12
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 134
+        width: 428
+        height: 553
+      alignment: 9
+      pivot: {x: 0.5148097, y: 0.022408567}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00f9277eb1acb7142acfc3e3881f544c
+      internalID: 783456849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_14
+      rect:
+        serializedVersion: 2
+        x: 1096
+        y: 141
+        width: 374
+        height: 440
+      alignment: 9
+      pivot: {x: 0.50564915, y: 0.015001748}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ea9a30e85229a84091a346a649f45fb
+      internalID: 762824070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_15
+      rect:
+        serializedVersion: 2
+        x: 1491
+        y: 577
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e17508e6d6981554594f5371662657ff
+      internalID: -638236204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_16
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 433
+        width: 153
+        height: 182
+      alignment: 9
+      pivot: {x: 0.5, y: 0.015307919}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9371638d56b4344458392b9bb07492e2
+      internalID: -333772214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_17
+      rect:
+        serializedVersion: 2
+        x: 1791
+        y: 435
+        width: 64
+        height: 139
+      alignment: 9
+      pivot: {x: 0.5107689, y: 0.01410944}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: afd0ea97841c35945824b313679faabe
+      internalID: 1041117757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_18
+      rect:
+        serializedVersion: 2
+        x: 1577
+        y: 229
+        width: 64
+        height: 138
+      alignment: 9
+      pivot: {x: 0.5107689, y: 0.010589157}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fceeb530691544479655c3147b67e27
+      internalID: -2088797770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flower_eat_sun_19
+      rect:
+        serializedVersion: 2
+        x: 1817
+        y: 219
+        width: 36
+        height: 94
+      alignment: 9
+      pivot: {x: 0.538286, y: 0.023444967}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4ff333be6e56dd459da15026f4228fa
+      internalID: -1456898406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline:
+    - - {x: -1018.401, y: 421.5166}
+      - {x: -1018.401, y: 1015.2317}
+      - {x: -547.2322, y: 1015.2317}
+      - {x: -547.2322, y: 421.5166}
+    - - {x: -528.21655, y: 423.6294}
+      - {x: -526.1036, y: 1013.11865}
+      - {x: -65.49902, y: 1011.00586}
+      - {x: -65.49872, y: 421.51648}
+    - - {x: -26.613464, y: 419.94678}
+      - {x: -26.613464, y: 1017.8876}
+      - {x: 431.87817, y: 1017.8876}
+      - {x: 431.87817, y: 419.94678}
+    - - {x: 467.797, y: 419.94678}
+      - {x: 467.797, y: 1013.66187}
+      - {x: 957.98157, y: 1013.66187}
+      - {x: 957.98157, y: 419.94678}
+    - - {x: -1015.4344, y: -203.34851}
+      - {x: -1015.4344, y: 379.80237}
+      - {x: -578.0712, y: 375.57666}
+      - {x: -578.0712, y: -207.57422}
+    - - {x: -548.4913, y: -213.91284}
+      - {x: -548.4913, y: 379.80237}
+      - {x: 0.8536377, y: 379.80237}
+      - {x: 0.8536377, y: -213.91284}
+    - - {x: 40.99817, y: -207.57416}
+      - {x: 40.99817, y: 384.02808}
+      - {x: 588.2302, y: 384.02808}
+      - {x: 588.2302, y: -207.57416}
+    - - {x: 636.8262, y: -209.68701}
+      - {x: 634.71313, y: 164.29004}
+      - {x: 966.43286, y: 166.40283}
+      - {x: 970.65857, y: -209.68701}
+    - - {x: -1011.2087, y: -890.02954}
+      - {x: -1011.2087, y: -249.83136}
+      - {x: -466.08948, y: -249.83136}
+      - {x: -466.08948, y: -890.02954}
+    - - {x: -461.86365, y: -887.9167}
+      - {x: -461.86365, y: -249.83136}
+      - {x: 24.095337, y: -249.83136}
+      - {x: 24.095337, y: -887.9167}
+    - - {x: 47.336792, y: -887.91675}
+      - {x: 47.336792, y: -376.60327}
+      - {x: 465.68396, y: -376.60327}
+      - {x: 465.68396, y: -887.91675}
+    - - {x: 501.60278, y: -590.0026}
+      - {x: 501.60278, y: -366.03894}
+      - {x: 702.3248, y: -366.03894}
+      - {x: 702.3248, y: -590.0026}
+    - - {x: 740.35645, y: -598.4541}
+      - {x: 740.35645, y: -418.8606}
+      - {x: 848.1123, y: -418.8606}
+      - {x: 848.1123, y: -598.4541}
+    - - {x: 531.18286, y: -807.6278}
+      - {x: 531.18286, y: -621.69556}
+      - {x: 638.93896, y: -621.69556}
+      - {x: 638.93896, y: -807.6278}
+    - - {x: 759.3721, y: -822.4178}
+      - {x: 759.3721, y: -672.4044}
+      - {x: 845.99963, y: -672.4044}
+      - {x: 845.99963, y: -822.4178}
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      flower_eat_sun_0: -1993460403
+      flower_eat_sun_1: -468692978
+      flower_eat_sun_10: 1110998329
+      flower_eat_sun_11: -2077168100
+      flower_eat_sun_12: 783456849
+      flower_eat_sun_13: -1504806424
+      flower_eat_sun_14: 762824070
+      flower_eat_sun_15: -638236204
+      flower_eat_sun_16: -333772214
+      flower_eat_sun_17: 1041117757
+      flower_eat_sun_18: -2088797770
+      flower_eat_sun_19: -1456898406
+      flower_eat_sun_2: 821119584
+      flower_eat_sun_3: -224947966
+      flower_eat_sun_4: 1664172869
+      flower_eat_sun_5: -217863925
+      flower_eat_sun_6: -349422756
+      flower_eat_sun_7: 1488366467
+      flower_eat_sun_8: 615384062
+      flower_eat_sun_9: 1314741629
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
