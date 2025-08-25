@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 68c23b2c26ac9ab47b5e9adcc5d4e69f
+guid: 54c2d15218975b74eb5cc8bb2d9324c6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -7,7 +7,7 @@ TextureImporter:
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
-    sRGBTexture: 1
+    sRGBTexture: 0
     linearTexture: 0
     fadeOut: 0
     borderMipMap: 0
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Blocks1_TextureAtlas-1_0
+      name: Blocks_LVL1_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 1472
-        width: 1222
-        height: 576
+        y: 1111
+        width: 1284
+        height: 937
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ee5d93bbb4d8d754db8c0039d9572472
-      internalID: -685105623
+      spriteID: 391bdef3a7e4d7a4988cfddce041af52
+      internalID: -90645074
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Blocks1_TextureAtlas-1_1
+      name: Blocks_LVL1_1
       rect:
         serializedVersion: 2
-        x: 1222
-        y: 836
-        width: 704
-        height: 1212
+        x: 1284
+        y: 1555
+        width: 670
+        height: 493
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,41 +158,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 35d1caac052d9564daa2afc427148d07
-      internalID: -1527686420
+      spriteID: cbc7a8225496dcf49a549921029df391
+      internalID: 605106764
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Blocks1_TextureAtlas-1_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 837
-        width: 1114
-        height: 635
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b1eafcd6cc3a54740a2b640fcfbe0378
-      internalID: 817227671
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Blocks1_TextureAtlas-1_3
+      name: Blocks_LVL1_2
       rect:
         serializedVersion: 2
         x: 0
-        y: 158
-        width: 613
-        height: 678
+        y: 8
+        width: 908
+        height: 1103
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,20 +179,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a81aae8a6842db6418104258ef17e6f1
-      internalID: 1931022799
+      spriteID: 6da28d9784a27b149aeedbad75b70102
+      internalID: 2134943004
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Blocks1_TextureAtlas-1_7
+      name: Blocks_LVL1_3
       rect:
         serializedVersion: 2
-        x: 1206
-        y: 272
-        width: 421
-        height: 564
+        x: 908
+        y: 450
+        width: 1118
+        height: 661
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -221,29 +200,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d729c25255824674180ffcdf8b8833c9
-      internalID: -208786495
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Blocks1_TextureAtlas-1_4
-      rect:
-        serializedVersion: 2
-        x: 613
-        y: 356
-        width: 593
-        height: 480
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 85c8828747d8f6d4a894f38046e3bb3d
-      internalID: -662174086
+      spriteID: e572e44555448194abe43ec9aaac4f39
+      internalID: -1794559293
       vertices: []
       indices: 
       edges: []
@@ -259,16 +217,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Blocks1_TextureAtlas-1_0: -685105623
-      Blocks1_TextureAtlas-1_1: -1527686420
-      Blocks1_TextureAtlas-1_2: 817227671
-      Blocks1_TextureAtlas-1_3: 1931022799
-      Blocks1_TextureAtlas-1_4: -662174086
-      Blocks1_TextureAtlas-1_5: 549461979
-      Blocks1_TextureAtlas-1_6: 1601768750
-      Blocks1_TextureAtlas-1_7: -208786495
-      Blocks1_TextureAtlas-1_8: 1025008077
-      Blocks1_TextureAtlas-1_9: 719714585
+      Blocks_LVL1_0: -90645074
+      Blocks_LVL1_1: 605106764
+      Blocks_LVL1_2: 2134943004
+      Blocks_LVL1_3: -1794559293
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
