@@ -70,7 +70,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        Material instanceMat = new Material(sourceMaterial)
+        Material instanceMat = new Material(sourceMaterial);
         renderer.material = instanceMat;
 
         Debug.Log($"[Crush_block] Материал применён к частицам: {sourceMaterial.name}");

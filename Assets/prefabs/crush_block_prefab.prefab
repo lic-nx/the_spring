@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2235994174968741373
+--- !u!1 &304750380406399298
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2269291422297981650}
-  - component: {fileID: 6631907506952023956}
-  - component: {fileID: 1237204453021810944}
-  - component: {fileID: 3953884554203951053}
-  - component: {fileID: 8803661415854215341}
+  - component: {fileID: 743000891284906879}
+  - component: {fileID: 1240794297386504002}
+  - component: {fileID: 1220428973772505814}
+  - component: {fileID: 3411710323766606144}
+  - component: {fileID: 5370756783337845219}
+  - component: {fileID: 3228436939676247210}
   m_Layer: 0
-  m_Name: "\u0420\u0435\u0441\u0443\u0440\u0441 22@lvl1_tr"
+  m_Name: crush_block_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2269291422297981650
+--- !u!4 &743000891284906879
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2235994174968741373}
+  m_GameObject: {fileID: 304750380406399298}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.55, y: -7.0908856, z: 0}
+  m_LocalPosition: {x: 16.92, y: 20.13, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6631907506952023956
+--- !u!212 &1240794297386504002
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2235994174968741373}
+  m_GameObject: {fileID: 304750380406399298}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -87,31 +88,31 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1237204453021810944
+--- !u!114 &1220428973772505814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2235994174968741373}
+  m_GameObject: {fileID: 304750380406399298}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af28d52f2334b15428e75ba8ff9fb87f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canCrush: 1
-  breakEffect: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
   obj_name: 
   count: 0
   max_count: 2
---- !u!50 &3953884554203951053
+  breakEffectOverride: {fileID: 0}
+--- !u!50 &3411710323766606144
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2235994174968741373}
+  m_GameObject: {fileID: 304750380406399298}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -131,13 +132,13 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
---- !u!60 &8803661415854215341
+--- !u!60 &5370756783337845219
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2235994174968741373}
+  m_GameObject: {fileID: 304750380406399298}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -1934,3 +1935,17 @@ PolygonCollider2D:
       - {x: -0.21, y: 4.1549997}
       - {x: -0.19999999, y: 4.1549997}
   m_UseDelaunayMesh: 0
+--- !u!114 &3228436939676247210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304750380406399298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c19a7c8fa33f7c4c87d354d96f7274c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.2
+  magnitude: 0.1
