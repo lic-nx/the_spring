@@ -2038,10 +2038,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canCrush: 1
-  breakEffect: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
   obj_name: 
   count: 0
   max_count: 2
+  breakEffectOverride: {fileID: 0}
 --- !u!212 &693931531
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5219,10 +5219,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canCrush: 1
-  breakEffect: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
   obj_name: 
   count: 0
   max_count: 2
+  breakEffectOverride: {fileID: 0}
 --- !u!114 &1927597584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5304,10 +5304,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canCrush: 1
-  breakEffect: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
   obj_name: 
   count: 0
   max_count: 2
+  breakEffectOverride: {fileID: 0}
 --- !u!212 &2108336493
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5883,6 +5883,18 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -90645074, guid: 54c2d15218975b74eb5cc8bb2d9324c6, type: 3}
+    - target: {fileID: 6631907506952023956, guid: 871efc74d2489f74b9ef366899bda8ce, type: 3}
+      propertyPath: m_Color.b
+      value: 0.2104592
+      objectReference: {fileID: 0}
+    - target: {fileID: 6631907506952023956, guid: 871efc74d2489f74b9ef366899bda8ce, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2104592
+      objectReference: {fileID: 0}
+    - target: {fileID: 6631907506952023956, guid: 871efc74d2489f74b9ef366899bda8ce, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6679245
+      objectReference: {fileID: 0}
     - target: {fileID: 6631907506952023956, guid: 871efc74d2489f74b9ef366899bda8ce, type: 3}
       propertyPath: m_DrawMode
       value: 0

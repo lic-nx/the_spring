@@ -14,6 +14,7 @@ public class SceneSerings : MonoBehaviour
     public TextMeshProUGUI level_number;
 
     void Start() {
+        Debug.Log("payse Camera.main: " + (Camera.main ? Camera.main.name : "null"));
         imageComponent = GetComponent<Image>();
         ppVolume = Camera.main.gameObject.GetComponent<PostProcessVolume>();
         level_number.text = "Уровень " + (SceneManager.GetActiveScene().buildIndex - 1);

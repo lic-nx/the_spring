@@ -1015,7 +1015,7 @@
     "m_ActiveSubTarget": {
         "m_Id": "178d2140322b45048126d8e60f872104"
     },
-    "m_AllowMaterialOverride": false,
+    "m_AllowMaterialOverride": true,
     "m_SurfaceType": 0,
     "m_ZWriteControl": 0,
     "m_ZTestMode": 4,

@@ -10,6 +10,10 @@ public class ShakeOnClick : MonoBehaviour
 
     void OnMouseDown()
     {
+        // Проверяем, что игра не на паузе (время идёт)
+        if (Time.timeScale == 0f)
+            return; // не запускаем тряску, если игра приостановлена
+
         StartCoroutine(Shake());
     }
 

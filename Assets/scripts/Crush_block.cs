@@ -1,80 +1,105 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Crush_block : MonoBehaviour, IPointerClickHandler
 {
     public bool canCrush = true;
-    public GameObject breakEffect; // частицы
-    public string obj_name; // имя объекта под которым нужно будет сохранить текстуры
-    private Material matDefault; // материал на объекте изначально
-    private Material matCrash; // материал при поломке
-    private SpriteRenderer SpriteRend;
+    public string obj_name; // имя объекта (можно использовать для сохранения)
     public int count = 0;
-    public int max_count;
+    public int max_count = 1;
+
+    [Header("Optional: override particles")]
+    public GameObject breakEffectOverride; // можно указать вручную
+
+    private SpriteRenderer spriteRenderer;
+    private Material matDefault;
+    private Material matCrash;
+
+    private const string DefaultEffectName = "Parts_stones";
+
+    void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        matDefault = spriteRenderer.material;
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (canCrush)
+        if (!canCrush) return;
+
+        GameObject effectPrefab = breakEffectOverride != null
+            ? breakEffectOverride
+            : Resources.Load<GameObject>(DefaultEffectName);
+
+        if (effectPrefab == null)
         {
-            GameObject explosion = Instantiate(breakEffect, this.gameObject.transform.position, Quaternion.identity);
-            explosion.GetComponent<ParticleSystem>().Play();
-            count += 1;
-            if (count >= max_count)
-            {
-                Destroy(gameObject);
-            }
-            ChangeMaterial();
-            Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.startLifetime.constantMax);
+            Debug.LogError($"[Crush_block] Префаб частиц '{DefaultEffectName}' не найден в папке Resources!");
+            return;
         }
+
+        GameObject explosion = Instantiate(effectPrefab, transform.position, Quaternion.identity);
+
+        ApplyMaterialToParticles(explosion, spriteRenderer.material);
+
+        var ps = explosion.GetComponent<ParticleSystem>();
+        if (ps != null)
+        {
+            ps.Play();
+            Destroy(explosion, ps.main.startLifetime.constantMax);
+        }
+
+        count++;
+        if (count >= max_count)
+        {
+            Destroy(gameObject);
+        }
+
+        ChangeMaterial();
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void ApplyMaterialToParticles(GameObject particleObj, Material sourceMaterial)
     {
-        SpriteRend = GetComponent<SpriteRenderer>();
+        var ps = particleObj.GetComponent<ParticleSystem>();
+        if (ps == null) return;
 
-        // Получаем название текущего материала
-        string currentMaterialName = SpriteRend.material.name;
-        Debug.Log("Current Material Name: " + currentMaterialName);
+        var renderer = particleObj.GetComponent<ParticleSystemRenderer>();
+        if (renderer == null)
+        {
+            Debug.LogError("ParticleSystemRenderer не найден на префабе частиц!");
+            return;
+        }
 
-        // Сохраняем текущий материал
-        matDefault = SpriteRend.material;
+        Material instanceMat = new Material(sourceMaterial)
+        renderer.material = instanceMat;
+
+        Debug.Log($"[Crush_block] Материал применён к частицам: {sourceMaterial.name}");
     }
 
     void ChangeMaterial()
     {
-        // Получаем название текущего материала
-        string currentMaterialName = SpriteRend.material.name;
+        string currentMaterialName = spriteRenderer.material.name;
+        string[] nameParts = currentMaterialName.Split('_', ' ');
 
-        // Разделяем название по нижнему подчеркиванию
-        string[] nameParts = currentMaterialName.Split(new char[] { '_', ' ' });
-
-        // Изменяем порядковый номер в конце
-        if (nameParts.Length > 0)
+        if (nameParts.Length >= 2)
         {
-            Debug.Log("nameParts[nameParts.Length-1] " + nameParts[nameParts.Length-1]);
-            int currentNumber = 1;
-            if(int.TryParse(nameParts[nameParts.Length-2], out currentNumber)){
+            if (int.TryParse(nameParts[nameParts.Length - 2], out int currentNumber))
+            {
                 currentNumber += 1;
                 nameParts[nameParts.Length - 2] = currentNumber.ToString();
             }
         }
-        // Собираем новое название материала
-        string newMaterialName = string.Join("_", nameParts, 0, nameParts.Length - 1);
 
-        // Загружаем новый материал из ресурсов
+        string newMaterialName = string.Join("_", nameParts, 0, nameParts.Length - 1);
         matCrash = Resources.Load<Material>(newMaterialName);
 
-        // Проверяем, что новый материал загружен
         if (matCrash != null)
         {
-            SpriteRend.material = matCrash;
+            spriteRenderer.material = matCrash;
         }
         else
         {
-            Debug.LogError("Material " + newMaterialName + " not found in Resources.");
+            Debug.LogError("Материал не найден: " + newMaterialName);
         }
     }
 }
