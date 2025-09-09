@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Pink
+  m_Name: Move
   m_Shader: {fileID: -6465566751694194690, guid: 53babea7b776abe4daaf24ef9d7ae95e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -31,7 +31,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MovableMask:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 03f3fec89d1ecc54bace274eb0118c6d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_d125d4b49d9f45469dfe35236d1c7f6f_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 86e8bf63b8e8e22418b74048bce74e1f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2D:
@@ -56,8 +60,9 @@ Material:
     - _BUILTIN_ZWrite: 1
     - _BUILTIN_ZWriteControl: 0
     - _Crushed: 0
+    - _Float: 1.7
     - _Movable: 1
-    - _Radius: 1.5
+    - _Radius: 1.35
     m_Colors: []
   m_BuildTextureStacks: []
 --- !u!114 &5186034346424135931

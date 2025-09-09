@@ -76,6 +76,8 @@ Material:
     - _BUILTIN_ZTest: 4
     - _BUILTIN_ZWrite: 1
     - _BUILTIN_ZWriteControl: 0
+    - _Crushed: 1
+    - _Movable: 0
     - _Scale: 0.5
     m_Colors: []
   m_BuildTextureStacks: []
