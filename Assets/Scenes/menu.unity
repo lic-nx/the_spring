@@ -498,15 +498,15 @@ RectTransform:
   m_GameObject: {fileID: 508611846}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 5.9996004}
+  m_LocalScale: {x: 1.3333334, y: 1.3333334, z: 5.9996004}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 614440500}
+  m_Father: {fileID: 1066311564}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 33, y: 153}
-  m_SizeDelta: {x: -625.0616, y: -1465.8103}
+  m_AnchoredPosition: {x: -6.666668, y: -1.3333435}
+  m_SizeDelta: {x: 454.93842, y: 454.1897}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &508611848
 MonoBehaviour:
@@ -806,7 +806,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1066311564}
-  - {fileID: 508611847}
   - {fileID: 1110066302}
   - {fileID: 1412679226}
   - {fileID: 92569803}
@@ -1139,6 +1138,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1321039542}
+  - {fileID: 508611847}
   - {fileID: 1323398390}
   m_Father: {fileID: 614440500}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1884,6 +1884,7 @@ GameObject:
   - component: {fileID: 1624492711}
   - component: {fileID: 1624492713}
   - component: {fileID: 1624492712}
+  - component: {fileID: 1624492714}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -2007,6 +2008,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1624492710}
   m_CullTransparentMesh: 1
+--- !u!114 &1624492714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624492710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2720338c0d0d31c4aa9b94bf7caf618b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelText: {fileID: 1624492712}
 --- !u!4 &1666212376 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 510509443499256790, guid: ff8b654c3d90ff24d91640b51f0952df, type: 3}
