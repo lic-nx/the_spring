@@ -1291,7 +1291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e799d50561c35646af941a6acbb428e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRotationSpeed: 100
+  maxRotationSpeed: 5
   Sun: {fileID: 0}
   animator: {fileID: 3719128576577355870}
   line_render: {fileID: 1137898690210577901}

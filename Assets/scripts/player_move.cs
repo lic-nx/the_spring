@@ -35,10 +35,9 @@ public class player_move : MonoBehaviour
         // animator = GetComponent<Animator>();
         Debug.Log("Start game");
         Debug.Log(first_dot.transform.position);
-        line_render.SetUpLine(first_dot.transform.position);
-        // line_render.SetLastPoint(first_dot.transform.position);
+        line_render.AddPoint(first_dot.transform.position);
         body_position = transform.position;
-        line_render.SetUpLine(body_position);
+        line_render.AddPoint(body_position);
         body_position = transform.position;
         nextPosition = transform.position;
         position = 1;
@@ -69,7 +68,7 @@ public class player_move : MonoBehaviour
                     Debug.Log("move to new pos");
                     body_position = transform.position; // то где сейчас тело
                     if (Vector3.Distance(line_render.GetLastPoint(), body_position) > 1.5){
-                        line_render.SetUpLine(body_position); // добавляем последнее место нахождения цветка
+                        line_render.AddPoint(body_position); // добавляем последнее место нахождения цветка
                     }
                     Debug.Log(tag.OnTriggerEnter_);
                     nextPosition =  tag.transform.position; // То куда тело должно прийти 
@@ -79,6 +78,7 @@ public class player_move : MonoBehaviour
                     Debug.Log("can't move");
                 }
             }
+        position = 0;
 
   // continue process
 } 
@@ -93,7 +93,7 @@ public class player_move : MonoBehaviour
             if (Vector3.Distance(nextPosition, transform.position) > 0.2){
                 flower._instance.rotate_flower(nextPosition); // Вызываем метод поворота
                 transform.position +=  position/600 * (nextPosition - body_position);
-                line_render.SetLastPoint(transform.position); // двигаем последнюю точку вместе с цветком
+                line_render.UpdateLastPoint(transform.position); // двигаем последнюю точку вместе с цветком
             } 
             position++;
         }
