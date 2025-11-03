@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using YG;
 
 public class MusicController : MonoBehaviour
 {
@@ -9,12 +10,12 @@ public class MusicController : MonoBehaviour
     private bool isEnabled = true;
     private AudioSource[] musicSources;
 
-    private static readonly string MUSIC_ENABLED_KEY = "MusicEnabled"; // Ключ в PlayerPrefs
+    //private static readonly string MUSIC_ENABLED_KEY = "MusicEnabled"; // Ключ в PlayerPrefs
 
     void Start()
     {
         // Загружаем сохранённое состояние (по умолчанию — включено)
-        isEnabled = PlayerPrefs.GetInt(MUSIC_ENABLED_KEY, 1) == 1;
+        isEnabled = YG2.saves.MusicEnabled == 1;
 
         // Находим все источники музыки на сцене
         FindMusicSources();
@@ -74,8 +75,10 @@ public class MusicController : MonoBehaviour
         }
 
         // Сохраняем новое состояние
-        PlayerPrefs.SetInt(MUSIC_ENABLED_KEY, isEnabled ? 1 : 0);
-        PlayerPrefs.Save(); // Надёжное сохранение
+        YG2.saves.MusicEnabled = YG2.saves.MusicEnabled == 0 ? 1 : 0;
+        YG2.SaveProgress();
+        //PlayerPrefs.SetInt(MUSIC_ENABLED_KEY, isEnabled ? 1 : 0);
+        //PlayerPrefs.Save(); // Надёжное сохранение
     }
 
     // Продолжить воспроизведение всех источников

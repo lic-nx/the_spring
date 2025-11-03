@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using YG;
 
 public class Mainmenu : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class Mainmenu : MonoBehaviour
     //}
     public void PlayGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+        SceneManager.LoadScene(YG2.saves.CompletedLevel + 2);
     }
 
     public void ChooseLevel()

@@ -1,0 +1,15 @@
+{
+    "intExample": 5,
+    "strExample": "Hello!",
+    "boolExample": [
+        false,
+        false,
+        false,
+        false
+    ],
+    "idSave": 12,
+    "UnlockedLevel": 5,
+    "CompletedLevel": 4,
+    "MusicEnabled": 0,
+    "ReachedIndex": 4
+}

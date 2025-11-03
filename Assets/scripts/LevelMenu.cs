@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using YG;
 
 public class LevelMenu : MonoBehaviour
 {
@@ -15,8 +16,8 @@ public class LevelMenu : MonoBehaviour
     private void Awake()
     {
         ButtonsToArray();
-        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
-        int CompletedLevel = PlayerPrefs.GetInt("CompletedLevel", 0);
+        int unlockedLevel = YG2.saves.UnlockedLevel;
+        int CompletedLevel = YG2.saves.CompletedLevel;
         Debug.Log($"unlockedLevel {unlockedLevel}");
         Debug.Log($"CompletedLevel {CompletedLevel}");
         Debug.Log($"buttons.Length {buttons.Length}");

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using YG;
 
 public class level_text : MonoBehaviour
 {
@@ -11,8 +11,8 @@ public class level_text : MonoBehaviour
 
     void Start()
     {
-        int CompletedLevel = PlayerPrefs.GetInt("CompletedLevel", 0) + 1;
-
+        int CompletedLevel = YG2.saves.CompletedLevel + 1;
+        YG2.SaveProgress();
         if (levelText != null)
         {
             levelText.text =  CompletedLevel + " уровень";
