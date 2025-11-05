@@ -18,6 +18,7 @@ public class player_move : MonoBehaviour
     float position;
     Vector3 body_position;
     public bool enabled = false;
+    float duration = 0.8f;  
     public GameObject first_dot;
 
     public void change_enabled(){
@@ -81,22 +82,104 @@ public class player_move : MonoBehaviour
         position = 0;
 
   // continue process
-} 
+}
 
-    // Update is called once per frame
-    void FixedUpdate()
-    { 
-        if (position >= 60 && enabled == true){
-            StartCoroutine(Reset());
-        }      
-        if (position < 60 && enabled == true ){
-            if (Vector3.Distance(nextPosition, transform.position) > 0.2){
-                flower._instance.rotate_flower(nextPosition); // Вызываем метод поворота
-                transform.position +=  position/600 * (nextPosition - body_position);
-                line_render.UpdateLastPoint(transform.position); // двигаем последнюю точку вместе с цветком
-            } 
-            position++;
+    [SerializeField] private LayerMask obstacleMask; // В инспекторе укажи слой блоков
+
+    private bool isMoving = false;
+
+    // Проверяет, поместится ли цветок в позицию
+    bool CanFitAt(Vector3 position)
+    {
+        BoxCollider2D col = GetComponent<BoxCollider2D>();
+        if (col == null) return true;
+
+        Vector2 size = col.size * 0.9f; // немного меньше, чтобы не клипать
+        Collider2D[] hits = Physics2D.OverlapBoxAll(position, size, 0f, obstacleMask);
+        foreach (var hit in hits)
+        {
+            if (hit != null && hit.gameObject != gameObject && !hit.isTrigger)
+                return false;
         }
-        
+        return true;
     }
+
+    // Ищет первый свободный и подходящий триггер
+    public bool TryFindNextPosition(out Vector3 targetPosition)
+    {
+        targetPosition = transform.position;
+        foreach (frigger_checker trigger in Triggers)
+        {
+            if (!trigger.OnTriggerEnter_) // триггер не занят
+            {
+                Vector3 candidate = trigger.transform.position;
+                if (CanFitAt(candidate))
+                {
+                    targetPosition = candidate;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Вызывается извне (после разрушения/перемещения)
+    public void OnWorldChanged()
+    {
+        if (isMoving || !enabled) return;
+
+        if (TryFindNextPosition(out Vector3 target))
+        {
+            StartCoroutine(MoveTo(target));
+        }
+        else
+        {
+            Debug.Log("Цветок не может начать движение: нет доступных путей.");
+        }
+    }
+
+    // Плавное движение к цели
+    IEnumerator MoveTo(Vector3 target)
+    {
+        isMoving = true;
+
+        // Обновляем стебель
+        if (Vector3.Distance(line_render.GetLastPoint(), transform.position) > 0.1f)
+            line_render.AddPoint(transform.position);
+
+        Vector3 start = transform.position;
+        float duration = 0.8f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            transform.position = Vector3.Lerp(start, target, elapsed / duration);
+            flower._instance?.rotate_flower(target);
+            line_render.UpdateLastPoint(transform.position);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = target;
+        flower._instance?.rotate_flower(target);
+        line_render.UpdateLastPoint(target);
+
+        isMoving = false;
+
+        // 🔁 Сразу проверяем: можно ли идти дальше?
+        // (только если мы всё ещё включены и не достигли солнца)
+        if (enabled)
+        {
+            if (TryFindNextPosition(out Vector3 nextTarget))
+            {
+                yield return new WaitForSeconds(0.1f); // небольшая пауза для плавности
+                StartCoroutine(MoveTo(nextTarget));
+            }
+            else
+            {
+                Debug.Log("Цветок остановлен: все триггеры заблокированы или недоступны.");
+            }
+        }
+    }
+
 }
