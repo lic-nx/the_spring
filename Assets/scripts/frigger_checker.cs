@@ -5,9 +5,11 @@ using UnityEngine;
 public class frigger_checker : MonoBehaviour
 {
     public bool OnTriggerEnter_ = false;
+    public int CounterTrigger = 0;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        CounterTrigger++;
         Debug.Log("An object entered.");
         player_move._instance.stop();
         
@@ -39,7 +41,11 @@ public class frigger_checker : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        OnTriggerEnter_ = false;
+        CounterTrigger--;
+        if (CounterTrigger == 0)
+        {
+            OnTriggerEnter_ = false;
+        }
     }
 
 }
