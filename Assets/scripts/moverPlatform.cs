@@ -66,6 +66,12 @@ public class moverPlatform : MonoBehaviour
                 Debug.Log("Пересечение обнаружено!");
             }
         }
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+            // Отправляем сигнал, что платформа остановилась
+            player_move._instance?.OnWorldChanged();
+        }
     }
 
     bool WillCollide(Vector3 position)

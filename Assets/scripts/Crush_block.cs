@@ -53,6 +53,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         if (count >= max_count)
         {
             Destroy(gameObject);
+            player_move._instance?.OnWorldChanged();
         }
 
         ChangeMaterial();
