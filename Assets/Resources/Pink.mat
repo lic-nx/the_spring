@@ -56,7 +56,7 @@ Material:
     - _BUILTIN_ZWrite: 1
     - _BUILTIN_ZWriteControl: 0
     - _Crushed: 0
-    - _Movable: 1
+    - _Movable: 0
     - _Radius: 1.5
     m_Colors: []
   m_BuildTextureStacks: []

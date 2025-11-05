@@ -33,6 +33,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Crushed: 1
+    - _Movable: 0
     m_Colors: []
   m_BuildTextureStacks: []
 --- !u!114 &6579706740187298995
