@@ -91,7 +91,7 @@ public class player_move : MonoBehaviour
     // Проверяет, поместится ли цветок в позицию
     bool CanFitAt(Vector3 position)
     {
-        BoxCollider2D col = GetComponent<BoxCollider2D>();
+        CapsuleCollider2D col = GetComponent<CapsuleCollider2D>();
         if (col == null) return true;
 
         Vector2 size = col.size * 0.9f; // немного меньше, чтобы не клипать

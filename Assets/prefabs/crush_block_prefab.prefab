@@ -86,7 +86,7 @@ SpriteRenderer:
   m_Size: {x: 12.84, y: 9.37}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &1220428973772505814
@@ -105,7 +105,7 @@ MonoBehaviour:
   obj_name: 
   count: 0
   max_count: 2
-  breakEffectOverride: {fileID: 0}
+  breakEffectOverride: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
 --- !u!50 &3411710323766606144
 Rigidbody2D:
   serializedVersion: 4
