@@ -62,7 +62,7 @@ Material:
     - _Crushed: 0
     - _Float: 1.7
     - _Movable: 1
-    - _Radius: 1.35
+    - _Radius: 2.06
     m_Colors: []
   m_BuildTextureStacks: []
 --- !u!114 &5186034346424135931

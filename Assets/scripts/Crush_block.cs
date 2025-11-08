@@ -12,7 +12,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
     [Header("Optional: override particles")]
     public GameObject breakEffectOverride; // можно указать вручную
 
-    private SpriteRenderer spriteRenderer;
+    //private SpriteRenderer spriteRenderer;
     private Material matDefault;
     private Material matCrash;
 
@@ -20,8 +20,9 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        matDefault = spriteRenderer.material;
+        //spriteRenderer = GetComponent<SpriteRenderer>();
+        //matDefault = spriteRenderer.material;
+        matDefault = GetComponent<Renderer>().material;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -40,7 +41,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
 
         GameObject explosion = Instantiate(effectPrefab, transform.position, Quaternion.identity);
 
-        ApplyMaterialToParticles(explosion, spriteRenderer.material);
+        ApplyMaterialToParticles(explosion, matDefault);
 
         var ps = explosion.GetComponent<ParticleSystem>();
         if (ps != null)
@@ -79,7 +80,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
 
     void ChangeMaterial()
     {
-        string currentMaterialName = spriteRenderer.material.name;
+        string currentMaterialName = matDefault.name;
         string[] nameParts = currentMaterialName.Split('_', ' ');
 
         if (nameParts.Length >= 2)
@@ -96,7 +97,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
 
         if (matCrash != null)
         {
-            spriteRenderer.material = matCrash;
+            matDefault = matCrash;
         }
         else
         {
