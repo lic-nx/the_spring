@@ -7,6 +7,7 @@ public class moverPlatform : MonoBehaviour
     public Transform pointA; // Точка A для задания вектора
     public Transform pointB; // Точка B для задания вектора
     public float speed = 20f; // Скорость перемещения
+    public bool mode = false; // если true — движение ограничено отрезком A–B
 
     private Vector3 movementVector;
     private Vector3 initialPosition;
@@ -18,8 +19,7 @@ public class moverPlatform : MonoBehaviour
         // Вычисляем вектор перемещения
         movementVector = pointB.position - pointA.position;
         movementVector.Normalize(); // Нормализуем вектор для получения направления
-
-        initialPosition = pointA.transform.position;
+        initialPosition = pointA.position;
     }
 
     void OnMouseEnter()
@@ -48,17 +48,35 @@ public class moverPlatform : MonoBehaviour
         if (isDragging)
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePosition.z = 0; // Устанавливаем z-координату для 2D пространства
+            mousePosition.z = 0;
 
-            // Вычисляем направление перемещения относительно вектора
-            Vector3 direction = mousePosition - initialPosition;
-            direction = Vector3.Project(direction, movementVector);
-            Vector3 objNextPosition = Vector3.MoveTowards(transform.position, initialPosition + direction, speed * Time.deltaTime);
+            Vector3 targetPosition;
 
-            // Проверяем, будет ли коллизия в новой позиции
+            if (mode)
+            {
+                // Проекция мыши на отрезок между pointA и pointB
+                Vector3 a = pointA.position;
+                Vector3 b = pointB.position;
+                Vector3 ab = b - a;
+                float t = Vector3.Dot(mousePosition - a, ab) / Vector3.Dot(ab, ab);
+                t = Mathf.Clamp01(t); // Ограничиваем отрезком
+                targetPosition = a + t * ab;
+            }
+            else
+            {
+                // Свободное следование за мышью
+                targetPosition = mousePosition;
+            }
+
+            Vector3 objNextPosition = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+
             if (!WillCollide(objNextPosition))
             {
-                objNextPosition = ClampPosition(objNextPosition, pointA.position, pointB.position);
+                if (mode)
+                {
+                    // Ограничиваем позицию отрезком A–B
+                    objNextPosition = ClampToSegment(objNextPosition, pointA.position, pointB.position);
+                }
                 transform.position = objNextPosition;
             }
             else
@@ -66,23 +84,19 @@ public class moverPlatform : MonoBehaviour
                 Debug.Log("Пересечение обнаружено!");
             }
         }
+
         if (Input.GetMouseButtonUp(0))
         {
             isDragging = false;
-            // Отправляем сигнал, что платформа остановилась
             player_move._instance?.OnWorldChanged();
         }
     }
 
     bool WillCollide(Vector3 position)
     {
-        // Создаем временный коллайдер для проверки пересечения
         Collider2D[] colliders = Physics2D.OverlapBoxAll(position, transform.lossyScale, 0);
-
-        // Проверяем, есть ли пересечения с другими коллайдерами
         foreach (var collider in colliders)
         {
-            // Исключаем триггеры и текущий коллайдер
             if (collider != GetComponent<Collider2D>() && !collider.isTrigger)
             {
                 return true;
@@ -91,11 +105,12 @@ public class moverPlatform : MonoBehaviour
         return false;
     }
 
-    Vector3 ClampPosition(Vector3 position, Vector3 min, Vector3 max)
+    // Ограничивает точку отрезком между min и max (в 2D, но работает и в 3D)
+    Vector3 ClampToSegment(Vector3 point, Vector3 a, Vector3 b)
     {
-        float x = Mathf.Clamp(position.x, Mathf.Min(min.x, max.x), Mathf.Max(min.x, max.x));
-        float y = Mathf.Clamp(position.y, Mathf.Min(min.y, max.y), Mathf.Max(min.y, max.y));
-        float z = Mathf.Clamp(position.z, Mathf.Min(min.z, max.z), Mathf.Max(min.z, max.z));
-        return new Vector3(x, y, z);
+        Vector3 ab = b - a;
+        float t = Vector3.Dot(point - a, ab) / Vector3.Dot(ab, ab);
+        t = Mathf.Clamp01(t);
+        return a + t * ab;
     }
 }
