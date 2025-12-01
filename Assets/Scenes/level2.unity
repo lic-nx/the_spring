@@ -20468,6 +20468,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93d28ba595b76894b8abe81b62f48b47, type: 3}
+--- !u!120 &1132079861 stripped
+LineRenderer:
+  m_CorrespondingSourceObject: {fileID: 8959421938137610893, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+  m_PrefabInstance: {fileID: 1611753046}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1133430785 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4583227003572545246, guid: 5e407ec0d357374458b446d684a59293, type: 3}
@@ -22888,6 +22893,10 @@ PrefabInstance:
       propertyPath: petalPrefab
       value: 
       objectReference: {fileID: 139142807618730360, guid: ac82e190c23b62d4485a476dbd1d5d0a, type: 3}
+    - target: {fileID: 1137898690210577901, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: lineRenderer
+      value: 
+      objectReference: {fileID: 1132079861}
     - target: {fileID: 1137898690210577901, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: minLeafDistance
       value: 5

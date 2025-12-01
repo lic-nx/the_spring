@@ -54,6 +54,7 @@ public class player_move : MonoBehaviour
     public void is_sun(){
         Debug.Log("take sun");
         animator.SetBool("End", true);
+        isMoving = false;
         Destroy(Sun);
         enabled = false;
     }
@@ -151,7 +152,7 @@ public class player_move : MonoBehaviour
         float duration = 0.8f;
         float elapsed = 0f;
 
-        while (elapsed < duration)
+        while (elapsed < duration && enabled)
         {
             transform.position = Vector3.Lerp(start, target, elapsed / duration);
             flower._instance?.rotate_flower(target);
