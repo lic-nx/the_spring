@@ -65,42 +65,13 @@ public class Line_rendered : MonoBehaviour
         for (int i = 0; i < smoothPoints.Count; i++)
             lineRenderer.SetPosition(i, smoothPoints[i]);
 
-        edgeCollider.points = smoothPoints.ToArray();
-        currentStemLength = CalculateStemLength();
-        UpdateAllLeavesScale();
-
-        if (growLeavesAlongStem && petalPrefab != null)
-            TryPlaceNewLeaves();
-    }
-
-    private List<Vector2> GenerateSmoothPoints()
-    {
-        List<Vector2> points = new();
-        if (controlPoints.Count == 1)
+        Vector2[] localPoints = new Vector2[smoothPoints.Count];
+        for (int i = 0; i < smoothPoints.Count; i++)
         {
-            points.Add(controlPoints[0]);
-            return points;
+            localPoints[i] = transform.InverseTransformPoint(smoothPoints[i]);
         }
+        edgeCollider.points = localPoints;
 
-        List<Vector2> extended = new(controlPoints);
-        extended.Insert(0, controlPoints[0]);
-        extended.Add(controlPoints[^1]);
-
-        for (int i = 1; i < controlPoints.Count; i++)
-        {
-            Vector2 p0 = extended[i - 1];
-            Vector2 p1 = extended[i];
-            Vector2 p2 = extended[i + 1];
-            Vector2 p3 = extended[i + 2];
-
-            for (int j = 0; j < smoothness; j++)
-            {
-                float t = (float)j / smoothness;
-                points.Add(CatmullRom(p0, p1, p2, p3, t));
-            }
-        }
-        points.Add(controlPoints[^1]);
-        return points;
     }
 
     private void TryPlaceNewLeaves()
