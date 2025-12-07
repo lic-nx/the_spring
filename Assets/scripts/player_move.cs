@@ -37,7 +37,7 @@ public class player_move : MonoBehaviour
         Debug.Log("Start game");
         Debug.Log(first_dot.transform.position);
         line_render.AddPoint(first_dot.transform.position);
-        body_position = transform.position;
+        body_position = this.transform.position;
         line_render.AddPoint(body_position);
         body_position = transform.position;
         nextPosition = transform.position;
@@ -145,8 +145,8 @@ public class player_move : MonoBehaviour
         isMoving = true;
 
         // Обновляем стебель
-        if (Vector3.Distance(line_render.GetLastPoint(), transform.position) > 0.1f)
-            line_render.AddPoint(transform.position);
+        if (Vector3.Distance(line_render.GetLastPoint(), this.transform.position) > 0.1f)
+            line_render.AddPoint(this.transform.position);
 
         Vector3 start = transform.position;
         float duration = 0.8f;
