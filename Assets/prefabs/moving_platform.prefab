@@ -236,7 +236,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3140114301776396161, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       propertyPath: m_Constraints
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3140114301776396161, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       propertyPath: m_GravityScale
@@ -380,3 +380,4 @@ MonoBehaviour:
   pointA: {fileID: 7870119589417094460}
   pointB: {fileID: 7419068456128311466}
   speed: 5
+  mode: 0

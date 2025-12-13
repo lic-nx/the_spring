@@ -136,7 +136,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10967993}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -276,7 +276,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 155414463}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -346,6 +346,10 @@ PrefabInstance:
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3411710323766606144, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_BodyType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4037626902689613716, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_Creator
@@ -2196,6 +2200,10 @@ PrefabInstance:
       propertyPath: m_Spline.m_ControlPoints.Array.data[3].rightTangent.y
       value: -0.34113693
       objectReference: {fileID: 0}
+    - target: {fileID: 9016293094025202936, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3081,6 +3089,10 @@ PrefabInstance:
       propertyPath: m_Spline.m_ControlPoints.Array.data[3].rightTangent.y
       value: -0.39204836
       objectReference: {fileID: 0}
+    - target: {fileID: 9016293094025202936, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3950,6 +3962,10 @@ PrefabInstance:
       propertyPath: m_Spline.m_ControlPoints.Array.data[3].rightTangent.y
       value: 0.028738737
       objectReference: {fileID: 0}
+    - target: {fileID: 9016293094025202936, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4178,6 +4194,10 @@ PrefabInstance:
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3411710323766606144, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_BodyType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4037626902689613716, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_Creator
@@ -6725,6 +6745,10 @@ PrefabInstance:
       propertyPath: m_Spline.m_ControlPoints.Array.data[3].rightTangent.y
       value: -0.061739445
       objectReference: {fileID: 0}
+    - target: {fileID: 9016293094025202936, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7093,6 +7117,14 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7877175344309364540, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877175344309364540, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.32
+      objectReference: {fileID: 0}
     - target: {fileID: 8065363990315018938, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
       value: 0
@@ -7115,7 +7147,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1718387242}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -7910,6 +7942,10 @@ PrefabInstance:
     - target: {fileID: 8165343944093449914, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Spline.m_ControlPoints.Array.data[3].rightTangent.y
       value: -1.2186527
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016293094025202936, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_BodyType
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9641,6 +9677,10 @@ PrefabInstance:
       propertyPath: m_Spline.m_ControlPoints.Array.data[3].rightTangent.y
       value: -0.021543503
       objectReference: {fileID: 0}
+    - target: {fileID: 9016293094025202936, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9697,6 +9737,10 @@ PrefabInstance:
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3411710323766606144, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_BodyType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4037626902689613716, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_Creator
@@ -12270,6 +12314,10 @@ PrefabInstance:
     - target: {fileID: 8165343944093449914, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Spline.m_ControlPoints.Array.data[3].rightTangent.y
       value: -1.4820623
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016293094025202936, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_BodyType
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
