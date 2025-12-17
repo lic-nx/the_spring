@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using YG;
+using UnityEngine.Rendering.PostProcessing;
 
 public class LevelMenu : MonoBehaviour
 {
@@ -21,14 +22,14 @@ public class LevelMenu : MonoBehaviour
         Debug.Log($"unlockedLevel {unlockedLevel}");
         Debug.Log($"CompletedLevel {CompletedLevel}");
         Debug.Log($"buttons.Length {buttons.Length}");
-        for (int i = unlockedLevel; i < buttons.Length; i++)
+        for (int i = unlockedLevel; i < buttons.Length ; i++)
         {
             buttons[i].enabled = false;
             buttons[i].GetComponent<Image>().sprite = Lock.sprite; // ✅ Правильное обращение к спрайту
             buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
         }
 
-        for (int i = CompletedLevel; i < unlockedLevel; i++)
+        for (int i = CompletedLevel; i < unlockedLevel && i < buttons.Length; i++)
         {
             buttons[i].enabled = true;
             buttons[i].GetComponent<Image>().sprite = Unlock.sprite; // ✅ Здесь тоже
@@ -56,5 +57,13 @@ public class LevelMenu : MonoBehaviour
     {
         string levelName = "level" + levelId;
         SceneManager.LoadScene(levelName);
+    }
+
+    public void Restart_button()
+    {
+        YG2.saves.UnlockedLevel = 1;     // Исправлена опечатка!
+        YG2.saves.CompletedLevel = 0;
+        YG2.SaveProgress();                      // Сохраняем в YG
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Обновляем UI
     }
 }
