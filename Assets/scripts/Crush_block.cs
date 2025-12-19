@@ -71,9 +71,15 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
             Debug.LogError("ParticleSystemRenderer не найден на префабе частиц!");
             return;
         }
+        string currentMaterialName = matDefault.name;
+        string[] nameParts = currentMaterialName.Split('_', ' ');
 
-        Material instanceMat = new Material(sourceMaterial);
-        renderer.material = instanceMat;
+        string newMaterialName = nameParts[0];
+        matCrash = Resources.Load<Material>(newMaterialName);
+
+
+        //Material instanceMat = new Material(sourceMaterial);
+        renderer.material = Resources.Load<Material>(newMaterialName);
 
         Debug.Log($"[Crush_block] Материал применён к частицам: {sourceMaterial.name}");
     }
