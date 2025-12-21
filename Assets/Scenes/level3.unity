@@ -3055,12 +3055,16 @@ PrefabInstance:
       value: usual_block (5)
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 943c0aa752885084da481d027bcc359e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.48068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062190051990939641, guid: 943c0aa752885084da481d027bcc359e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.73
+      value: 2.2407
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 943c0aa752885084da481d027bcc359e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.8
+      value: 18.72
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 943c0aa752885084da481d027bcc359e, type: 3}
       propertyPath: m_LocalPosition.z
