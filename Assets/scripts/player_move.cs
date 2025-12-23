@@ -18,8 +18,9 @@ public class player_move : MonoBehaviour
     float position;
     Vector3 body_position;
     public bool enabled = false;
-    float duration = 0.8f;  
+    float duration = 0.2f;  
     public GameObject first_dot;
+    public float duration_of_move = 0.3f;
 
     public void change_enabled(){
         Debug.Log("change enabled");
@@ -149,21 +150,21 @@ public class player_move : MonoBehaviour
             line_render.AddPoint(this.transform.position);
 
         Vector3 start = transform.position;
-        float duration = 0.8f;
+        
         float elapsed = 0f;
 
         while (elapsed < duration && enabled)
         {
-            transform.position = Vector3.Lerp(start, target, elapsed / duration);
+            transform.position = Vector3.Lerp(start, target, elapsed / duration_of_move);
             flower._instance?.rotate_flower(target);
             line_render.UpdateLastPoint(transform.position);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.position = target;
+        //transform.position = target;
         flower._instance?.rotate_flower(target);
-        line_render.UpdateLastPoint(target);
+        line_render.UpdateLastPoint(transform.position);
 
         isMoving = false;
 
