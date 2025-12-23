@@ -63,6 +63,7 @@ public class LevelMenu : MonoBehaviour
     {
         YG2.saves.UnlockedLevel = 1;     // Исправлена опечатка!
         YG2.saves.CompletedLevel = 0;
+        YG2.saves.ReachedIndex = 0;
         YG2.SaveProgress();                      // Сохраняем в YG
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Обновляем UI
     }

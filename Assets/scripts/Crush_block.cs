@@ -105,9 +105,9 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         {
             matDefault = matCrash;
         }
-        else
-        {
-            Debug.LogError("Материал не найден: " + newMaterialName);
-        }
+        //else
+        //{
+        //    Debug.LogError("Материал не найден: " + newMaterialName);
+        //}
     }
 }
