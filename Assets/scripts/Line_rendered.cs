@@ -11,7 +11,7 @@ public class Line_rendered : MonoBehaviour
     public GameObject petalPrefab;              // ← перетащи сюда префаб листа/лепестка!
     public bool growLeavesAlongStem = true;     // включить листья?
     public float minLeafDistance = 1.0f;        // минимальное расстояние между листьями
-    public float leafOffsetFromStem = 0.3f;     // насколько лист выступает вбок
+    public float leafOffsetFromStem = 0.0f;     // насколько лист выступает вбок
     public float leafGrowthDuration = 0.5f;     // время анимации появления листа
 
     [Tooltip("Чем выше — тем плавнее линия (но дороже по производительности)")]
@@ -161,11 +161,12 @@ public class Line_rendered : MonoBehaviour
         GameObject leaf = Instantiate(petalPrefab, leafPosition, Quaternion.identity, transform);
         leaf.transform.localScale = Vector3.zero;
 
-        // Поворот листа по направлению стебля
+        //Поворот листа по направлению стебля
         float angle = Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg;
-        leaf.transform.rotation = Quaternion.Euler(0, 0, angle + 90f); // +90 для естественного вида
+        angle = Mathf.Clamp( angle - 90f, -60f, 60f); //чтобы листик не сильно наклонялся
+        leaf.transform.rotation = Quaternion.Euler(0, 0, angle);
 
-        StartCoroutine(ScaleTo(leaf.transform, Vector3.one, leafGrowthDuration));
+        StartCoroutine(ScaleTo(leaf.transform, Vector3.one * 1.5f, leafGrowthDuration));
     }
 
     private Vector2 GetTangentAtPoint(Vector2 position)
