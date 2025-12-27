@@ -799,8 +799,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edgeCollider: {fileID: 3749724608736829675}
-  lineRenderer: {fileID: 0}
-  petalPrefab: {fileID: 7538050308748150284, guid: ff8b654c3d90ff24d91640b51f0952df, type: 3}
+  lineRenderer: {fileID: 8959421938137610893}
+  petalPrefab: {fileID: 139142807618730360, guid: ac82e190c23b62d4485a476dbd1d5d0a, type: 3}
   growLeavesAlongStem: 1
   minLeafDistance: 5
   leafOffsetFromStem: 0
