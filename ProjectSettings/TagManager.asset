@@ -8,6 +8,7 @@ TagManager:
   - stem
   - sun
   - Music
+  - enemy
   layers:
   - Default
   - TransparentFX
