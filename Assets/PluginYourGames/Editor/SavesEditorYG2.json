@@ -7,15 +7,9 @@
         false,
         false
     ],
-<<<<<<< HEAD
-    "idSave": 114,
-    "UnlockedLevel": 11,
-    "CompletedLevel": 10,
-=======
-    "idSave": 67,
-    "UnlockedLevel": 4,
-    "CompletedLevel": 3,
->>>>>>> e965bee (add)
+    "idSave": 2,
+    "UnlockedLevel": 1,
+    "CompletedLevel": 0,
     "MusicEnabled": 0,
-    "ReachedIndex": 10
+    "ReachedIndex": 0
 }

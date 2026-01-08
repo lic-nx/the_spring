@@ -39,6 +39,7 @@ public class eventController : MonoBehaviour
     }
 
     public void OnEndGame() {
+        Time.timeScale = 0f;
 
         Debug.Log("Игра завершена! идет расчет");
         if (SceneManager.GetActiveScene().buildIndex >= YG2.saves.ReachedIndex)
@@ -67,6 +68,7 @@ public class eventController : MonoBehaviour
     }
     public void PlayerLose()
     {
+        Time.timeScale = 0f;
         Debug.Log("Игрок проиграл!");
         ppVolume = Camera.main.GetComponent<PostProcessVolume>();
         ppVolume.enabled = true;
