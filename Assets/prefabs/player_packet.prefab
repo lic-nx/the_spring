@@ -258,7 +258,7 @@ MonoBehaviour:
   onGameEnd:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1637758348529077688, guid: 0a5ca50929d095e42965198eba1e9cc6, type: 3}
         m_TargetAssemblyTypeName: WinPanel, Assembly-CSharp
         m_MethodName: OnEventTriggered
         m_Mode: 1
@@ -1179,6 +1179,7 @@ MonoBehaviour:
   - {fileID: 4216618434888856645}
   enabled: 0
   first_dot: {fileID: 3155653613081097962}
+  duration_of_move: 0.3
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
