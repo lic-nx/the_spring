@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        // Проверяем, что вошедший объект — это игрок
+        Debug.Log("Тег вошедшего объекта: " + other.tag);
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("change enabled");
+            eventController.Instance.PlayerLose();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
