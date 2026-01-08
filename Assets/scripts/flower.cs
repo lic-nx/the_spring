@@ -7,8 +7,6 @@ public class flower : MonoBehaviour
     public static flower _instance;
 
     // Объявляем событие как статическое UnityEvent
-    [SerializeField]
-    private UnityEvent onGameEnd;
     public float maxRotationSpeed = 100f;
 
     void Start()
@@ -57,6 +55,6 @@ public class flower : MonoBehaviour
     public void end_level()
     {
         Debug.Log("Вызываем сигнал");
-        onGameEnd.Invoke();
+        eventController.Instance.OnEndGame();
     }
 }

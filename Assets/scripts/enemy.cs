@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class enemy : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.CompareTag("Player"))
+        // Проверяем, что вошедший объект — это игрок
+        Debug.Log("Тег вошедшего объекта: " + other.tag);
+        if (other.CompareTag("Player"))
         {
-            Debug.Log("Enemy touched Player!");
+            Debug.Log("change enabled");
+            eventController.Instance.PlayerLose();
         }
     }
 

@@ -18,13 +18,13 @@ public class frigger_checker : MonoBehaviour
     {
         if (other.CompareTag("sun"))
         {
-
             Debug.Log("is sun");
             Debug.Log("Object name: " + other.name);
             Debug.Log("find sun = " + other.transform.position );
             StartCoroutine(HandleSunInteraction(other.transform));
         }
-        else{    
+        else if (!other.CompareTag("Player"))
+            {    
             OnTriggerEnter_ = true;
         }
     }
