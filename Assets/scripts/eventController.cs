@@ -12,6 +12,7 @@ public class eventController : MonoBehaviour
     public GameObject gameOverPanel;
     private PostProcessVolume ppVolume;
     public GameObject someObject;
+    public bool isTutorial;
 
 
 
@@ -19,10 +20,7 @@ public class eventController : MonoBehaviour
     {
         Debug.Log("Camera.main: " + (Camera.main ? Camera.main.name : "null"));
         ppVolume = Camera.main.GetComponent<PostProcessVolume>();
-        if (someObject != null)
-        {
-            someObject.SetActive(false); // объект становится неактивным
-        }
+        
     }
 
     private void Awake()
@@ -39,10 +37,14 @@ public class eventController : MonoBehaviour
     }
 
     public void OnEndGame() {
+        if (someObject != null)
+        {
+            someObject.SetActive(false); // объект становится неактивным
+        }
         Time.timeScale = 0f;
 
         Debug.Log("Игра завершена! идет расчет");
-        if (SceneManager.GetActiveScene().buildIndex >= YG2.saves.ReachedIndex)
+        if (SceneManager.GetActiveScene().buildIndex >= YG2.saves.ReachedIndex && !isTutorial)
         {
             YG2.saves.UnlockedLevel += 1;
             YG2.saves.CompletedLevel += 1;
@@ -68,6 +70,10 @@ public class eventController : MonoBehaviour
     }
     public void PlayerLose()
     {
+        if (someObject != null)
+        {
+            someObject.SetActive(false); // объект становится неактивным
+        }
         Time.timeScale = 0f;
         Debug.Log("Игрок проиграл!");
         ppVolume = Camera.main.GetComponent<PostProcessVolume>();
