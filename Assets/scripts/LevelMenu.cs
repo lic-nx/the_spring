@@ -52,10 +52,16 @@ public class LevelMenu : MonoBehaviour
             buttons[i] = levelButtons.transform.GetChild(i).GetComponent<Button>();
         }
     }
+    public void OpenLevelWitTutorial(int levelId)
+    {
+        // если у уровня есть туториал то вызываем этот метод
+        string levelName = "tutorial" + levelId;
+        SceneManager.LoadScene(levelName);
+    }
 
     public void OpenLevel(int levelId)
     {
-        string levelName = "level" + levelId;
+        string levelName = "level" + levelId;        
         SceneManager.LoadScene(levelName);
     }
 
