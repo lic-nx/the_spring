@@ -405,6 +405,7 @@ MonoBehaviour:
   winPanel: {fileID: 8892269620467572608}
   gameOverPanel: {fileID: 3401208407080751088}
   someObject: {fileID: 4583227003572545246}
+  isTutorial: 0
 --- !u!1 &5688556997524954065
 GameObject:
   m_ObjectHideFlags: 0
@@ -1244,6 +1245,10 @@ PrefabInstance:
     - target: {fileID: 1637758348529077688, guid: 17e890a52de9f5544bbb536715abe443, type: 3}
       propertyPath: m_Name
       value: EndPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637758348529077688, guid: 17e890a52de9f5544bbb536715abe443, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1709641039249472558, guid: 17e890a52de9f5544bbb536715abe443, type: 3}
       propertyPath: m_LocalScale.x

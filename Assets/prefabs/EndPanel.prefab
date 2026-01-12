@@ -172,7 +172,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3674637548642032689}
-  - component: {fileID: 1978094622793592373}
   m_Layer: 5
   m_Name: EndPanel
   m_TagString: Untagged
@@ -203,20 +202,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1978094622793592373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1637758348529077688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7bf3e1e26be30b47aa9b0649cc372ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  winPanel: {fileID: 1637758348529077688}
-  someObject: {fileID: 0}
 --- !u!1 &8738424998040971045
 GameObject:
   m_ObjectHideFlags: 0
