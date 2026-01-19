@@ -1832,6 +1832,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: levelpause
       objectReference: {fileID: 0}
+    - target: {fileID: 8892269620467572608, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

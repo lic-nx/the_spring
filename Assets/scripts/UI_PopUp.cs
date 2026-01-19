@@ -11,16 +11,16 @@ public class PopUpUI : MonoBehaviour
     public bool autoActive = false;
 
     private RectTransform rectTransform;
+    private Vector3 startScale;
     private Vector3 targetScale;
     private Coroutine animRoutine;
 
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+        startScale = rectTransform.localScale * scaleCurve.Evaluate(0.0f);
         targetScale = rectTransform.localScale;
 
-
-        rectTransform.localScale = rectTransform.localScale * scaleCurve.Evaluate(0.0f);
         
     }
 
@@ -34,12 +34,12 @@ public class PopUpUI : MonoBehaviour
 
     private void OnEnable()
     {
+        rectTransform.localScale = startScale;
         StartAnim();
     }
 
     private void StartAnim()
     {
-//        rectTransform.localScale = Vector3.zero;        
         if (animRoutine != null)
             StopCoroutine(animRoutine);
 
