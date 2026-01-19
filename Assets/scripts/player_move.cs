@@ -21,6 +21,9 @@ public class player_move : MonoBehaviour
     float duration = 0.2f;  
     public GameObject first_dot;
     public float duration_of_move = 0.3f;
+    public float max_angle = 120f;
+    private Vector3 lastGrowthDirection = Vector3.zero; // Инициализируем как нулевой вектор
+
 
     public void change_enabled(){
         Debug.Log("change enabled");
@@ -110,6 +113,7 @@ public class player_move : MonoBehaviour
     public bool TryFindNextPosition(out Vector3 targetPosition)
     {
         targetPosition = transform.position;
+
         foreach (frigger_checker trigger in Triggers)
         {
             if (!trigger.OnTriggerEnter_) // триггер не занят
@@ -117,11 +121,26 @@ public class player_move : MonoBehaviour
                 Vector3 candidate = trigger.transform.position;
                 if (CanFitAt(candidate))
                 {
+                    Vector3 newDirection = (candidate - transform.position).normalized;
+
+                    // Проверяем, есть ли предыдущее направление
+                    if (lastGrowthDirection != Vector3.zero)
+                    {
+                        float angle = Vector3.Angle(lastGrowthDirection, newDirection);
+                        if (angle > max_angle)
+                        {
+                            continue; // Отклоняем этот кандидат
+                        }
+                    }
+
+                    // Принимаем кандидата
                     targetPosition = candidate;
+                    lastGrowthDirection = newDirection; // Сохраняем новое направление
                     return true;
                 }
             }
         }
+
         return false;
     }
 
