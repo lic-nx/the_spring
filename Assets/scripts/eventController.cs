@@ -9,8 +9,8 @@ public class eventController : MonoBehaviour
 {
     public static eventController Instance { get; private set; }
     public GameObject winPanel;
+    public ParticleSystem particles;
     public GameObject gameOverPanel;
-    private PostProcessVolume ppVolume;
     public GameObject someObject;
     public bool isTutorial;
 
@@ -19,7 +19,6 @@ public class eventController : MonoBehaviour
     void Start()
     {
         Debug.Log("Camera.main: " + (Camera.main ? Camera.main.name : "null"));
-        ppVolume = Camera.main.GetComponent<PostProcessVolume>();
         
     }
 
@@ -32,60 +31,59 @@ public class eventController : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // опционально
+            DontDestroyOnLoad(gameObject);
         }
     }
 
     public void OnEndGame() {
         if (someObject != null)
         {
-            someObject.SetActive(false); // объект становится неактивным
+            someObject.SetActive(false);
+            Debug.Log("РљРЅРѕРїРєР° РїР°СѓР·С‹ РІС‹РєР»СЋС‡РµРЅР°");
         }
-        Time.timeScale = 0f;
 
-        Debug.Log("Игра завершена! идет расчет");
+        //Time.timeScale = 0f;
+        //Debug.Log("РРіСЂР° РЅР° РїР°СѓР·Рµ");
+        
         if (SceneManager.GetActiveScene().buildIndex >= YG2.saves.ReachedIndex && !isTutorial)
         {
             YG2.saves.UnlockedLevel += 1;
             YG2.saves.CompletedLevel += 1;
             YG2.saves.ReachedIndex += 1;
             YG2.SaveProgress();
-            //PlayerPrefs.SetInt("ReachedIndex", SceneManager.GetActiveScene().buildIndex + 1);
-            //PlayerPrefs.Save();
         }
-        ppVolume = Camera.main.GetComponent<PostProcessVolume>();
-        ppVolume.enabled = true;
-        Debug.LogWarning("PostProcessVolume не найден. Эффект блюра не применён.");
+
         if (winPanel != null)
         {
             winPanel.SetActive(true);
+            particles.Play();
+            Debug.Log("winPanel Р°РєС‚РёРІРµРЅ");
         }
         else
         {
-            Debug.LogError("winPanel не назначен!");
+            Debug.LogError("winPanel РЅРµ СѓРєР°Р·Р°РЅ!");
         }
 
-        Debug.Log("Игра завершена! Панель победы показана.");
+        Debug.Log("Р’С‹Р·РѕРІ РїРѕР±РµРґРЅРѕРіРѕ СЌРєСЂР°РЅР° РѕРєРѕРЅС‡РµРЅ");
 
     }
     public void PlayerLose()
     {
         if (someObject != null)
         {
-            someObject.SetActive(false); // объект становится неактивным
+            someObject.SetActive(false);
         }
-        Time.timeScale = 0f;
-        Debug.Log("Игрок проиграл!");
-        ppVolume = Camera.main.GetComponent<PostProcessVolume>();
-        ppVolume.enabled = true;
-        Debug.LogWarning("PostProcessVolume не найден. Эффект блюра не применён.");
+
+        //Time.timeScale = 0f;
+        //Debug.Log("РРіСЂР° РЅР° РїР°СѓР·Рµ");
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
         }
         else
         {
-            Debug.LogError("gameOverPanel не назначен!");
+            Debug.LogError("gameOverPanel РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ!");
         }
 
     }

@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 8588897432039154424}
   - component: {fileID: 7664058627054111673}
   - component: {fileID: 8183579252856142556}
+  - component: {fileID: 4838748787948681534}
   m_Layer: 5
   m_Name: MusicController
   m_TagString: Untagged
@@ -116,7 +117,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2692369412150580134}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -253,6 +254,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicToggle: {fileID: 7664058627054111673}
+--- !u!114 &4838748787948681534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692369412150580134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee072ffc17d779e4191b734b4b147487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  delay: 0.1
+  scaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.53672916
+      value: 1.0560678
+      inSlope: 1.129751
+      outSlope: 1.129751
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.22809309
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.0023505343
+      outSlope: 0.0023505343
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  autoActive: 0
 --- !u!1 &8047501036752773500
 GameObject:
   m_ObjectHideFlags: 0

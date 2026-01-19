@@ -6,17 +6,16 @@ using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 using TMPro;
 
-public class SceneSerings : MonoBehaviour
+public class SceneSetings : MonoBehaviour
 {
     public GameObject PausePanel;
-    private PostProcessVolume ppVolume;
+
     private Image imageComponent;
     public TextMeshProUGUI level_number;
 
     void Start() {
         Debug.Log("payse Camera.main: " + (Camera.main ? Camera.main.name : "null"));
         imageComponent = GetComponent<Image>();
-        ppVolume = Camera.main.gameObject.GetComponent<PostProcessVolume>();
         level_number.text = "Уровень " + (SceneManager.GetActiveScene().buildIndex - 1);
     }
     public void PauseButtonPressed()
@@ -24,7 +23,6 @@ public class SceneSerings : MonoBehaviour
 
         // вызываем остановку
         PausePanel.SetActive(true);
-        ppVolume.enabled = true;
         imageComponent.enabled = false;
         Time.timeScale = 0f;
     }
@@ -34,14 +32,12 @@ public class SceneSerings : MonoBehaviour
         // вызываем продолжаем игру
         imageComponent.enabled = true;
         PausePanel.SetActive(false);
-        ppVolume.enabled = false;
         Time.timeScale = 1f;
     }
 
     public void ChangeScene(int scene)
     {
         SceneManager.LoadScene(scene);
-        ppVolume.enabled = false;
         Time.timeScale = 1f; 
     }
 

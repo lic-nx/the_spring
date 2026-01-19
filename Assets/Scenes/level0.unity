@@ -27828,17 +27828,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
---- !u!114 &799414296 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8551867322121255949, guid: 5e407ec0d357374458b446d684a59293, type: 3}
-  m_PrefabInstance: {fileID: 1556100628}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7bf3e1e26be30b47aa9b0649cc372ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &817277689
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50445,9 +50434,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1689205106598608352, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1896884657}
     - target: {fileID: 6826151214039659762, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_Name
       value: levelpause
+      objectReference: {fileID: 0}
+    - target: {fileID: 8892269620467572608, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -50553,7 +50550,7 @@ PrefabInstance:
     - target: {fileID: 3557946200316986868, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: onGameEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 799414296}
+      objectReference: {fileID: 0}
     - target: {fileID: 4337208402020194212, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
       value: 0
@@ -61375,11 +61372,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8542555123189733968, guid: 6be26fb093190be4fb6f70eb91276051, type: 3}
+      propertyPath: isGlobal
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6be26fb093190be4fb6f70eb91276051, type: 3}
+--- !u!20 &1896884657 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2025864055888050571, guid: 6be26fb093190be4fb6f70eb91276051, type: 3}
+  m_PrefabInstance: {fileID: 1896884656}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1899367997
 PrefabInstance:
   m_ObjectHideFlags: 0
