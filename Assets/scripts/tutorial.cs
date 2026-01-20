@@ -5,24 +5,38 @@ using UnityEngine;
 public class tutorial : MonoBehaviour
 {
     public GameObject activeBlock;
-    public GameObject shadowPanel;
+    public GameObject[] overlayObjects; // Массив объектов, которые нужно удалить
 
-    // Start is called before the first frame update
     void Start()
     {
-        Vector3 pos = activeBlock.transform.position;
-        pos.z -= 1; // в 2D: меньший Z = ближе к камере
-        activeBlock.transform.position = pos;
+        if (activeBlock != null)
+        {
+            Vector3 pos = activeBlock.transform.position;
+            pos.z -= 1f; // В 2D: меньший Z = ближе к камере
+            activeBlock.transform.position = pos;
 
-        Debug.Log("Текущая Z: " + transform.position.z);
+            Debug.Log("Текущая Z активного блока: " + pos.z);
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (activeBlock == null)
         {
-            Destroy(shadowPanel);
+            // Удаляем все объекты из массива
+            if (overlayObjects != null)
+            {
+                foreach (GameObject obj in overlayObjects)
+                {
+                    if (obj != null)
+                    {
+                        Destroy(obj);
+                    }
+                }
+            }
+
+            // Опционально: отключаем скрипт, чтобы не проверять дальше
+            enabled = false;
         }
     }
 }
