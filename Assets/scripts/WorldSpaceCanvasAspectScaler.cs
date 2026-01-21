@@ -35,18 +35,28 @@ public class WorldSpaceCanvasAspectScaler : MonoBehaviour
 
     void ApplyScale()
     {
+        if (Screen.height == 0 || Screen.width == 0)
+            return;
+
+        if (referenceAspect <= 0f)
+            return;
+        
         float screenAspect = (float)Screen.width / Screen.height;
 
         float scaleFactor = screenAspect / referenceAspect;
 
+        if (float.IsNaN(scaleFactor) || float.IsInfinity(scaleFactor))
+            return;
+
+
         if (scaleWidthOnly)
         {
-            scaleFactor = Mathf.Clamp(scaleFactor, minScale, maxScale)/100;
+            scaleFactor = Mathf.Clamp(scaleFactor, minScale, maxScale) / 100;
             rect.localScale = new Vector3(scaleFactor, 0.01f, 0.01f);
         }
         else
         {
-            scaleFactor = Mathf.Clamp(scaleFactor, minScale, maxScale)/100;
+            scaleFactor = Mathf.Clamp(scaleFactor, minScale, maxScale) / 100;
             rect.localScale = Vector3.one * scaleFactor;
         }
     }
