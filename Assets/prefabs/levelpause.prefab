@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 306565186947131891}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 169.564, y: 231.23898, z: 126.8352}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 169.564, y: 232, z: 234.87999}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6855362573968657929}
@@ -72,8 +72,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3b9c76dc1286c3f4cbe98ecc65466be9, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: 89dd9dd98e1738946b8008693af1af6c, type: 3}
   m_Color: {r: 0.6377357, g: 0.2779565, b: 0.2779565, a: 0.7058824}
   m_FlipX: 0
   m_FlipY: 0
@@ -207,6 +207,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
 --- !u!1 &2779072856606470640
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,6 +331,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
 --- !u!1 &3276401402735498534
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,6 +455,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
 --- !u!1 &3401208407080751088
 GameObject:
   m_ObjectHideFlags: 0
@@ -5722,6 +5725,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
 --- !u!1 &6826151214039659762
 GameObject:
   m_ObjectHideFlags: 0
@@ -5734,6 +5738,7 @@ GameObject:
   - component: {fileID: 1689205106598608352}
   - component: {fileID: 4604930858591638283}
   - component: {fileID: 6116487125153922339}
+  - component: {fileID: 2086632674144692576}
   m_Layer: 5
   m_Name: levelpause
   m_TagString: Untagged
@@ -5750,8 +5755,8 @@ RectTransform:
   m_GameObject: {fileID: 6826151214039659762}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.008216943, y: 0.008216943, z: 0.008216943}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 417068200736975214}
   - {fileID: 4783346204217928217}
@@ -5829,6 +5834,22 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2086632674144692576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6826151214039659762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66cdd3b6e69a7d74f87f057796856b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceAspect: 0.5625
+  minScale: 0.66
+  maxScale: 1
+  scaleWidthOnly: 0
 --- !u!1 &7010160176675801192
 GameObject:
   m_ObjectHideFlags: 0
@@ -6020,6 +6041,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
 --- !u!1 &7383846830323829535
 GameObject:
   m_ObjectHideFlags: 0
@@ -6913,6 +6935,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
 --- !u!198 &4503062508216546302 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 6026902545985069510, guid: 17e890a52de9f5544bbb536715abe443, type: 3}
@@ -6970,6 +6993,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
 --- !u!4 &5637846979834456895 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2585184263720450311, guid: 17e890a52de9f5544bbb536715abe443, type: 3}
@@ -7032,6 +7056,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
 --- !u!1 &8892269620467572608 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1637758348529077688, guid: 17e890a52de9f5544bbb536715abe443, type: 3}
@@ -7089,3 +7114,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  autoActive: 0
