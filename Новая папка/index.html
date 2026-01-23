@@ -115,12 +115,15 @@
             SetVisibility(true);
         });
 
-        document.addEventListener('click', () => {
-          const canvas = document.getElementById('canvas');
-          if (canvas && canvas.requestPointerLock) {
-            canvas.requestPointerLock({ unadjustedMovement: true });
-          }
-        });
+        const oRequestPointerLock = Element.prototype.requestPointerLock;
+        Element.prototype.requestPointerLock = async function hkRequestPointerLock(...args) {
+            try {
+                (args[0] ||= {}).unadjustedMovement = true;
+                await oRequestPointerLock.apply(this, args);
+            } catch (err) {
+                console.log(err);
+            }
+        };
 
         function InstallBlurFocusBlocker() {
             if (!('onblur' in document)) return;
@@ -154,7 +157,7 @@
         }
 
         function FocusGame() {
-            canvas.focus();
+            if (!isPausedGame) canvas.focus();
         }
 
         function SetVisibility(visibility) {
@@ -312,7 +315,7 @@ LogStyledMessage('Init Storage ysdk');
         }
 
         // Additional script modules
-LogStyledMessage('PluginYG2 v2.005  build: 5');
+LogStyledMessage('[PluginYG2 v2.007] [Build: 9] [Platform: YandexGames]');
 
 var cloudSaves = NO_DATA;
 
