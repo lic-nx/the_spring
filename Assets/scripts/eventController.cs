@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 using YG;
 
-public class eventController : MonoBehaviour
+public class eventController : Button_sound_controller
 {
     public static eventController Instance { get; private set; }
     public GameObject winPanel;
@@ -14,13 +14,25 @@ public class eventController : MonoBehaviour
     public GameObject someObject;
     public bool isTutorial;
 
-
+    public AudioClip gameWinSound;
+    public AudioClip gameErrorSound;
+    private AudioSource audioSource;
 
     void Start()
     {
-        Debug.Log("Camera.main: " + (Camera.main ? Camera.main.name : "null"));
-        
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        // Не нужно: audioSource.clip = gameErrorSound; — PlayOneShot использует clip напрямую
     }
+
+    //void Start()
+    //{
+    //    Debug.Log("Camera.main: " + (Camera.main ? Camera.main.name : "null"));
+        
+    //}
 
     private void Awake()
     {
@@ -42,9 +54,9 @@ public class eventController : MonoBehaviour
             Debug.Log("Кнопка паузы выключена");
         }
 
-        //Time.timeScale = 0f;
+        Time.timeScale = 0f;
         //Debug.Log("Игра на паузе");
-        
+        audioSource.PlayOneShot(gameWinSound);
         if (SceneManager.GetActiveScene().buildIndex >= YG2.saves.ReachedIndex && !isTutorial)
         {
             YG2.saves.UnlockedLevel += 1;
@@ -74,11 +86,12 @@ public class eventController : MonoBehaviour
             someObject.SetActive(false);
         }
 
-        //Time.timeScale = 0f;
+        Time.timeScale = 0f;
         //Debug.Log("Игра на паузе");
 
         if (gameOverPanel != null)
         {
+            audioSource.PlayOneShot(gameErrorSound);
             gameOverPanel.SetActive(true);
         }
         else
