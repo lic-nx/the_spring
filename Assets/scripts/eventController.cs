@@ -54,7 +54,7 @@ public class eventController : Button_sound_controller
             Debug.Log("Кнопка паузы выключена");
         }
 
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
         //Debug.Log("Игра на паузе");
         audioSource.PlayOneShot(gameWinSound);
         if (SceneManager.GetActiveScene().buildIndex >= YG2.saves.ReachedIndex && !isTutorial)
@@ -86,7 +86,7 @@ public class eventController : Button_sound_controller
             someObject.SetActive(false);
         }
 
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
         //Debug.Log("Игра на паузе");
 
         if (gameOverPanel != null)
