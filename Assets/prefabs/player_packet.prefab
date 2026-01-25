@@ -1,5 +1,91 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &401728490832954174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2962976400963805159}
+  - component: {fileID: 977299136826391452}
+  - component: {fileID: 5534034281932932994}
+  m_Layer: 5
+  m_Name: ExitTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2962976400963805159
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401728490832954174}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.009757618, y: 0.009757618, z: 0.009757618}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 63128241024046240}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.08843422, y: 1.3109341}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!58 &977299136826391452
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401728490832954174}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 5.3753138, y: -25.973034}
+  serializedVersion: 2
+  m_Radius: 161.5353
+--- !u!114 &5534034281932932994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401728490832954174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92e2343f7be29134ca13e5fa125f5925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flower: {fileID: 2584316325378757621}
+  restartButton: {fileID: 0}
 --- !u!1 &1281787692885937121
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,21 +341,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7efc9651121cb6146b17161197ec6f26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onGameEnd:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1637758348529077688, guid: 0a5ca50929d095e42965198eba1e9cc6, type: 3}
-        m_TargetAssemblyTypeName: WinPanel, Assembly-CSharp
-        m_MethodName: OnEventTriggered
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   maxRotationSpeed: 50
 --- !u!70 &4398016469960666877
 CapsuleCollider2D:
@@ -335,6 +406,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2962976400963805159}
   - {fileID: 7877175344309364540}
   - {fileID: 2569202270293951882}
   - {fileID: 2888004987606302130}
@@ -1180,6 +1252,7 @@ MonoBehaviour:
   enabled: 0
   first_dot: {fileID: 3155653613081097962}
   duration_of_move: 0.3
+  max_angle: 120
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
