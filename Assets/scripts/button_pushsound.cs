@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class button_pushsound : MonoBehaviour
 {
-    // Start is called before the first frame update
+        [SerializeField] private AudioClip soundClip;
+    private AudioSource audioSource;
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>(); 
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+
+    }
+    
+    public void ButtonPush()
+    {
+        audioSource.PlayOneShot(soundClip);
     }
 }

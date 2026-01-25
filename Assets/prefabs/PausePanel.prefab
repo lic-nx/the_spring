@@ -221,6 +221,7 @@ GameObject:
   - component: {fileID: 1180591808717459753}
   - component: {fileID: 6059794650121269750}
   - component: {fileID: 5676180658671867540}
+  - component: {fileID: 8128399641070879430}
   - component: {fileID: 7613443835548598232}
   m_Layer: 5
   m_Name: continue
@@ -331,8 +332,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: EventControllerScr, Assembly-CSharp
+      - m_Target: {fileID: 8128399641070879430}
+        m_TargetAssemblyTypeName: button_pause, Assembly-CSharp
         m_MethodName: PlayerUnPause
         m_Mode: 1
         m_Arguments:
@@ -343,6 +344,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8128399641070879430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7486511333835695239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 377e14acdd3d39448a58bd3b71c40862, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7613443835548598232
 MonoBehaviour:
   m_ObjectHideFlags: 0

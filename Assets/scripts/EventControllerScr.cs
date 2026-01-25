@@ -81,10 +81,4 @@ public class EventControllerScr : Button_sound_controller
         UI.HidePause();
         Time.timeScale = 1f;
     }
-
-    public void ButtonPressed()
-    {
-        audioSource.PlayOneShot(buttonPressed);        
-
-    }
 }

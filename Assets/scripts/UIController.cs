@@ -8,14 +8,16 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject loosePanel;
 
     [Header("Gameplay Buttons")]
-    [SerializeField] private GameObject gameplayButtons; 
+    [SerializeField] private GameObject gameplayButtons;
 
     private void Awake()
     {
+
+    }
+    
+    private void Start()
+    {
         EventControllerScr.Instance.RegisterUI(this);
-        HidePause();
-        HideWin();
-        ShowGameplayButtons();
     }
 
     // ===== Pause =====
