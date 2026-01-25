@@ -463,8 +463,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3b9c76dc1286c3f4cbe98ecc65466be9, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: 89dd9dd98e1738946b8008693af1af6c, type: 3}
   m_Color: {r: 0.6392157, g: 0.2784314, b: 0.2784314, a: 0.7058824}
   m_FlipX: 0
   m_FlipY: 0
@@ -575,7 +575,7 @@ PrefabInstance:
     - target: {fileID: 6777331641348850380, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 892479416290610885}
+      objectReference: {fileID: 5351728084223406334}
     - target: {fileID: 6777331641348850380, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Mainmenu
@@ -670,12 +670,21 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5812783389626507256, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 5351728084223406334}
+    - targetCorrespondingSourceObject: {fileID: 5812783389626507256, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 3586415342448833119}
   m_SourcePrefab: {fileID: 100100000, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
---- !u!114 &892479416290610885 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 658804283304880562, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
+--- !u!1 &6191629250438084751 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5812783389626507256, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
   m_PrefabInstance: {fileID: 380046527600338807}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5351728084223406334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6191629250438084751}
   m_Enabled: 1
@@ -683,11 +692,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 871d7976a344e814fab76006b962643b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &6191629250438084751 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5812783389626507256, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
-  m_PrefabInstance: {fileID: 380046527600338807}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3586415342448833119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1006,66 +1010,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2692369412150580134, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6638676652640925402}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
 --- !u!224 &7876593762930212051 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4583997404297060161, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
   m_PrefabInstance: {fileID: 5968088718562780050}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8615349419257081908 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2692369412150580134, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
-  m_PrefabInstance: {fileID: 5968088718562780050}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6638676652640925402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8615349419257081908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee072ffc17d779e4191b734b4b147487, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  duration: 0.5
-  delay: 0.1
-  scaleCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.53672916
-      value: 1.0560678
-      inSlope: 1.129751
-      outSlope: 1.129751
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.22809309
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.0023505343
-      outSlope: 0.0023505343
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 1
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  autoActive: 0
