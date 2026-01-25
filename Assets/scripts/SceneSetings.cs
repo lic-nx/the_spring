@@ -20,8 +20,7 @@ public class SceneSetings : MonoBehaviour
     }
     public void PauseButtonPressed()
     {
-
-        // вызываем остановку
+        //вызываем остановку
         PausePanel.SetActive(true);
         imageComponent.enabled = false;
         Time.timeScale = 0f;
@@ -37,8 +36,8 @@ public class SceneSetings : MonoBehaviour
 
     public void ChangeScene(int scene)
     {
-        SceneManager.LoadScene(scene);
         Time.timeScale = 1f; 
+        SceneManager.LoadScene(scene);
     }
 
 }

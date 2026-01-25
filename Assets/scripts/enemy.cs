@@ -6,12 +6,12 @@ public class enemy : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Проверяем, что вошедший объект — это игрок
-        Debug.Log("Тег вошедшего объекта: " + other.tag);
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+        Debug.Log("пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: " + other.tag);
         if (other.CompareTag("Player"))
         {
             Debug.Log("change enabled");
-            eventController.Instance.PlayerLose();
+            EventControllerScr.Instance.PlayerLose();
         }
     }
 

@@ -661,6 +661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5dc6616490fe3741b3d551a0c359b2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundClip: {fileID: 0}
 --- !u!1001 &636128860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1683,6 +1684,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1923015758}
+        m_TargetAssemblyTypeName: EventControllerScr, Assembly-CSharp
+        m_MethodName: ButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1412679228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2124,6 +2137,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 510509443499256790, guid: ff8b654c3d90ff24d91640b51f0952df, type: 3}
   m_PrefabInstance: {fileID: 1158734441}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1923015757
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1923015759}
+  - component: {fileID: 1923015758}
+  m_Layer: 0
+  m_Name: SceneEventController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1923015758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923015757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b87db40bdfb649429b95a59a8dd822c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UI: {fileID: 0}
+  isTutorial: 0
+  gameWinSound: {fileID: 8300000, guid: 592a67df5c667cb4aaf75277d0c97fb4, type: 3}
+  gameErrorSound: {fileID: 8300000, guid: b2cac0d2909dac446b92de9a298af120, type: 3}
+  buttonPressed: {fileID: 8300000, guid: 04f1d0c1b8245184a9a24941571c5780, type: 3}
+--- !u!4 &1923015759
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923015757}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.0210612, y: -0.9636075, z: -0.72581995}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1980453838 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 510509443499256790, guid: ff8b654c3d90ff24d91640b51f0952df, type: 3}
@@ -2444,6 +2506,34 @@ PrefabInstance:
       propertyPath: autoActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1923015758}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: ButtonPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: EventControllerScr, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2458,3 +2548,4 @@ SceneRoots:
   - {fileID: 1596151906}
   - {fileID: 595603840}
   - {fileID: 732517187}
+  - {fileID: 1923015759}

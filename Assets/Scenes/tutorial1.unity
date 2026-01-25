@@ -319,13 +319,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 204520032993192001, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1689205106598608352, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1761686879}
     - target: {fileID: 4583227003572545246, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604930858591638283, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6288833802801479154, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: isTutorial
@@ -334,6 +342,14 @@ PrefabInstance:
     - target: {fileID: 6826151214039659762, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_Name
       value: levelpause
+      objectReference: {fileID: 0}
+    - target: {fileID: 8055634032618160699, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8695772282908031520, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8892269620467572608, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_IsActive
@@ -2809,6 +2825,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.2
   magnitude: 0.1
+--- !u!114 &965537038 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3540933240913308926, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+  m_PrefabInstance: {fileID: 40087024}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34fb660177669254a9df29489f6cec16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &970175038 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
@@ -6258,6 +6285,55 @@ PrefabInstance:
       insertIndex: 4
       addedObject: {fileID: 933709591}
   m_SourcePrefab: {fileID: 100100000, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+--- !u!1 &2139153648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2139153650}
+  - component: {fileID: 2139153649}
+  m_Layer: 0
+  m_Name: SceneEventController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2139153649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139153648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b87db40bdfb649429b95a59a8dd822c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UI: {fileID: 965537038}
+  isTutorial: 0
+  gameWinSound: {fileID: 8300000, guid: 592a67df5c667cb4aaf75277d0c97fb4, type: 3}
+  gameErrorSound: {fileID: 8300000, guid: b2cac0d2909dac446b92de9a298af120, type: 3}
+  buttonPressed: {fileID: 8300000, guid: 04f1d0c1b8245184a9a24941571c5780, type: 3}
+--- !u!4 &2139153650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139153648}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.0210612, y: -0.9636075, z: -0.72581995}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -6279,3 +6355,4 @@ SceneRoots:
   - {fileID: 1170919982}
   - {fileID: 1029944890}
   - {fileID: 1842617679}
+  - {fileID: 2139153650}

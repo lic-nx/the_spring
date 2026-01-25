@@ -55,6 +55,6 @@ public class flower : MonoBehaviour
     public void end_level()
     {
         Debug.Log("Вызываем сигнал");
-        eventController.Instance.OnEndGame();
+        EventControllerScr.Instance.OnEndGame();
     }
 }
