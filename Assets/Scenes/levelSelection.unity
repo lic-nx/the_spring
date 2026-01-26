@@ -1570,6 +1570,18 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 782657020410141540, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
+      propertyPath: delay
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 782657020410141540, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
+      propertyPath: duration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 782657020410141540, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
+      propertyPath: autoActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5812783389626507256, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_Name
       value: mainMenu
@@ -1592,11 +1604,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7481028210721701253, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_Pivot.x
-      value: 1
+      value: 0.5000001
       objectReference: {fileID: 0}
     - target: {fileID: 7481028210721701253, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_Pivot.y
-      value: 1
+      value: 0.5000005
       objectReference: {fileID: 0}
     - target: {fileID: 7481028210721701253, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1652,11 +1664,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7481028210721701253, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -50
+      value: -114
       objectReference: {fileID: 0}
     - target: {fileID: 7481028210721701253, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: -113.99933
       objectReference: {fileID: 0}
     - target: {fileID: 7481028210721701253, guid: 64001731aa996d249aa483ab4606dd39, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
