@@ -43,6 +43,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MovableMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_2fc4e459d5b14108b0b178c63a6a19ed_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 990cba08dd4ba0a479d0579c8a6a180a, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -56,7 +60,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _crush:
-        m_Texture: {fileID: 2800000, guid: 6b4c10582054c8a498c214bee3b1d42e, type: 3}
+        m_Texture: {fileID: 2800000, guid: bbf24b34555f08b43933981543933b2d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _layer2:
@@ -78,6 +82,7 @@ Material:
     - _BUILTIN_ZWriteControl: 0
     - _Crushed: 1
     - _Movable: 0
+    - _Radius: 0
     - _Scale: 0.5
     m_Colors: []
   m_BuildTextureStacks: []
