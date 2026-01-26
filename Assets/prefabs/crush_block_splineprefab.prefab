@@ -298,6 +298,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.2
   magnitude: 0.1
+  soundClips:
+  - {fileID: 8300000, guid: b0cf8457c9611a34e9c2fcaa866ce9eb, type: 3}
+  - {fileID: 8300000, guid: 0e1a0e4a40278fe48826186618238785, type: 3}
+  - {fileID: 8300000, guid: cd384c59b11e5e64295b990d605a8cd3, type: 3}
+  - {fileID: 8300000, guid: 138545fbfbf207048b4cd90d0085a432, type: 3}
 --- !u!114 &2478899701925859018
 MonoBehaviour:
   m_ObjectHideFlags: 0
