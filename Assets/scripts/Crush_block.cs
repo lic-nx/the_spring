@@ -70,11 +70,23 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
             
         int lastIndex = -1;
         int index;
-        do
+        if (lastSound)
+        {
+            do
+        {
+            index = Random.Range(0, soundClipsLast.Length);
+        }
+        while (index == lastIndex && soundClips.Length > 1);
+        }
+        else
+        {
+            do
         {
             index = Random.Range(0, soundClips.Length);
         }
-        while (index == lastIndex && soundClips.Length > 1);
+        while (index == lastIndex && soundClips.Length > 1);            
+        }
+
 
         lastIndex = index;
         

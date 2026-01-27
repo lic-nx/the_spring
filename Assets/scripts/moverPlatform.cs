@@ -8,6 +8,8 @@ public class MoverPlatform : MonoBehaviour
 
     private bool isDragging = false;
     private bool isEnter = false;
+    [SerializeField] private AudioClip soundTake;
+    [SerializeField] private AudioClip soundRelease;
 
     void OnMouseEnter() => isEnter = true;
     void OnMouseExit() => isEnter = false;
@@ -17,11 +19,26 @@ public class MoverPlatform : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && isEnter)
         {
             isDragging = true;
+            AudioSource.PlayClipAtPoint(
+                soundTake,
+                transform.position,
+                1f
+            );
         }
         // Завершение перетаскивания
         else if (Input.GetMouseButtonUp(0))
         {
+            if (isDragging)
+            {
+                AudioSource.PlayClipAtPoint(
+                soundRelease,
+                transform.position,
+                1f
+            );
+            
+            }
             isDragging = false;
+            
             player_move._instance?.OnWorldChanged();
         }
 

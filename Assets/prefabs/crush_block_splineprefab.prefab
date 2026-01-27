@@ -284,6 +284,15 @@ MonoBehaviour:
   count: 0
   max_count: 2
   breakEffectOverride: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
+  soundClips:
+  - {fileID: 8300000, guid: b0cf8457c9611a34e9c2fcaa866ce9eb, type: 3}
+  - {fileID: 8300000, guid: 0e1a0e4a40278fe48826186618238785, type: 3}
+  - {fileID: 8300000, guid: cd384c59b11e5e64295b990d605a8cd3, type: 3}
+  - {fileID: 8300000, guid: 138545fbfbf207048b4cd90d0085a432, type: 3}
+  soundClipsLast:
+  - {fileID: 8300000, guid: 77ea43e53fd1689438435a362c9ee9b3, type: 3}
+  - {fileID: 8300000, guid: 3f77fe4a63e679d43ae41395eb0bacfb, type: 3}
+  - {fileID: 8300000, guid: 4fafcb7eba4e1014da8d4082313a833f, type: 3}
 --- !u!114 &3228436939676247210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,11 +307,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.2
   magnitude: 0.1
-  soundClips:
-  - {fileID: 8300000, guid: b0cf8457c9611a34e9c2fcaa866ce9eb, type: 3}
-  - {fileID: 8300000, guid: 0e1a0e4a40278fe48826186618238785, type: 3}
-  - {fileID: 8300000, guid: cd384c59b11e5e64295b990d605a8cd3, type: 3}
-  - {fileID: 8300000, guid: 138545fbfbf207048b4cd90d0085a432, type: 3}
 --- !u!114 &2478899701925859018
 MonoBehaviour:
   m_ObjectHideFlags: 0

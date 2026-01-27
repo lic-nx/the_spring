@@ -998,7 +998,7 @@ Animator:
   m_GameObject: {fileID: 642490653}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e3a025ce66c370748a2976f9bee00fb9, type: 2}
+  m_Controller: {fileID: 9100000, guid: 29d534d0313472c43825700e4406589d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -6333,9 +6333,53 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: obj_name
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       propertyPath: max_count
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: breakEffectOverride
+      value: 
+      objectReference: {fileID: 4119156188005601554, guid: eee3f94c08bfe9740a75125fa6b21115, type: 3}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClips.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: b0cf8457c9611a34e9c2fcaa866ce9eb, type: 3}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 0e1a0e4a40278fe48826186618238785, type: 3}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: cd384c59b11e5e64295b990d605a8cd3, type: 3}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClips.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 138545fbfbf207048b4cd90d0085a432, type: 3}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClipsLast.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClipsLast.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 77ea43e53fd1689438435a362c9ee9b3, type: 3}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClipsLast.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 3f77fe4a63e679d43ae41395eb0bacfb, type: 3}
+    - target: {fileID: 8199158380845267352, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      propertyPath: soundClipsLast.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4fafcb7eba4e1014da8d4082313a833f, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

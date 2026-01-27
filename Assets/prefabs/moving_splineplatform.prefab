@@ -320,6 +320,8 @@ MonoBehaviour:
   pointB: {fileID: 7419068456128311466}
   speed: 5
   mode: 0
+  soundTake: {fileID: 8300000, guid: 989ce55d944fd294e905d61842920397, type: 3}
+  soundRelease: {fileID: 8300000, guid: 67505210f9f55bb47b375764e234f22b, type: 3}
 --- !u!4 &3111609620915745287 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}

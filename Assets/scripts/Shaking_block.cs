@@ -8,8 +8,6 @@ public class ShakeOnClick : MonoBehaviour
 
     private Vector3 originalPos;
 
-    [SerializeField] private AudioClip[] soundClips;
-
     void OnMouseDown()
     {
         // Проверяем, что игра не на паузе (время идёт)
