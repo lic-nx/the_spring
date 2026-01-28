@@ -1,55 +1,81 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Crush_block : MonoBehaviour, IPointerClickHandler
 {
     public bool canCrush = true;
-    public string obj_name; // имя объекта (можно использовать для сохранения)
+    public string obj_name;
     public int count = 0;
     public int max_count = 1;
 
     [Header("Optional: override particles")]
-    public GameObject breakEffectOverride; // можно указать вручную
+    public GameObject breakEffectOverride;
 
-    //private SpriteRenderer spriteRenderer;
-    private Material matDefault;
-    private Material matCrash;
+    private Material currentMaterial; // текущий материал объекта
+    private string materialBasePath = ""; // путь без цифры в конце (например: "Materials/Pink_Crush_")
 
     private const string DefaultEffectName = "Parts_stones";
 
     [SerializeField] private AudioClip[] soundClips;
     [SerializeField] private AudioClip[] soundClipsLast;
+
     void Start()
     {
-        //spriteRenderer = GetComponent<SpriteRenderer>();
-        //matDefault = spriteRenderer.material;
-        matDefault = GetComponent<Renderer>().material;
+        // Сохраняем базовый путь материала для будущих загрузок
+        Material mat = GetComponent<Renderer>().sharedMaterial;
+        if (mat != null)
+        {
+            // Извлекаем путь из имени материала (предполагаем формат "Имя_1")
+            string matName = mat.name;
+            int lastUnderscore = matName.LastIndexOf('_');
+            if (lastUnderscore > 0 && char.IsDigit(matName[lastUnderscore + 1]))
+            {
+                materialBasePath = matName.Substring(0, lastUnderscore + 1); // "Pink_Crush_"
+            }
+            else
+            {
+                materialBasePath = matName + "_"; // fallback
+            }
+            currentMaterial = mat;
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!canCrush) return;
 
+        // Загрузка префаба частиц
         GameObject effectPrefab = breakEffectOverride != null
             ? breakEffectOverride
             : Resources.Load<GameObject>(DefaultEffectName);
 
         if (effectPrefab == null)
         {
-            Debug.LogError($"[Crush_block] Префаб частиц '{DefaultEffectName}' не найден в папке Resources!");
+            Debug.LogError($"[Crush_block] Префаб частиц '{DefaultEffectName}' не найден в Resources!");
             return;
         }
 
         GameObject explosion = Instantiate(effectPrefab, transform.position, Quaternion.identity);
 
-        ApplyMaterialToParticles(explosion, matDefault);
+        // ✅ Загружаем материал для частиц по пути
+        string particlesMatPath = materialBasePath + (count + 1);
+        Material particlesMat = Resources.Load<Material>(particlesMatPath);
 
+        if (particlesMat != null)
+        {
+            ApplyMaterialToParticles(explosion, particlesMat);
+        }
+        else
+        {
+            Debug.LogWarning($"Материал для частиц не найден: '{particlesMatPath}'. Используем материал по умолчанию.");
+        }
+
+        // Воспроизведение частиц
         var ps = explosion.GetComponent<ParticleSystem>();
         if (ps != null)
         {
             ps.Play();
-            Destroy(explosion, ps.main.startLifetime.constantMax);
+            Destroy(explosion, ps.main.duration + ps.main.startLifetime.constantMax);
         }
 
         count++;
@@ -59,105 +85,51 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
             Destroy(gameObject);
             player_move._instance?.OnWorldChanged();
         }
-        RandomSound(false);
-        ChangeMaterial();
-    }
-
-    void RandomSound(bool lastSound)
-    {
-        if (soundClips == null || soundClips.Length == 0)
-            return;
-            
-        int lastIndex = -1;
-        int index;
-        if (lastSound)
-        {
-            do
-        {
-            index = Random.Range(0, soundClipsLast.Length);
-        }
-        while (index == lastIndex && soundClips.Length > 1);
-        }
         else
         {
-            do
-        {
-            index = Random.Range(0, soundClips.Length);
+            RandomSound(false);
+            ChangeMaterial();
         }
-        while (index == lastIndex && soundClips.Length > 1);            
-        }
-
-
-        lastIndex = index;
-        
-        if (lastSound)
-        {
-            AudioSource.PlayClipAtPoint(
-                soundClipsLast[index],
-                transform.position,
-                1f
-            );            
-
-        }
-        else
-        {
-            AudioSource.PlayClipAtPoint(
-            soundClips[index],
-            transform.position,
-            1f
-        );
-        }
-
     }
 
     void ApplyMaterialToParticles(GameObject particleObj, Material sourceMaterial)
     {
-        var ps = particleObj.GetComponent<ParticleSystem>();
-        if (ps == null) return;
-
         var renderer = particleObj.GetComponent<ParticleSystemRenderer>();
         if (renderer == null)
         {
             Debug.LogError("ParticleSystemRenderer не найден на префабе частиц!");
             return;
         }
-        string currentMaterialName = matDefault.name;
-        string[] nameParts = currentMaterialName.Split('_', ' ');
 
-        string newMaterialName = nameParts[0];
-        matCrash = Resources.Load<Material>(newMaterialName);
-
-
-        //Material instanceMat = new Material(sourceMaterial);
-        renderer.material = Resources.Load<Material>(newMaterialName);
-
-        Debug.Log($"[Crush_block] Материал применён к частицам: {sourceMaterial.name}");
+        // Создаём инстанс материала, чтобы не модифицировать оригинал
+        renderer.material = new Material(sourceMaterial);
+        Debug.Log($"[Crush_block] Применён материал к частицам: {sourceMaterial.name}");
     }
 
     void ChangeMaterial()
     {
-        string currentMaterialName = matDefault.name;
-        string[] nameParts = currentMaterialName.Split('_', ' ');
+        string newMatPath = materialBasePath + (count + 1);
+        Material newMat = Resources.Load<Material>(newMatPath);
 
-        if (nameParts.Length >= 2)
+        if (newMat != null)
         {
-            if (int.TryParse(nameParts[nameParts.Length - 2], out int currentNumber))
-            {
-                currentNumber += 1;
-                nameParts[nameParts.Length - 2] = currentNumber.ToString();
-            }
+            // Применяем к рендереру (создаём инстанс для изоляции)
+            GetComponent<Renderer>().material = new Material(newMat);
+            currentMaterial = newMat;
+            Debug.Log($"[Crush_block] Материал объекта изменён на: {newMat.name}");
         }
-
-        string newMaterialName = string.Join("_", nameParts, 0, nameParts.Length - 1);
-        matCrash = Resources.Load<Material>(newMaterialName);
-
-        if (matCrash != null)
+        else
         {
-            matDefault = matCrash;
+            Debug.LogWarning($"Материал не найден: '{newMatPath}'. Материал объекта не изменён.");
         }
-        //else
-        //{
-        //    Debug.LogError("Материал не найден: " + newMaterialName);
-        //}
+    }
+
+    void RandomSound(bool lastSound)
+    {
+        AudioClip[] clips = lastSound ? soundClipsLast : soundClips;
+        if (clips == null || clips.Length == 0) return;
+
+        int index = Random.Range(0, clips.Length);
+        AudioSource.PlayClipAtPoint(clips[index], transform.position, 1f);
     }
 }
