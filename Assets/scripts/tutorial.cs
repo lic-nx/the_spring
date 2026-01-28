@@ -6,6 +6,7 @@ public class tutorial : MonoBehaviour
 {
     public GameObject activeBlock;
     public GameObject[] overlayObjects; // Массив объектов, которые нужно удалить
+    private Vector3 activeObjPosition;
 
     void Start()
     {
@@ -16,12 +17,13 @@ public class tutorial : MonoBehaviour
             activeBlock.transform.position = pos;
 
             Debug.Log("Текущая Z активного блока: " + pos.z);
+            activeObjPosition = pos;
         }
     }
 
     void Update()
     {
-        if (activeBlock == null)
+        if (activeBlock == null || activeObjPosition != activeBlock.transform.position)
         {
             // Удаляем все объекты из массива
             if (overlayObjects != null)
