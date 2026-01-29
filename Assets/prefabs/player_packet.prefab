@@ -761,7 +761,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 5
-    numCapVertices: 0
+    numCapVertices: 3
     alignment: 0
     textureMode: 1
     textureScale: {x: 1, y: 1}
@@ -790,7 +790,7 @@ MonoBehaviour:
   minLeafDistance: 5
   leafOffsetFromStem: 0
   leafGrowthDuration: 0.5
-  smoothness: 10
+  smoothness: 4
 --- !u!68 &3749724608736829675
 EdgeCollider2D:
   m_ObjectHideFlags: 0

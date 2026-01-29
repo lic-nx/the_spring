@@ -1853,10 +1853,14 @@ PrefabInstance:
     - target: {fileID: 2648680780074402107, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1252118469}
+      objectReference: {fileID: 0}
     - target: {fileID: 2648680780074402107, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ContinueButtonPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 4604930858591638283, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6826151214039659762, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_Name
@@ -8405,6 +8409,7 @@ MonoBehaviour:
   isTutorial: 0
   gameWinSound: {fileID: 8300000, guid: 592a67df5c667cb4aaf75277d0c97fb4, type: 3}
   gameErrorSound: {fileID: 8300000, guid: b2cac0d2909dac446b92de9a298af120, type: 3}
+  buttonPressed: {fileID: 0}
 --- !u!4 &870329176
 Transform:
   m_ObjectHideFlags: 0
@@ -9203,17 +9208,6 @@ LineRenderer:
   m_CorrespondingSourceObject: {fileID: 8959421938137610893, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
   m_PrefabInstance: {fileID: 1611753046}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1252118469 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8191446058266942994, guid: 5e407ec0d357374458b446d684a59293, type: 3}
-  m_PrefabInstance: {fileID: 199127506}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 148ebd80eb8f56247a840b498288051e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1382855518
 PrefabInstance:
   m_ObjectHideFlags: 0
