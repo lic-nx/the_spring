@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.U2D;
 
 public class Crush_block : MonoBehaviour, IPointerClickHandler
 {
@@ -30,11 +31,11 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
             int lastUnderscore = matName.LastIndexOf('_');
             if (lastUnderscore > 0 && char.IsDigit(matName[lastUnderscore + 1]))
             {
-                materialBasePath = matName.Substring(0, lastUnderscore + 1); // "Pink_Crush_"
+                materialBasePath = matName.Substring(0, lastUnderscore); // "Pink_Crush"
             }
             else
             {
-                materialBasePath = matName + "_"; // fallback
+                materialBasePath = matName; // fallback
             }
             currentMaterial = mat;
         }
@@ -58,7 +59,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         GameObject explosion = Instantiate(effectPrefab, transform.position, Quaternion.identity);
 
         // ✅ Загружаем материал для частиц по пути
-        string particlesMatPath = materialBasePath + (count + 1);
+        string particlesMatPath = materialBasePath; // + (count + 1);
         Material particlesMat = Resources.Load<Material>(particlesMatPath);
 
         if (particlesMat != null)
@@ -108,8 +109,21 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
 
     void ChangeMaterial()
     {
-        string newMatPath = materialBasePath + (count + 1);
+        string newMatPath = materialBasePath + '_' + (count + 1);
         Material newMat = Resources.Load<Material>(newMatPath);
+        SpriteShapeRenderer spriteShape = GetComponent<SpriteShapeRenderer>();
+        SpriteShapeController spriteController = GetComponent<SpriteShapeController>();
+
+        if (spriteShape != null && newMat != null)
+        {
+            // Создаём уникальный инстанс материала для изоляции изменений
+            spriteShape.material = newMat;
+            spriteController.RefreshSpriteShape();
+            // Сохраняем ссылку на КЛОН (важно для будущих изменений!)
+            currentMaterial = spriteShape.material;
+
+            Debug.Log($"[Crush_block] Материал SpriteShape изменён на: {newMat.name}");
+        }
 
         if (newMat != null)
         {

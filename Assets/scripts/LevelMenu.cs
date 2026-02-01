@@ -12,6 +12,7 @@ public class LevelMenu : MonoBehaviour
     public Image Lock;         // Объект с компонентом Image
     public Image Unlock;
     public GameObject levelButtons;
+    public GameObject openLevel;
     private int highesLevel; // максимально открытый уровень у игрока
 
     private void Awake()
@@ -34,6 +35,19 @@ public class LevelMenu : MonoBehaviour
             buttons[i].enabled = true;
             buttons[i].GetComponent<Image>().sprite = Unlock.sprite; // ✅ Здесь тоже
             buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = "" + (i + 1);
+            if (i == CompletedLevel && openLevel != null)
+            {
+                Transform buttonParent = buttons[i].transform.parent;
+                GameObject instance = Instantiate(openLevel, buttonParent);
+
+                // Устанавливаем мировую позицию напрямую
+                instance.transform.position = buttons[i].transform.position;
+
+                // Остальное без изменений...
+                instance.transform.SetSiblingIndex(Mathf.Max(0, buttons[i].transform.GetSiblingIndex() - 1));
+                Image bg = instance.GetComponent<Image>();
+                if (bg != null) bg.raycastTarget = false;
+            }
         }
         for (int i = 0; i < CompletedLevel; i++)
         {
