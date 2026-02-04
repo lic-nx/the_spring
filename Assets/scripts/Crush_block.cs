@@ -82,7 +82,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         count++;
         if (count >= max_count)
         {
-            RandomSound(true);
+            RandomSound(false);
             Destroy(gameObject);
             player_move._instance?.OnWorldChanged();
         }
