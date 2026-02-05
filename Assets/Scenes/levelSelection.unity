@@ -2196,7 +2196,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1133808925}
         m_TargetAssemblyTypeName: LevelMenu, Assembly-CSharp
-        m_MethodName: OpenLevel
+        m_MethodName: OpenLevelWitTutorial
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
