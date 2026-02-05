@@ -18,7 +18,6 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
     private const string DefaultEffectName = "Parts_stones";
 
     [SerializeField] private AudioClip[] soundClips;
-    [SerializeField] private AudioClip[] soundClipsLast;
 
     void Start()
     {
@@ -82,13 +81,13 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         count++;
         if (count >= max_count)
         {
-            RandomSound(false);
+            RandomSound();
             Destroy(gameObject);
             player_move._instance?.OnWorldChanged();
         }
         else
         {
-            RandomSound(false);
+            RandomSound();
             ChangeMaterial();
         }
     }
@@ -138,12 +137,11 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    void RandomSound(bool lastSound)
+    void RandomSound()
     {
-        AudioClip[] clips = lastSound ? soundClipsLast : soundClips;
-        if (clips == null || clips.Length == 0) return;
+        if (soundClips == null || soundClips.Length == 0) return;
 
-        int index = Random.Range(0, clips.Length);
-        AudioSource.PlayClipAtPoint(clips[index], transform.position, 1f);
+        int index = Random.Range(0, soundClips.Length);
+        AudioSource.PlayClipAtPoint(soundClips[index], transform.position, 1f);
     }
 }

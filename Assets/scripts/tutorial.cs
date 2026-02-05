@@ -5,7 +5,7 @@ using UnityEngine;
 public class tutorial : MonoBehaviour
 {
     public GameObject activeBlock;
-    public GameObject[] overlayObjects; // Массив объектов, которые нужно удалить
+    public GameObject[] overlayObjects; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     private Vector3 activeObjPosition;
 
     void Start()
@@ -13,10 +13,10 @@ public class tutorial : MonoBehaviour
         if (activeBlock != null)
         {
             Vector3 pos = activeBlock.transform.position;
-            pos.z -= 1f; // В 2D: меньший Z = ближе к камере
+            pos.z -= 1f; // пїЅ 2D: пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Z = пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             activeBlock.transform.position = pos;
 
-            Debug.Log("Текущая Z активного блока: " + pos.z);
+            Debug.Log("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Z пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: " + pos.z);
             activeObjPosition = pos;
         }
     }
@@ -25,7 +25,7 @@ public class tutorial : MonoBehaviour
     {
         if (activeBlock == null || activeObjPosition != activeBlock.transform.position)
         {
-            // Удаляем все объекты из массива
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (overlayObjects != null)
             {
                 foreach (GameObject obj in overlayObjects)
@@ -35,9 +35,13 @@ public class tutorial : MonoBehaviour
                         Destroy(obj);
                     }
                 }
+                Vector3 pos = activeBlock.transform.position;
+                pos.z += 1f;
+                activeBlock.transform.position = pos;
+                activeObjPosition = pos;
             }
 
-            // Опционально: отключаем скрипт, чтобы не проверять дальше
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             enabled = false;
         }
     }
