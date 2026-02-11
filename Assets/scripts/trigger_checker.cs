@@ -11,7 +11,7 @@ public class frigger_checker : MonoBehaviour
     {
         CounterTrigger++;
         Debug.Log("An object entered.");
-        player_move._instance.stop();
+        // player_move._instance.stop();
         
     }
     private void OnTriggerStay2D(Collider2D other)
@@ -31,11 +31,11 @@ public class frigger_checker : MonoBehaviour
 
     private IEnumerator HandleSunInteraction(Transform sunTransform)
     {
-        // Запускаем поворот цветка и ждём его завершения
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         yield return flower._instance.rotate_flower_to_sun(sunTransform.position);
 
-        // После того как цветок повернулся — выполняем остальные действия
-        player_move._instance.stop();
+        // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        //player_move._instance.stop();
         player_move._instance.is_sun();
     }
 

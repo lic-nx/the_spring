@@ -6,21 +6,17 @@ using UnityEngine;
 
 public class player_move : MonoBehaviour
 {
-    // public Vector3 first_dot;
-    public float maxRotationSpeed = 100f;
     public GameObject Sun;
     public static player_move _instance;
-    public Animator animator;
+
     // ответсвенное за рисование стебля цветка 
     public Line_rendered line_render;  
     public frigger_checker[] Triggers;
-    private Vector3 nextPosition;
-    float position;
     Vector3 body_position;
+    private Vector3 currentGrowDirection;
     public bool enabled = false;
-    float duration = 0.2f;  
     public GameObject first_dot;
-    public float duration_of_move = 0.3f;
+    public float duration_of_move = 0.4f;
     public float max_angle = 120f;
     private Vector3 lastGrowthDirection = Vector3.zero; // Инициализируем как нулевой вектор
 
@@ -36,58 +32,57 @@ public class player_move : MonoBehaviour
         }
     }
     void Start()
-    {  
-        // animator = GetComponent<Animator>();
+    {
         Debug.Log("Start game");
         Debug.Log(first_dot.transform.position);
+
         line_render.AddPoint(first_dot.transform.position);
-        body_position = this.transform.position;
-        line_render.AddPoint(body_position);
-        body_position = transform.position;
-        nextPosition = transform.position;
-        position = 1;
-        if (_instance == null){
-        _instance = this;
+        line_render.AddPoint(this.transform.position);
+
+
+        body_position = transform.position; ;
+
+        if (_instance == null)
+        {
+            _instance = this;
         }
+
     }
-    public void stop(){
-        nextPosition = transform.position;
-        position = 60;
+    private void Update() {
+                    line_render.UpdateHead(this.transform.position);
     }
+
 
     public void is_sun(){
         Debug.Log("take sun");
-        animator.SetBool("End", true);
+
         isMoving = false;
-        Destroy(Sun);
         enabled = false;
+        flower._instance?.anim_flower(true);
+
+        Destroy(Sun);
     }
 
-    IEnumerator Reset() {
+//     IEnumerator Reset() {
         
-        yield return new WaitForSeconds(0);
-            Debug.Log("check whats is free");
-            foreach (frigger_checker tag in Triggers)
-            {
-                if (tag.OnTriggerEnter_ == false){
-                    position = 0;
-                    Debug.Log("move to new pos");
-                    body_position = transform.position; // то где сейчас тело
-                    if (Vector3.Distance(line_render.GetLastPoint(), body_position) > 1.5){
-                        line_render.AddPoint(body_position); // добавляем последнее место нахождения цветка
-                    }
-                    Debug.Log(tag.OnTriggerEnter_);
-                    nextPosition =  tag.transform.position; // То куда тело должно прийти 
-                    break;
-                }
-                else{
-                    Debug.Log("can't move");
-                }
-            }
-        position = 0;
-
-  // continue process
-}
+//         yield return new WaitForSeconds(0);
+//             Debug.Log("check whats is free");
+//             foreach (frigger_checker tag in Triggers)
+//             {
+//                 if (tag.OnTriggerEnter_ == false){
+//                     Debug.Log("move to new pos");
+//                     body_position = transform.position; // то где сейчас тело
+//                     if (Vector3.Distance(line_render.GetLastPoint(), body_position) > 1.5){
+//                         line_render.AddPoint(body_position); // добавляем последнее место нахождения цветка
+//                     }
+//                     Debug.Log(tag.OnTriggerEnter_);
+//                     break;
+//                 }
+//                 else{
+//                     Debug.Log("can't move");
+//                 }
+//             }
+// }
 
     [SerializeField] private LayerMask obstacleMask; // В инспекторе укажи слой блоков
 
@@ -107,6 +102,21 @@ public class player_move : MonoBehaviour
                 return false;
         }
         return true;
+    }
+
+        // Вызывается извне (после разрушения/перемещения)
+    public void OnWorldChanged()
+    {
+        if (isMoving || !enabled) return;
+
+        if (TryFindNextPosition(out Vector3 target))
+        {
+            StartCoroutine(MoveTo(target));
+        }
+        else
+        {
+            Debug.Log("Цветок не может начать движение: нет доступных путей.");
+        }
     }
 
     // Ищет первый свободный и подходящий триггер
@@ -134,6 +144,7 @@ public class player_move : MonoBehaviour
                     }
 
                     // Принимаем кандидата
+                    currentGrowDirection = newDirection;
                     targetPosition = candidate;
                     lastGrowthDirection = newDirection; // Сохраняем новое направление
                     return true;
@@ -144,63 +155,46 @@ public class player_move : MonoBehaviour
         return false;
     }
 
-    // Вызывается извне (после разрушения/перемещения)
-    public void OnWorldChanged()
-    {
-        if (isMoving || !enabled) return;
-
-        if (TryFindNextPosition(out Vector3 target))
-        {
-            StartCoroutine(MoveTo(target));
-        }
-        else
-        {
-            Debug.Log("Цветок не может начать движение: нет доступных путей.");
-        }
-    }
-
     // Плавное движение к цели
     IEnumerator MoveTo(Vector3 target)
     {
         isMoving = true;
 
-        // Обновляем стебель
-        if (Vector3.Distance(line_render.GetLastPoint(), this.transform.position) > 0.1f)
-            line_render.AddPoint(this.transform.position);
+        //if (Vector3.Distance(line_render.GetLastPoint(), transform.position) > 0.1f)
+        //line_render.AddPoint(transform.position);
 
         Vector3 start = transform.position;
-        
         float elapsed = 0f;
 
-        while (elapsed < duration && enabled)
+        while (elapsed < duration_of_move && enabled)
         {
             transform.position = Vector3.Lerp(start, target, elapsed / duration_of_move);
-            flower._instance?.rotate_flower(target);
-            line_render.UpdateLastPoint(transform.position);
+
+            Vector2 headPos = transform.position;
+            line_render.UpdateHead(headPos);        // ← всегда
+            line_render.TryCommitSegment(headPos);
+    
+
+            flower._instance?.RotateByDirection(currentGrowDirection);
+
+            //line_render.UpdateLastPoint(transform.position);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        //transform.position = target;
-        flower._instance?.rotate_flower(target);
-        line_render.UpdateLastPoint(transform.position);
+
+        // ⭐ фикс финальной позиции
+        transform.position = target;
+
+        flower._instance?.RotateByDirection(currentGrowDirection);
 
         isMoving = false;
 
-        // 🔁 Сразу проверяем: можно ли идти дальше?
-        // (только если мы всё ещё включены и не достигли солнца)
         if (enabled)
         {
-            if (TryFindNextPosition(out Vector3 nextTarget))
-            {
-                yield return new WaitForSeconds(0.1f); // небольшая пауза для плавности
-                StartCoroutine(MoveTo(nextTarget));
-            }
-            else
-            {
-                Debug.Log("Цветок остановлен: все триггеры заблокированы или недоступны.");
-            }
+            OnWorldChanged();
         }
+
     }
 
 }

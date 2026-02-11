@@ -8,6 +8,7 @@ public class flower : MonoBehaviour
 
     // Объявляем событие как статическое UnityEvent
     public float maxRotationSpeed = 100f;
+    public Animator animator;
 
     void Start()
     {
@@ -43,18 +44,29 @@ public class flower : MonoBehaviour
         Debug.Log("Цветок повернулся к солнцу.");
     }
 
-    public void rotate_flower(Vector3 nextPosition)
-    {
-        Debug.Log("Start rotate");
-        Vector3 direction = nextPosition - transform.position;
-        float rotateZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(0f, 0f, rotateZ - 90);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotationSpeed * Time.deltaTime);
-    }
+public void RotateByDirection(Vector3 growDirection)
+{
+    if (growDirection == Vector3.zero)
+        return;
 
+    float angle = Mathf.Atan2(growDirection.y, growDirection.x) * Mathf.Rad2Deg - 90f;
+    Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
+
+    transform.rotation = Quaternion.RotateTowards(
+        transform.rotation,
+        targetRotation,
+        maxRotationSpeed * Time.deltaTime
+    );
+}
     public void end_level()
     {
         Debug.Log("Вызываем сигнал");
         EventControllerScr.Instance.OnEndGame();
+    }
+
+    public void anim_flower(bool True)
+    {
+        animator = GetComponent<Animator>();
+        animator.SetBool("End", True);
     }
 }
