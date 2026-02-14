@@ -11163,12 +11163,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 204520032993192001, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1507886633306436012, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_margin.y
+      value: -110.619286
+      objectReference: {fileID: 0}
     - target: {fileID: 1689205106598608352, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1896884657}
     - target: {fileID: 4604930858591638283, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6187788474388565500, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6826151214039659762, guid: 5e407ec0d357374458b446d684a59293, type: 3}
@@ -12247,6 +12259,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5052317126616187788, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669066713799243808, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8065363990315018938, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}

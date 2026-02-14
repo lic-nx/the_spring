@@ -7106,6 +7106,10 @@ PrefabInstance:
       propertyPath: Sun
       value: 
       objectReference: {fileID: 2044786342}
+    - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: max_angle
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3041934112464998794, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
       value: 0

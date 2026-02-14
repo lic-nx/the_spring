@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 3522483333349544143}
   - component: {fileID: 4171722508763266729}
   - component: {fileID: 9145350665867044355}
+  - component: {fileID: 2905437852709886755}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3522483333349544143
 RectTransform:
   m_ObjectHideFlags: 0
@@ -134,6 +135,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2905437852709886755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4600613712251247187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7038e602a0b8734190e3945b8ce7da7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelText: {fileID: 9145350665867044355}
+  prefix: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C "
 --- !u!1 &5774819930100618770
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +546,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2911019814454984118
 RectTransform:
   m_ObjectHideFlags: 0

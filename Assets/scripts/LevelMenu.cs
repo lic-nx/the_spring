@@ -69,13 +69,13 @@ public class LevelMenu : MonoBehaviour
     public void OpenLevelWitTutorial(int levelId)
     {
         // если у уровня есть туториал то вызываем этот метод
-        string levelName = "tutorial" + levelId;
+        string levelName = "tutorial_" + levelId;
         SceneManager.LoadScene(levelName);
     }
 
     public void OpenLevel(int levelId)
     {
-        string levelName = "level" + levelId;        
+        string levelName = "level_" + levelId;        
         SceneManager.LoadScene(levelName);
     }
 
