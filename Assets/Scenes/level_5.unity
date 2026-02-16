@@ -167,6 +167,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wals (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4502278483278849321, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
@@ -311,6 +315,10 @@ PrefabInstance:
     - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_Name
       value: crush_block_splineprefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1205,6 +1213,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalScale.x
@@ -2248,6 +2260,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wals (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4502278483278849321, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5655367
@@ -2328,6 +2344,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3216,6 +3236,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalScale.x
@@ -4111,6 +4135,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wals
       objectReference: {fileID: 0}
+    - target: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4502278483278849321, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.2
@@ -4187,6 +4215,10 @@ PrefabInstance:
     - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_Name
       value: crush_block_splineprefab (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4986,6 +5018,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1962673068}
     m_Modifications:
+    - target: {fileID: 1944088256904247097, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3111609620915745287, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.28
@@ -4997,6 +5033,10 @@ PrefabInstance:
     - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_Name
       value: moving_splineplatform (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6226062455939924213, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalAABB.m_Center.x
@@ -5959,6 +5999,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalScale.x
@@ -6965,6 +7009,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wals (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4502278483278849321, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5655367
@@ -7078,6 +7126,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1137898690210577901, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: smoothness
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1421254147187422666, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1
@@ -7106,6 +7158,10 @@ PrefabInstance:
       propertyPath: Sun
       value: 
       objectReference: {fileID: 2044786342}
+    - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: obstacleMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 3041934112464998794, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
       value: 0
@@ -7117,6 +7173,22 @@ PrefabInstance:
     - target: {fileID: 3399909067179494281, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: m_Size.x
+      value: 0.7850878
+      objectReference: {fileID: 0}
+    - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5180435
+      objectReference: {fileID: 0}
+    - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.010998607
+      objectReference: {fileID: 0}
+    - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.70379734
       objectReference: {fileID: 0}
     - target: {fileID: 3557946200316986868, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: onGameEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -7133,6 +7205,10 @@ PrefabInstance:
     - target: {fileID: 8065363990315018938, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8736889369234044823, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -7250,6 +7326,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7897,6 +7977,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1962673068}
     m_Modifications:
+    - target: {fileID: 1944088256904247097, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5128233278970127999, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: speed
       value: 20
@@ -7908,6 +7992,10 @@ PrefabInstance:
     - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_Name
       value: moving_splineplatform
+      objectReference: {fileID: 0}
+    - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6226062455939924213, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalAABB.m_Center.x
@@ -8886,6 +8974,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9896,6 +9988,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crush_block_splineprefab (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.117214
@@ -10790,9 +10886,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1962673068}
     m_Modifications:
+    - target: {fileID: 1944088256904247097, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_Name
       value: moving_splineplatform (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6226062455939924213, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalAABB.m_Center.x
@@ -11583,6 +11687,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
