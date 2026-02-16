@@ -167,6 +167,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crush_block_splineprefab (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.9900007
@@ -789,6 +793,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wals (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4502278483278849321, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
@@ -898,6 +906,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1914932309}
     m_Modifications:
+    - target: {fileID: 1944088256904247097, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3111609620915745287, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.69
@@ -909,6 +921,10 @@ PrefabInstance:
     - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_Name
       value: moving_splineplatform
+      objectReference: {fileID: 0}
+    - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6226062455939924213, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalAABB.m_Center.x
@@ -1727,6 +1743,10 @@ PrefabInstance:
     - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_Name
       value: crush_block_splineprefab (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2658,6 +2678,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wals (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4502278483278849321, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5655367
@@ -2731,6 +2755,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1914932309}
     m_Modifications:
+    - target: {fileID: 1944088256904247097, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3111609620915745287, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.97
@@ -2762,6 +2790,10 @@ PrefabInstance:
     - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_Name
       value: moving_splineplatform (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6226062455939924213, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalAABB.m_Center.x
@@ -3593,6 +3625,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: usual_splineblock (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.89
@@ -4419,6 +4455,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5290,6 +5330,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crush_block_splineprefab (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.8900003
@@ -6140,6 +6184,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wals
       objectReference: {fileID: 0}
+    - target: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4502278483278849321, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.2
@@ -6216,6 +6264,10 @@ PrefabInstance:
     - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_Name
       value: crush_block_splineprefab (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7071,6 +7123,10 @@ PrefabInstance:
     - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_Name
       value: crush_block_splineprefab (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8142,6 +8198,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crush_block_splineprefab (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.11
@@ -9066,6 +9126,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10146,6 +10210,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1914932309}
     m_Modifications:
+    - target: {fileID: 1944088256904247097, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3111609620915745287, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.37
@@ -10157,6 +10225,10 @@ PrefabInstance:
     - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_Name
       value: moving_splineplatform (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6226062455939924213, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalAABB.m_Center.x
@@ -11077,6 +11149,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: wals (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2481280849473415019, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4502278483278849321, guid: 2b87fb7916e1b484c988d81623bb1e6f, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.5655367
@@ -11280,6 +11356,10 @@ PrefabInstance:
       propertyPath: Sun
       value: 
       objectReference: {fileID: 2044786342}
+    - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: obstacleMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 3041934112464998794, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
       value: 0
@@ -11361,6 +11441,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12111,6 +12195,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1914932309}
     m_Modifications:
+    - target: {fileID: 1944088256904247097, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3111609620915745287, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.06
@@ -12142,6 +12230,10 @@ PrefabInstance:
     - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_Name
       value: moving_splineplatform (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6162814765879972751, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6226062455939924213, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
       propertyPath: m_LocalAABB.m_Center.x
@@ -13082,6 +13174,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: usual_splineblock (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.1
@@ -13845,6 +13941,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crush_block_splineprefab
       objectReference: {fileID: 0}
+    - target: {fileID: 304750380406399298, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 743000891284906879, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.71
@@ -14582,6 +14682,10 @@ PrefabInstance:
     - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_Name
       value: usual_splineblock
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993815001784148679, guid: 18365ed471e81d14689a404e086ab724, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}
       propertyPath: m_LocalPosition.x
