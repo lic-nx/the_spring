@@ -747,6 +747,10 @@ PrefabInstance:
       propertyPath: Sun
       value: 
       objectReference: {fileID: 470667890}
+    - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: moveSpeed
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3724746235951730361, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.2
@@ -1071,7 +1075,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 698206676640247258, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Radius
-      value: 1.2026182
+      value: 0.9191326
       objectReference: {fileID: 0}
     - target: {fileID: 698206676640247258, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Offset.x
@@ -1079,7 +1083,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 698206676640247258, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Offset.y
-      value: 2.2708075
+      value: 0.01995864
       objectReference: {fileID: 0}
     - target: {fileID: 1877042049290804962, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_LocalScale.x
@@ -1142,6 +1146,10 @@ PrefabInstance:
       value: 1.2017572
       objectReference: {fileID: 0}
     - target: {fileID: 8942069764695933964, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8942069764695933964, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Offset.x
       value: 0.02779855
       objectReference: {fileID: 0}
@@ -1149,7 +1157,8 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: 2.2230272
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8942069764695933964, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

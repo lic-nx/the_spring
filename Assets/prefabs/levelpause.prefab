@@ -6807,6 +6807,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pausePanel
       objectReference: {fileID: 0}
+    - target: {fileID: 7552889503143935982, guid: 1e39a750584140b4d8afb2ffae06ae8d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7876593762930212051, guid: 1e39a750584140b4d8afb2ffae06ae8d, type: 3}
       propertyPath: m_SizeDelta.x
       value: 128

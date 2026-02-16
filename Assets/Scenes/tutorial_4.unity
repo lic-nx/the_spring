@@ -806,6 +806,10 @@ PrefabInstance:
       propertyPath: Sun
       value: 
       objectReference: {fileID: 470667890}
+    - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: moveSpeed
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3724746235951730361, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.2
@@ -1990,7 +1994,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 698206676640247258, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Radius
-      value: 1.5
+      value: 0.9038466
       objectReference: {fileID: 0}
     - target: {fileID: 698206676640247258, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Enabled
@@ -2002,7 +2006,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 698206676640247258, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Offset.y
-      value: 0.019958856
+      value: 0.035244577
       objectReference: {fileID: 0}
     - target: {fileID: 1877042049290804962, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_LocalScale.x
