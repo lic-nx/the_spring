@@ -49,14 +49,16 @@ public class UIController : MonoBehaviour
     // ===== Loose =====
         public void ShowLoose()
     {
-        winPanel.SetActive(true);
+        loosePanel.SetActive(true);
         gameplayButtons.SetActive(false);
+        Time.timeScale = 0;
     }
 
     public void HideLoose()
     {
-        winPanel.SetActive(false);
+        loosePanel.SetActive(false);
         gameplayButtons.SetActive(true);
+        Time.timeScale = 1;
     }
 
     // ===== Gameplay Buttons =====

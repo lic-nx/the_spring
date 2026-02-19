@@ -7,7 +7,7 @@ public class enemy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // ���������, ��� �������� ������ � ��� �����
-        Debug.Log("��� ��������� �������: " + other.tag);
+        Debug.Log("who touch me " + other.tag);
         if (other.CompareTag("Player"))
         {
             Debug.Log("change enabled");

@@ -9,8 +9,11 @@ public class frigger_checker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        CounterTrigger++;
-        Debug.Log("An object entered.");
+        if (!other.CompareTag("enemy"))
+        {
+            CounterTrigger++;
+            Debug.Log("An object entered.");
+        }
         // player_move._instance.stop();
         
     }
@@ -20,11 +23,11 @@ public class frigger_checker : MonoBehaviour
         {
             Debug.Log("is sun");
             Debug.Log("Object name: " + other.name);
-            Debug.Log("find sun = " + other.transform.position );
+            Debug.Log("find sun = " + other.transform.position);
             StartCoroutine(HandleSunInteraction(other.transform));
         }
-        else if (!other.CompareTag("Player"))
-            {    
+        else if (!other.CompareTag("Player") && !other.CompareTag("enemy"))
+        {
             OnTriggerEnter_ = true;
         }
     }
@@ -41,10 +44,13 @@ public class frigger_checker : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        CounterTrigger--;
-        if (CounterTrigger == 0)
+        if (!other.CompareTag("enemy"))
         {
-            OnTriggerEnter_ = false;
+                CounterTrigger--;
+            if (CounterTrigger <= 0)
+            {
+                OnTriggerEnter_ = false;
+            }
         }
     }
 
