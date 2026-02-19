@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 using YG;
+using UnityEditor;
 using System.Diagnostics;
 
 public class EventControllerScr : Button_sound_controller
 {
     public static EventControllerScr Instance { get; private set; }
     [SerializeField] private UIController UI;
-    public bool isTutorial;
+    public bool isTutorial = false;
 
     public AudioClip gameWinSound;
     public AudioClip gameErrorSound;
@@ -27,7 +28,7 @@ public class EventControllerScr : Button_sound_controller
         {
             Instance = this;
             transform.SetParent(null);
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
     }
     
@@ -46,8 +47,16 @@ public class EventControllerScr : Button_sound_controller
     }
 
     public void OnEndGame() {
+        string sceneName = SceneManager.GetActiveScene().name;
+        string[] nameParts = sceneName.Split('_');
+        int levelType = 0;
+        if (nameParts.Length > 0)
+        {
+            int.TryParse(nameParts[nameParts.Length - 1], out levelType);
+        }
+        UnityEngine.Debug.Log($"Уровень обучающий: {isTutorial} | Текущий индекс сцены: {levelType} | ReachedIndex: {YG2.saves.ReachedIndex}");
 
-        if (SceneManager.GetActiveScene().buildIndex >= YG2.saves.ReachedIndex && !isTutorial)
+        if (levelType >= YG2.saves.ReachedIndex && !isTutorial)
         {
             YG2.saves.UnlockedLevel += 1;
             YG2.saves.CompletedLevel += 1;

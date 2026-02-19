@@ -662,6 +662,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundClip: {fileID: 0}
+--- !u!114 &620687466 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8476765771750097411, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+  m_PrefabInstance: {fileID: 1522408201153099125}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57eef61de25b95540bde3d6c6f5dccf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &636128860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2423,6 +2434,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MusicController
       objectReference: {fileID: 0}
+    - target: {fileID: 2692369412150580134, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4583997404297060161, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
       propertyPath: m_Pivot.x
       value: 0.49999964
@@ -2516,24 +2531,60 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 620687466}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1428588705}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
       objectReference: {fileID: 1428588705}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: EnableImage
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ButtonPush
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
       value: ButtonPush
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: image_controler, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: button_pushsound, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7664058627054111673, guid: 5400d2546b0386545b347d22ae0986bb, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
