@@ -2881,6 +2881,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.2
   magnitude: 0.1
+--- !u!114 &933709599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933709583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bf78a70750154c4db5af6876b68eca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &965537038 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3540933240913308926, guid: 5e407ec0d357374458b446d684a59293, type: 3}
@@ -3037,7 +3049,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55f53aa8177c2a419e4395a18d0f014, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeBlock: {fileID: 933709583}
   overlayObjects:
   - {fileID: 1256739769}
   - {fileID: 9820434}
@@ -5063,11 +5074,11 @@ PrefabInstance:
       objectReference: {fileID: 1287384673, guid: 0fb2333d37c9e9f4cb4c9a65e6545024, type: 3}
     - target: {fileID: 2969571667179148898, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 4.21
+      value: 10.63
       objectReference: {fileID: 0}
     - target: {fileID: 2969571667179148898, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 5.64
+      value: 10.56
       objectReference: {fileID: 0}
     - target: {fileID: 2969571667179148898, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.size
@@ -6396,6 +6407,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3882460531174193346, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
       insertIndex: 4
       addedObject: {fileID: 933709591}
+    - targetCorrespondingSourceObject: {fileID: 3882460531174193346, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 933709599}
   m_SourcePrefab: {fileID: 100100000, guid: 831d58f8eaea74846b2b08fe709bf9f2, type: 3}
 --- !u!1 &2139153648
 GameObject:

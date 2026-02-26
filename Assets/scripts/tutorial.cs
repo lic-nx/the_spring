@@ -1,48 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class tutorial : MonoBehaviour
 {
-    public GameObject activeBlock;
-    public GameObject[] overlayObjects; // ������ ��������, ������� ����� �������
-    private Vector3 activeObjPosition;
+    public GameObject[] overlayObjects;
 
-    void Start()
+    void OnEnable()
     {
-        if (activeBlock != null)
-        {
-            Vector3 pos = activeBlock.transform.position;
-            pos.z -= 1f; // � 2D: ������� Z = ����� � ������
-            activeBlock.transform.position = pos;
-
-            Debug.Log("������� Z ��������� �����: " + pos.z);
-            activeObjPosition = pos;
-        }
+        TutorialBlock.OnAnyBlockChanged += DisableTutorial;
     }
 
-    void Update()
+    void OnDisable()
     {
-        if (activeBlock == null || activeObjPosition != activeBlock.transform.position)
-        {
-            // ������� ��� ������� �� �������
-            if (overlayObjects != null)
-            {
-                foreach (GameObject obj in overlayObjects)
-                {
-                    if (obj != null)
-                    {
-                        Destroy(obj);
-                    }
-                }
-                Vector3 pos = activeBlock.transform.position;
-                pos.z += 1f;
-                activeBlock.transform.position = pos;
-                activeObjPosition = pos;
-            }
+        TutorialBlock.OnAnyBlockChanged -= DisableTutorial;
+    }
 
-            // �����������: ��������� ������, ����� �� ��������� ������
-            enabled = false;
+    void DisableTutorial()
+    {
+        foreach (var obj in overlayObjects)
+        {
+            if (obj != null)
+                Destroy(obj);
         }
+
+        enabled = false;
     }
 }
