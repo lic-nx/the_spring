@@ -1622,7 +1622,7 @@ GameObject:
   - component: {fileID: 701778216758516100}
   m_Layer: 0
   m_Name: GameObject
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1678,6 +1678,8 @@ MonoBehaviour:
   - {fileID: 7943175237953043029}
   enabled: 0
   first_dot: {fileID: 3155653613081097962}
+  moveSpeed: 2.5
+  speedMultiplier: 1
   duration_of_move: 0.4
   max_angle: 120
   obstacleMask:

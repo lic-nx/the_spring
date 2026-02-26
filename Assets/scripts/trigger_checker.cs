@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class frigger_checker : MonoBehaviour
+public class Trigger_checker : MonoBehaviour
 {
     public bool OnTriggerEnter_ = false;
     public int CounterTrigger = 0;

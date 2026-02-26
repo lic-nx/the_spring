@@ -9,7 +9,7 @@ public class player_move : MonoBehaviour
 
     // Ответственное за рисование стебля цветка 
     public Line_rendered line_render;
-    public frigger_checker[] Triggers;
+    public Trigger_checker[] Triggers;
     Vector3 body_position;
     private Vector3 currentGrowDirection;
     public bool enabled = false;
@@ -34,7 +34,7 @@ public class player_move : MonoBehaviour
     [SerializeField] private LayerMask obstacleMask;
 
     // Ссылка на текущий целевой триггер для проверки во время движения
-    private frigger_checker currentTargetTrigger = null;
+    private Trigger_checker currentTargetTrigger = null;
 
     public void change_enabled()
     {
@@ -91,7 +91,7 @@ public class player_move : MonoBehaviour
     {
         if (isMoving || !enabled) return;
 
-        if (TryFindNextPosition(out Vector3 target, out frigger_checker trigger))
+        if (TryFindNextPosition(out Vector3 target, out Trigger_checker trigger))
         {
             currentTargetTrigger = trigger;
             StartCoroutine(MoveTo(target, trigger));
@@ -103,12 +103,12 @@ public class player_move : MonoBehaviour
     }
 
     // Обновлённый метод: возвращает и позицию, и триггер
-    public bool TryFindNextPosition(out Vector3 targetPosition, out frigger_checker targetTrigger)
+    public bool TryFindNextPosition(out Vector3 targetPosition, out Trigger_checker targetTrigger)
     {
         targetPosition = transform.position;
         targetTrigger = null;
 
-        foreach (frigger_checker trigger in Triggers)
+        foreach (Trigger_checker trigger in Triggers)
         {
             if (!trigger.OnTriggerEnter_) // триггер не занят
             {
@@ -141,7 +141,7 @@ public class player_move : MonoBehaviour
     }
 
     // Обновлённая корутина с проверкой занятости триггера во время движения
-    IEnumerator MoveTo(Vector3 target, frigger_checker targetTrigger)
+    IEnumerator MoveTo(Vector3 target, Trigger_checker targetTrigger)
     {
         isMoving = true;
 
