@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using YG;
+using System;
+using System.IO; 
 using UnityEngine.Rendering.PostProcessing;
 
 public class LevelMenu : MonoBehaviour
@@ -14,6 +16,9 @@ public class LevelMenu : MonoBehaviour
     public GameObject levelButtons;
     public GameObject openLevel;
     private int highesLevel; // максимально открытый уровень у игрока
+    private const string FALLBACK_SCENE_NAME = "sorry_not_founded"; // имя сцены если нет уровня
+    // Флаг, чтобы избежать бесконечного цикла, если и запасная сцена не найдена
+    private static bool isFallbackLoading = false;
 
     private void Awake()
     {
@@ -72,11 +77,73 @@ public class LevelMenu : MonoBehaviour
         string levelName = "tutorial_" + levelId;
         SceneManager.LoadScene(levelName);
     }
-
-    public void OpenLevel(int levelId)
+    private bool IsSceneInBuildSettings(string sceneName)
     {
-        string levelName = "level_" + levelId;        
-        SceneManager.LoadScene(levelName);
+        // Проходим по всем сценам, добавленным в Build Settings
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            // Получаем полный путь к сцене (например: "Assets/Scenes/level_22.unity")
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+
+            // Извлекаем только имя файла без расширения и пути (например: "level_22")
+            string builtSceneName = Path.GetFileNameWithoutExtension(scenePath);
+
+            // Сравниваем
+            if (builtSceneName == sceneName)
+            {
+                return true; // ✅ Сцена найдена
+            }
+        }
+
+        return false; // ❌ Сцена не найдена
+    }
+
+    public void OpenLevel(int levelIndex)
+    {
+        string sceneName = "level_" + levelIndex.ToString();
+
+        // ✅ ПРОВЕРЯЕМ ПЕРЕД загрузкой
+        if (IsSceneInBuildSettings(sceneName))
+        {
+            // Всё ок, загружаем сцену
+            SceneManager.LoadScene(sceneName);
+        }
+        else
+        {
+            // Сцены нет в билде — перекидываем на заглушку
+            Debug.LogWarning($"⚠️ Сцена '{sceneName}' не найдена в Build Settings! Загружаем запасную.");
+            LoadFallbackScene();
+        }
+    }
+
+    private void LoadFallbackScene()
+    {
+        isFallbackLoading = true;
+
+        // Проверяем, существует ли сцена с таким именем (базовая проверка)
+        // Примечание: Это не гарантирует, что она в билде, но помогает избежать опечаток
+        Scene scene = SceneManager.GetSceneByName(FALLBACK_SCENE_NAME);
+
+        if (scene.IsValid())
+        {
+            // Если сцена уже загружена (редкий кейс), просто активируем её
+            SceneManager.SetActiveScene(scene);
+        }
+        else
+        {
+            // Пытаемся загрузить запасную сцену
+            // Вкладываем в try-catch на всякий случай, но без рекурсии
+            try
+            {
+                SceneManager.LoadScene(FALLBACK_SCENE_NAME);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Критическая ошибка: Не удалось загрузить даже запасную сцену '{FALLBACK_SCENE_NAME}'. {e.Message}");
+                // Здесь можно выйти из приложения, если всё совсем плохо
+                // Application.Quit(); 
+            }
+        }
     }
 
     public void Restart_button()
