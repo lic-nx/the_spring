@@ -1,6 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(AudioSource))] // ← 1. Гарантируем наличие AudioSource
 public class DragBlock2D : MonoBehaviour
 {
     public float followSpeed = 15f;
@@ -9,6 +10,8 @@ public class DragBlock2D : MonoBehaviour
     private bool isDragging;
     private Vector2 offset;
 
+    private AudioSource audioSource; // ← 2. Ссылка на компонент
+
     [SerializeField] private AudioClip soundTake;
     [SerializeField] private AudioClip soundRelease;
 
@@ -16,17 +19,20 @@ public class DragBlock2D : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         cam = Camera.main;
+        audioSource = GetComponent<AudioSource>(); // ← 3. Получаем компонент
+
+        // Настройки для 2D звука (чтобы громкость не зависела от расстояния до камеры)
+        audioSource.spatialBlend = 0f;
+        audioSource.playOnAwake = false;
     }
 
     void OnMouseDown()
     {
         isDragging = true;
 
-        AudioSource.PlayClipAtPoint(
-        soundTake,
-        transform.position,
-        1f
-    );
+        // ✅ 4. Вызываем метод у экземпляра (audioSource), а не у класса
+        if (soundTake != null)
+            audioSource.PlayOneShot(soundTake, 0.1f);
 
         Vector2 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
         offset = rb.position - mouseWorldPos;
@@ -38,12 +44,10 @@ public class DragBlock2D : MonoBehaviour
     {
         isDragging = false;
 
-        AudioSource.PlayClipAtPoint(
-        soundRelease,
-        transform.position,
-        1f
-    );
-        
+        // ✅ 5. Используем тот же метод PlayOneShot (без координат)
+        if (soundRelease != null)
+            audioSource.PlayOneShot(soundRelease, 1f);
+
         rb.velocity = Vector2.zero;
         player_move._instance?.OnWorldChanged();
     }

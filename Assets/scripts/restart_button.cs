@@ -28,7 +28,7 @@ public class restart_button : MonoBehaviour
         if (restartSound != null)
         {
             audioSource.PlayOneShot(restartSound);
-            yield return new WaitForSecondsRealtime(0.01f);
+            yield return new WaitForSecondsRealtime(0.5f);
         }
 
         Time.timeScale = 1f;

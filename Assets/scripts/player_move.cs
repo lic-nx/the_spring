@@ -40,6 +40,7 @@ public class player_move : MonoBehaviour
     {
         Debug.Log("change enabled");
         enabled = !enabled;
+        player_move._instance?.OnWorldChanged();
     }
 
     void Start()
