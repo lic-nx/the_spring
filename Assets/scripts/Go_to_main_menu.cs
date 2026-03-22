@@ -1,7 +1,8 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using YG;
 
 
 //public class Button_sound_controller : MonoBehaviour
@@ -21,29 +22,36 @@ using UnityEngine.SceneManagement;
 //            audioSource = gameObject.AddComponent<AudioSource>();
 //        }
 
-//        // Âîñïðîèçâîäèì ìóçûêó
+//        // Ð’Ð¾ÑÐ¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð¸Ð¼ Ð¼ÑƒÐ·Ñ‹ÐºÑƒ
 //        audioSource.PlayOneShot(musicClip);
-//        Debug.LogWarning("ýòî ÿ äî âûçîâà êðîóòèíû");
-//        // Çàïóñêàåì êîðóòèíó ñ çàäåðæêîé
+//        Debug.LogWarning("ÑÑ‚Ð¾ Ñ Ð´Ð¾ Ð²Ñ‹Ð·Ð¾Ð²Ð° ÐºÑ€Ð¾ÑƒÑ‚Ð¸Ð½Ñ‹");
+//        // Ð—Ð°Ð¿ÑƒÑÐºÐ°ÐµÐ¼ ÐºÐ¾Ñ€ÑƒÑ‚Ð¸Ð½Ñƒ Ñ Ð·Ð°Ð´ÐµÑ€Ð¶ÐºÐ¾Ð¹
 //        StartCoroutine(DelayedCallback(delay, onComplete));
 //    }
 
 //    private IEnumerator DelayedCallback(float delay, System.Action callback)
 //    {
-//        Debug.LogWarning("íà÷àë îñòàíîâêó");
+//        Debug.LogWarning("Ð½Ð°Ñ‡Ð°Ð» Ð¾ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÑƒ");
 //        yield return new WaitForSecondsRealtime(delay);
-//        Debug.LogWarning("çàêîí÷èë îñòàíîâêó");
+//        Debug.LogWarning("Ð·Ð°ÐºÐ¾Ð½Ñ‡Ð¸Ð» Ð¾ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÑƒ");
 //        callback?.Invoke();
 //    }
 //}
 
 public class Go_to_main_menu : Button_sound_controller
 {
-    public AudioClip restartSound; // Íàçíà÷üòå çâóê â èíñïåêòîðå
+    public AudioClip restartSound; // ÐÐ°Ð·Ð½Ð°Ñ‡ÑŒÑ‚Ðµ Ð·Ð²ÑƒÐº Ð² Ð¸Ð½ÑÐ¿ÐµÐºÑ‚Ð¾Ñ€Ðµ
 
     public void Mainmenu()
     {
-        PlayMusicWithDelay(restartSound, restartSound.length + 0.1f, () => SceneManager.LoadScene(0));
+        if (YG2.saves.EffectMusicEnabled)
+            PlayMusicWithDelay(
+                restartSound,
+                restartSound.length + 0.1f,
+                () => SceneManager.LoadScene(0),
+                volume: 0.5f 
+            );
+        else SceneManager.LoadScene(0);
         Time.timeScale = 1f;
     }
 }

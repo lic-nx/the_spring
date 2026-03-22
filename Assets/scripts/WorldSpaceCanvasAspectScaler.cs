@@ -52,7 +52,7 @@ public class WorldSpaceCanvasAspectScaler : MonoBehaviour
         if (scaleWidthOnly)
         {
             scaleFactor = Mathf.Clamp(scaleFactor, minScale, maxScale) / 100;
-            rect.localScale = new Vector3(scaleFactor, 0.01f, 0.01f);
+            rect.localScale = new Vector3(scaleFactor, 0.5f, 0.5f);
         }
         else
         {

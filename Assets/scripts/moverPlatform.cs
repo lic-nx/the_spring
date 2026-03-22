@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public class MoverPlatform : MonoBehaviour
 {
     public Transform pointA;
@@ -8,37 +9,52 @@ public class MoverPlatform : MonoBehaviour
 
     private bool isDragging = false;
     private bool isEnter = false;
+
     [SerializeField] private AudioClip soundTake;
     [SerializeField] private AudioClip soundRelease;
 
+    private AudioSource audioSource; // ← Ссылка на компонент
+
+    private void Awake()
+    {
+        // Получаем AudioSource с этого объекта
+        audioSource = GetComponent<AudioSource>();
+
+        // Если компонента нет — добавляем автоматически
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        // Настройки для 2D звука (громкость не зависит от расстояния до камеры)
+        audioSource.spatialBlend = 0f;
+        audioSource.playOnAwake = false;
+    }
+
     void OnMouseEnter() => isEnter = true;
     void OnMouseExit() => isEnter = false;
+
     void Update()
     {
         // Начало перетаскивания
         if (Input.GetMouseButtonDown(0) && isEnter)
         {
             isDragging = true;
-            AudioSource.PlayClipAtPoint(
-                soundTake,
-                transform.position,
-                1f
-            );
+
+            // ✅ PlayOneShot принимает только (клип, громкость)
+            if (soundTake != null)
+                audioSource.PlayOneShot(soundTake, 1f);
         }
         // Завершение перетаскивания
         else if (Input.GetMouseButtonUp(0))
         {
             if (isDragging)
             {
-                AudioSource.PlayClipAtPoint(
-                soundRelease,
-                transform.position,
-                1f
-            );
-            
+                // ✅ То же самое для звука отпускания
+                if (soundRelease != null)
+                    audioSource.PlayOneShot(soundRelease, 1f);
             }
             isDragging = false;
-            
             player_move._instance?.OnWorldChanged();
         }
 

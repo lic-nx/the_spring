@@ -7,9 +7,10 @@
         false,
         false
     ],
-    "idSave": 277,
+    "idSave": 584,
     "UnlockedLevel": 22,
     "CompletedLevel": 21,
-    "MusicEnabled": 0,
-    "ReachedIndex": 21
+    "MusicEnabled": 1,
+    "ReachedIndex": 21,
+    "EffectMusicEnabled": true
 }

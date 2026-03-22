@@ -19,8 +19,22 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] private AudioClip[] soundClips;
 
+    // ✅ ДОБАВЛЕНО: Ссылка на компонент AudioSource
+    private AudioSource audioSource;
+
     void Start()
     {
+        // ✅ ДОБАВЛЕНО: Получаем или создаём AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        // Настройки для 2D звука (громкость не зависит от расстояния до камеры)
+        audioSource.spatialBlend = 0f;
+        audioSource.playOnAwake = false;
+
         // Сохраняем базовый путь материала для будущих загрузок
         Material mat = GetComponent<Renderer>().sharedMaterial;
         if (mat != null)
@@ -142,6 +156,13 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         if (soundClips == null || soundClips.Length == 0) return;
 
         int index = Random.Range(0, soundClips.Length);
-        AudioSource.PlayClipAtPoint(soundClips[index], transform.position, 1f);
+
+        // ✅ ИСПРАВЛЕНО: 
+        // 1. Вызываем у экземпляра (audioSource), а не у класса
+        // 2. Передаём только 2 аргумента: (клип, громкость)
+        if (audioSource != null && soundClips[index] != null)
+        {
+            audioSource.PlayOneShot(soundClips[index], 1f);
+        }
     }
 }

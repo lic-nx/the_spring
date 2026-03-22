@@ -44,20 +44,21 @@ public class flower : MonoBehaviour
         Debug.Log("Цветок повернулся к солнцу.");
     }
 
-public void RotateByDirection(Vector3 growDirection)
-{
-    if (growDirection == Vector3.zero)
-        return;
+    public void RotateByDirection(Vector3 growDirection)
+    {
+        if (growDirection == Vector3.zero)
+            return;
 
-    float angle = Mathf.Atan2(growDirection.y, growDirection.x) * Mathf.Rad2Deg - 90f;
-    Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
+        float angle = Mathf.Atan2(growDirection.y, growDirection.x) * Mathf.Rad2Deg - 90f;
+        Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
 
-    transform.rotation = Quaternion.RotateTowards(
-        transform.rotation,
-        targetRotation,
-        maxRotationSpeed * Time.deltaTime
-    );
-}
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            targetRotation,
+            maxRotationSpeed * Time.deltaTime
+        );
+    }
+
     public void end_level()
     {
         Debug.Log("Вызываем сигнал");
@@ -68,5 +69,7 @@ public void RotateByDirection(Vector3 growDirection)
     {
         animator = GetComponent<Animator>();
         animator.SetBool("End", True);
+       
+
     }
 }
