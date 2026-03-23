@@ -33,7 +33,7 @@ public class DragBlock2D : MonoBehaviour
 
         // ✅ 4. Вызываем метод у экземпляра (audioSource), а не у класса
         if (soundTake != null && YG2.saves.EffectMusicEnabled)
-        audioSource.PlayOneShot(soundTake, 0.1f);
+        audioSource.PlayOneShot(soundTake, 0.5f);
 
         Vector2 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
         offset = rb.position - mouseWorldPos;
@@ -47,7 +47,7 @@ public class DragBlock2D : MonoBehaviour
 
         // ✅ 5. Используем тот же метод PlayOneShot (без координат)
         if (soundTake != null && YG2.saves.EffectMusicEnabled)
-            audioSource.PlayOneShot(soundRelease, 1f);
+            audioSource.PlayOneShot(soundRelease, 0.5f);
 
         rb.velocity = Vector2.zero;
         player_move._instance?.OnWorldChanged();

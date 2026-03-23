@@ -24,11 +24,13 @@ public class button_pushsound : MonoBehaviour
 
     public void ButtonPush()
     {
+        Debug.Log($"звук играет");
         if (!YG2.saves.EffectMusicEnabled || soundClip == null) return;
 
         float volume = Mathf.Clamp01(0.5f);
 
         // ✅ Вызываем метод у экземпляра (audioSource), а не у класса
         audioSource.PlayOneShot(soundClip, volume);
+        Debug.Log($"конец звука");
     }
 }

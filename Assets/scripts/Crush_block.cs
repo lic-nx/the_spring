@@ -158,7 +158,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         int index = Random.Range(0, soundClips.Length);
         if (audioSource != null && soundClips[index] != null && YG2.saves.EffectMusicEnabled)
         {
-            audioSource.PlayOneShot(soundClips[index], 1f);
+            audioSource.PlayOneShot(soundClips[index], 0.5f);
         }
     }
 }

@@ -5,16 +5,15 @@ using YG;
 public class soundEffectController : MonoBehaviour
 {
     [SerializeField] private Toggle musicToggle;
+    [SerializeField] private button_pushsound audioButton; // ← Новая ссылка
     private bool isEnabled = false;
 
     void Start()
     {
-        // Читаем сохранение
         isEnabled = YG2.saves.EffectMusicEnabled;
 
         if (musicToggle != null)
         {
-            // ✅ Безопасная установка значения без триггера события
             musicToggle.onValueChanged.RemoveListener(OnToggleValueChanged);
             musicToggle.isOn = !isEnabled;
             musicToggle.onValueChanged.AddListener(OnToggleValueChanged);
@@ -24,10 +23,11 @@ public class soundEffectController : MonoBehaviour
     private void OnToggleValueChanged(bool isOn)
     {
         isEnabled = isOn;
-
-        // ✅ Просто сохраняем то, что пришло от Toggle
         YG2.saves.EffectMusicEnabled = !isOn;
         YG2.SaveProgress();
+
+        // ✅ Вызов через экземпляр с проверкой на null
+        audioButton?.ButtonPush();
 
         Debug.Log($"Звук сохранён: {!isOn}");
     }
