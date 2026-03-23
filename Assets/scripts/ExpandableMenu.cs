@@ -132,7 +132,7 @@ public class ExpandableMenu : MonoBehaviour
         animCoroutine = StartCoroutine(AnimateMenu(openHeight));
         Debug.Log("[OpenMenu] >>> Coroutine ЗАПУЩЕН");
 
-        openButton.gameObject.SetActive(false);
+        //openButton.gameObject.SetActive(false);
     }
 
     private void CloseMenu()
@@ -187,6 +187,7 @@ public class ExpandableMenu : MonoBehaviour
             canvasGroup.alpha = 1f;
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
+            openButton.gameObject.SetActive(false);
             closeButton.gameObject.SetActive(true);
             Debug.Log("[AnimateMenu] <<< END (OPEN): height=" + menuPanel.rect.height + ", alpha=1");
         }
@@ -219,7 +220,7 @@ public class ExpandableMenu : MonoBehaviour
     {
         if (openCloseSound != null && audioSource != null && YG2.saves.EffectMusicEnabled)
         {
-            audioSource.PlayOneShot(openCloseSound);
+            audioSource.PlayOneShot(openCloseSound, 0.5f);
         }
     }
 }

@@ -42,7 +42,7 @@ public class MoverPlatform : MonoBehaviour
             isDragging = true;
 
             if (soundTake != null && YG2.saves.EffectMusicEnabled)
-                audioSource.PlayOneShot(soundTake, 1f);
+                audioSource.PlayOneShot(soundTake, 0.5f);
         }
         // Завершение перетаскивания
         else if (Input.GetMouseButtonUp(0))
@@ -51,7 +51,7 @@ public class MoverPlatform : MonoBehaviour
             {
                 // ✅ То же самое для звука отпускания
                 if (soundRelease != null && YG2.saves.EffectMusicEnabled)
-                    audioSource.PlayOneShot(soundRelease, 1f);
+                    audioSource.PlayOneShot(soundRelease, 0.5f);
             }
             isDragging = false;
             player_move._instance?.OnWorldChanged();
