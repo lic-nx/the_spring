@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.U2D;
-
+using YG;
 public class Crush_block : MonoBehaviour, IPointerClickHandler
 {
     public bool canCrush = true;
@@ -156,11 +156,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         if (soundClips == null || soundClips.Length == 0) return;
 
         int index = Random.Range(0, soundClips.Length);
-
-        // ✅ ИСПРАВЛЕНО: 
-        // 1. Вызываем у экземпляра (audioSource), а не у класса
-        // 2. Передаём только 2 аргумента: (клип, громкость)
-        if (audioSource != null && soundClips[index] != null)
+        if (audioSource != null && soundClips[index] != null && YG2.saves.EffectMusicEnabled)
         {
             audioSource.PlayOneShot(soundClips[index], 1f);
         }

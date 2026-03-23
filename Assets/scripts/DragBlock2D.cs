@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using YG;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AudioSource))] // ← 1. Гарантируем наличие AudioSource
@@ -31,8 +32,8 @@ public class DragBlock2D : MonoBehaviour
         isDragging = true;
 
         // ✅ 4. Вызываем метод у экземпляра (audioSource), а не у класса
-        if (soundTake != null)
-            audioSource.PlayOneShot(soundTake, 0.1f);
+        if (soundTake != null && YG2.saves.EffectMusicEnabled)
+        audioSource.PlayOneShot(soundTake, 0.1f);
 
         Vector2 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
         offset = rb.position - mouseWorldPos;
@@ -45,7 +46,7 @@ public class DragBlock2D : MonoBehaviour
         isDragging = false;
 
         // ✅ 5. Используем тот же метод PlayOneShot (без координат)
-        if (soundRelease != null)
+        if (soundTake != null && YG2.saves.EffectMusicEnabled)
             audioSource.PlayOneShot(soundRelease, 1f);
 
         rb.velocity = Vector2.zero;

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using YG;
 
 [RequireComponent(typeof(CanvasGroup))] // ← Гарантирует наличие CanvasGroup
 [RequireComponent(typeof(Mask))]         // ← Гарантирует обрезку контента
@@ -40,6 +41,16 @@ public class ExpandableMenu : MonoBehaviour
     private bool isOpen = false;
     private Coroutine animCoroutine;
     private Vector2 originalPanelSize; // Запоминаем исходный размер
+
+    private void OnEnable()
+    {
+        // Проверяем родительские CanvasGroup
+        var parentGroups = GetComponentsInParent<CanvasGroup>();
+        foreach (var group in parentGroups)
+        {
+            Debug.Log($"Parent CanvasGroup: {group.gameObject.name}, alpha={group.alpha}, interactable={group.interactable}");
+        }
+    }
 
     private void Awake()
     {
@@ -139,7 +150,7 @@ public class ExpandableMenu : MonoBehaviour
 
     private void PlaySound()
     {
-        if (openCloseSound != null && audioSource != null)
+        if (openCloseSound != null && audioSource != null && YG2.saves.EffectMusicEnabled)
         {
             audioSource.PlayOneShot(openCloseSound);
         }

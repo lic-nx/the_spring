@@ -63,30 +63,28 @@ public class EventControllerScr : Button_sound_controller
             YG2.saves.ReachedIndex += 1;
             YG2.SaveProgress();
         }
-
-        audioSource.PlayOneShot(gameWinSound);
+        if (YG2.saves.EffectMusicEnabled) audioSource.PlayOneShot(gameWinSound);
 
         UI.ShowWin();
 
         }
     public void PlayerLose()
     {
-
-        audioSource.PlayOneShot(gameErrorSound);
+        if (YG2.saves.EffectMusicEnabled) audioSource.PlayOneShot(gameErrorSound);
         UI.ShowLoose();
 
     }
 
     public void PlayerPause()
     {
-        audioSource.PlayOneShot(buttonPressed);
+        if (YG2.saves.EffectMusicEnabled) audioSource.PlayOneShot(buttonPressed);
         UI.ShowPause();
         Time.timeScale = 0f;
     }
 
     public void PlayerUnPause()
     {
-        audioSource.PlayOneShot(buttonPressed);
+        if (YG2.saves.EffectMusicEnabled ) audioSource.PlayOneShot(buttonPressed);
         UI.HidePause();
         Time.timeScale = 1f;
     }

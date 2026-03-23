@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using YG;
 
 public class Button_sound_controller : MonoBehaviour
 {
@@ -23,9 +24,7 @@ public class Button_sound_controller : MonoBehaviour
     
     // Ограничиваем диапазон 0..1 на всякий случай
     finalVolume = Mathf.Clamp01(finalVolume);
-
-    // ✅ Передаём громкость вторым параметром в PlayOneShot
-    audioSource.PlayOneShot(musicClip, finalVolume);
+    if (YG2.saves.EffectMusicEnabled) audioSource.PlayOneShot(musicClip, finalVolume);
 
     // Запускаем корутину с задержкой
     StartCoroutine(DelayedCallback(delay, onComplete));

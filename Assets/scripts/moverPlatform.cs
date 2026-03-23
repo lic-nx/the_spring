@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using YG;
 public class MoverPlatform : MonoBehaviour
 {
     public Transform pointA;
@@ -41,8 +41,7 @@ public class MoverPlatform : MonoBehaviour
         {
             isDragging = true;
 
-            // ✅ PlayOneShot принимает только (клип, громкость)
-            if (soundTake != null)
+            if (soundTake != null && YG2.saves.EffectMusicEnabled)
                 audioSource.PlayOneShot(soundTake, 1f);
         }
         // Завершение перетаскивания
@@ -51,7 +50,7 @@ public class MoverPlatform : MonoBehaviour
             if (isDragging)
             {
                 // ✅ То же самое для звука отпускания
-                if (soundRelease != null)
+                if (soundRelease != null && YG2.saves.EffectMusicEnabled)
                     audioSource.PlayOneShot(soundRelease, 1f);
             }
             isDragging = false;
