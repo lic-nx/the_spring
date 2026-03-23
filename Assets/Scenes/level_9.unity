@@ -545,7 +545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 204520032993192001, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 389707991264794783, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_AnchorMax.y
@@ -606,6 +606,10 @@ PrefabInstance:
     - target: {fileID: 6826151214039659762, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_Name
       value: levelpause
+      objectReference: {fileID: 0}
+    - target: {fileID: 7586568441589254227, guid: 5e407ec0d357374458b446d684a59293, type: 3}
+      propertyPath: playOnAwake
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

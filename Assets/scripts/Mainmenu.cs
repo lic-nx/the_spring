@@ -15,7 +15,6 @@ public class Mainmenu : Button_sound_controller
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-        // Не нужно: audioSource.clip = soundClip; — PlayOneShot использует clip напрямую
     }
     public void PlayGame()
     {

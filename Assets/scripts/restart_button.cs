@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using YG;
 public class restart_button : MonoBehaviour
 {
     public AudioClip restartSound;
@@ -25,7 +25,7 @@ public class restart_button : MonoBehaviour
 
     IEnumerator RestartWithSound()
     {
-        if (restartSound != null)
+        if (restartSound != null && YG2.saves.EffectMusicEnabled)
         {
             audioSource.PlayOneShot(restartSound);
             yield return new WaitForSecondsRealtime(0.5f);
