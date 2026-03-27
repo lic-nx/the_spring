@@ -5,7 +5,8 @@ public class swipe_menu : MonoBehaviour
 {
     [Header("Ссылки")]
     public ScrollRect scrollRect;        // Ссылка на ScrollRect
-
+    public int MaxCountOfLists = 3;
+    public int NowList = 1;
     [Header("Настройки")]
     public bool isHorizontal = true;     // Горизонтальная прокрутка?
     public float stepSize = 200f;        // На сколько пикселей сдвигать контент
@@ -44,7 +45,8 @@ public class swipe_menu : MonoBehaviour
     public void ScrollPrev()
     {
         if (content == null) return;
-
+        if (NowList <= 1) return;
+        NowList-=1;
         float delta = isHorizontal ? +stepSize : -stepSize;
         MoveContent(delta);
     }
@@ -52,7 +54,8 @@ public class swipe_menu : MonoBehaviour
     public void ScrollNext()
     {
         if (content == null) return;
-
+        if (NowList >= MaxCountOfLists) return;
+        NowList+=1;
         float delta = isHorizontal ? -stepSize : +stepSize;
         MoveContent(delta);
     }
