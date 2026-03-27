@@ -154,13 +154,15 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
     void RandomSound()
     {
         if (soundClips == null || soundClips.Length == 0) return;
+        if (!YG2.saves.EffectMusicEnabled) return;
 
         int index = Random.Range(0, soundClips.Length);
-        
-        // Вызываем менеджер, а не свой AudioSource
-        if (SoundManager.Instance != null)
+        if (soundClips[index] != null)
         {
-            SoundManager.Instance.PlaySound(soundClips[index], 0.5f);
+            // Эта функция создаст временный объект в точке transform.position
+            // и уничтожит его после проигрывания звука.
+            // Твой основной блок можно уничтожать сразу после этого.
+            AudioSource.PlayClipAtPoint(soundClips[index], transform.position, 0.5f);
         }
     }
 }
