@@ -8546,6 +8546,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollRect: {fileID: 1588310249}
+  MaxCountOfLists: 3
+  NowList: 1
   isHorizontal: 1
   stepSize: 1333.333
   scrollSpeed: 10
