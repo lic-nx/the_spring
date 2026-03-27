@@ -2457,6 +2457,18 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 3585522699169144317, guid: 56591bcc90f558c419efbed7d4c6e273, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3585522699169144317, guid: 56591bcc90f558c419efbed7d4c6e273, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3585522699169144317, guid: 56591bcc90f558c419efbed7d4c6e273, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3978852845857371295, guid: 56591bcc90f558c419efbed7d4c6e273, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2485,6 +2497,10 @@ PrefabInstance:
       propertyPath: audioButton
       value: 
       objectReference: {fileID: 1796388965}
+    - target: {fileID: 6710494860641756585, guid: 56591bcc90f558c419efbed7d4c6e273, type: 3}
+      propertyPath: m_Texture
+      value: 
+      objectReference: {fileID: 2800000, guid: c7bf8e36393622d4db98f29fa28c4984, type: 3}
     - target: {fileID: 7130935954428469351, guid: 56591bcc90f558c419efbed7d4c6e273, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1

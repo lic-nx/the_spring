@@ -15,7 +15,7 @@ public class level_text : MonoBehaviour
         YG2.SaveProgress();
         if (levelText != null)
         {
-            levelText.text =  CompletedLevel + " уровень";
+            levelText.text =  CompletedLevel + " СѓСЂРѕРІРµРЅСЊ";
         }
         else
         {
