@@ -6,7 +6,6 @@ public class SimpleButterfly : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float speed = 1f;
-    [SerializeField] private float radius = 2f;
 
     [Header("Noise")]
     [SerializeField] private float noiseAmplitude = 0.5f;
