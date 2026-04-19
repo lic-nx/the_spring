@@ -18,8 +18,23 @@ public class Mainmenu : Button_sound_controller
     }
     public void PlayGame()
     {
-        float delay = soundClip ? soundClip.length + 0.1f : 0.1f;
-        PlayMusicWithDelay(soundClip, delay, () => SceneManager.LoadScene(YG2.saves.CompletedLevel + 2));
+        string sceneName = "level_"+(YG2.saves.CompletedLevel+1);
+        int buildIndex = SceneUtility.GetBuildIndexByScenePath(sceneName);
+        if (buildIndex >= 0)
+        {   
+            string tutorName = "tutorial_" + YG2.saves.CompletedLevel+1;
+            buildIndex = SceneUtility.GetBuildIndexByScenePath(tutorName);
+            if (buildIndex >= 0) SceneManager.LoadScene(tutorName);
+            else
+                SceneManager.LoadScene(sceneName);
+        }
+        else
+        {
+            // Сцены нет в билде — перекидываем на заглушку
+            Debug.LogWarning($"⚠️ Сцена '{sceneName}' не найдена в Build Settings! Загружаем запасную.");
+            
+        }
+       
     }
 
     public void ChooseLevel()
