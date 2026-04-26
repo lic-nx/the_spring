@@ -21,8 +21,12 @@ public class LocalizedText : MonoBehaviour
 
     void OnDestroy()
     {
-        LocalizationManager.Instance.OnLanguageChanged -= UpdateText;
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged -= UpdateText;
+        }
     }
+
 
     void UpdateText()
     {
