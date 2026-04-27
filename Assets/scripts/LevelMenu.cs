@@ -71,42 +71,18 @@ public class LevelMenu : MonoBehaviour
             buttons[i] = levelButtons.transform.GetChild(i).GetComponent<Button>();
         }
     }
-    public void OpenLevelWitTutorial(int levelId)
-    {
-        // если у уровня есть туториал то вызываем этот метод
-        string levelName = "tutorial_" + levelId;
-        SceneManager.LoadScene(levelName);
-    }
-    private bool IsSceneInBuildSettings(string sceneName)
-    {
-        // Проходим по всем сценам, добавленным в Build Settings
-        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
-        {
-            // Получаем полный путь к сцене (например: "Assets/Scenes/level_22.unity")
-            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
-
-            // Извлекаем только имя файла без расширения и пути (например: "level_22")
-            string builtSceneName = Path.GetFileNameWithoutExtension(scenePath);
-
-            // Сравниваем
-            if (builtSceneName == sceneName)
-            {
-                return true; // ✅ Сцена найдена
-            }
-        }
-
-        return false; // ❌ Сцена не найдена
-    }
-
-    public void OpenLevel(int levelIndex)
+     public void OpenLevel(int levelIndex)
     {
         string sceneName = "level_" + levelIndex.ToString();
-
+        int buildIndex = SceneUtility.GetBuildIndexByScenePath(sceneName);
         // ✅ ПРОВЕРЯЕМ ПЕРЕД загрузкой
-        if (IsSceneInBuildSettings(sceneName))
-        {
-            // Всё ок, загружаем сцену
-            SceneManager.LoadScene(sceneName);
+        if (buildIndex >= 0)
+        {   
+            string tutorName = "tutorial_" + levelIndex;
+            buildIndex = SceneUtility.GetBuildIndexByScenePath(tutorName);
+            if (buildIndex >= 0) SceneManager.LoadScene(tutorName);
+            else
+                SceneManager.LoadScene(sceneName);
         }
         else
         {
@@ -115,7 +91,6 @@ public class LevelMenu : MonoBehaviour
             LoadFallbackScene();
         }
     }
-
     private void LoadFallbackScene()
     {
         isFallbackLoading = true;
