@@ -4963,7 +4963,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1133808925}
         m_TargetAssemblyTypeName: LevelMenu, Assembly-CSharp
-        m_MethodName: OpenLevelWitTutorial
+        m_MethodName: OpenLevel
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9255,7 +9255,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1133808925}
         m_TargetAssemblyTypeName: LevelMenu, Assembly-CSharp
-        m_MethodName: OpenLevelWitTutorial
+        m_MethodName: OpenLevel
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9664,7 +9664,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1133808925}
         m_TargetAssemblyTypeName: LevelMenu, Assembly-CSharp
-        m_MethodName: OpenLevelWitTutorial
+        m_MethodName: OpenLevel
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

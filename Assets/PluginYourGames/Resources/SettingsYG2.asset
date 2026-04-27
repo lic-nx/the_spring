@@ -177,7 +177,7 @@ MonoBehaviour:
   Localization:
     setLanguageMod: 1
   Storage:
-    saveLocal: 0
+    saveLocal: 1
     saveCloud: 1
     flush: 0
   Basic:
