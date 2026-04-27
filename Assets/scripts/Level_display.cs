@@ -7,6 +7,7 @@ public class Level_display : MonoBehaviour
 {
     public TextMeshProUGUI levelText;
     public bool Win;
+    public bool Pause;
 
     private void Start()
     {
@@ -29,12 +30,21 @@ public class Level_display : MonoBehaviour
 
     void UpdateText()
     {
+        if (Pause)
+        {
+            levelText.text = LocalizationManager.Instance.GetText("level", levelText.text);
+            return;
+        }
         if (Win)
         {
             levelText.text = LocalizationManager.Instance.GetText("win", levelText.text);
-        } else
-        {
-            levelText.text = LocalizationManager.Instance.GetText("win", levelText.text);
+            return;
         }
+        else
+        {
+            levelText.text = LocalizationManager.Instance.GetText("loose", levelText.text);
+            return;
+        }
+
     }
 }
