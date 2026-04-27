@@ -162,7 +162,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
             // Эта функция создаст временный объект в точке transform.position
             // и уничтожит его после проигрывания звука.
             // Твой основной блок можно уничтожать сразу после этого.
-            AudioSource.PlayClipAtPoint(soundClips[index], transform.position, 0.5f);
+            AudioSource.PlayClipAtPoint(soundClips[index], Camera.main.transform.position, 0.5f);
         }
     }
 }
