@@ -177,7 +177,7 @@ MonoBehaviour:
   Localization:
     setLanguageMod: 1
   Storage:
-    saveLocal: 1
+    saveLocal: 0
     saveCloud: 1
     flush: 0
   Basic:
@@ -194,7 +194,7 @@ MonoBehaviour:
     loadSceneIfSDKLate: 0
     loadSceneIndex: 0
     initDelaySimulation: 0
-    buildNumber: 0
+    buildNumber: 19
   Simulation:
     device: 0
     language: ru
@@ -205,7 +205,7 @@ MonoBehaviour:
     testFailAds: 0
     pauseOnFocusGame: 0
   Templates:
-    logoImageFormat: 1
+    logoImageFormat: 0
     backgroundImgFormat: 0
     gradientBackgroundByLoadGame:
       radial: 0

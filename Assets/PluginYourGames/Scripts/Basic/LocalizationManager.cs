@@ -1,34 +1,16 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using YG;
 
 public class LocalizationManager : MonoBehaviour
 {
     private static LocalizationManager _instance;
 
-    public static LocalizationManager Instance
-{
-    get
-    {
-        if (isQuitting)
-            return null;
-
-        if (_instance == null)
-        {
-            _instance = FindObjectOfType<LocalizationManager>();
-
-            if (_instance == null)
-            {
-                GameObject obj = new GameObject("LocalizationManager");
-                _instance = obj.AddComponent<LocalizationManager>();
-            }
-        }
-        return _instance;
-    }
-}
+    public static LocalizationManager Instance => _instance;
 
     private string currentLang;
-    public System.Action OnLanguageChanged;
+    public Action OnLanguageChanged;
 
     private static bool isQuitting = false;
 
@@ -38,11 +20,11 @@ public class LocalizationManager : MonoBehaviour
         {"settings", "Настройки" },
         {"level", "Уровень {0}" },
         {"levels", "Уровни"},
-        {"help", "Помоги <color=#EE5B71>ЦВЕТКУ</color> добрать до <color=#FFE177>СОЛНЦА</color>"},
+        {"help", "Помоги <color=#EE5B71>ЦВЕТКУ</color> добраться до <color=#FFE177>СОЛНЦА</color>"},
         {"t1", "Нажимай на треснувшую почву, пока она не сломается"},
-        {"t2_1", "Зеленый листик можно двигать"},
+        {"t2_1", "Зелёный листик можно двигать"},
         {"t2_2", "Зажми его и потяни"},
-        {"t3_1", "<color=#84EE54>ГУСЕНИЦА</color> поедает растения на своем пути"},
+        {"t3_1", "<color=#84EE54>ГУСЕНИЦА</color> поедает растения на своём пути"},
         {"t3_2", "Постарайся с ней не сталкиваться"},
         {"loose", "Уровень {0} \nне пройден"},
         {"win", "Уровень {0} \nпройден!"},
@@ -57,7 +39,6 @@ public class LocalizationManager : MonoBehaviour
         {"level", "Level {0}" },
         {"levels", "Levels"},
         {"help", "Help the <color=#EE5B71>FLOWER</color> reach the <color=#FFE177>SUN</color>" },
-        {"sun", ""},
         {"t1", "Tap the cracked soil until it breaks"},
         {"t2_1", "The green leaf can be moved"},
         {"t2_2", "Press and drag it"},
@@ -71,31 +52,71 @@ public class LocalizationManager : MonoBehaviour
 
     void Awake()
     {
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (_instance != this)
+        if (isQuitting)
+            return;
+
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
-        if (PlayerPrefs.HasKey("lang"))
-            currentLang = PlayerPrefs.GetString("lang");
-        else
-            DetectLanguage();
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        InitLanguage();
     }
-    
-
-
-    void DetectLanguage()
+    void Start()
     {
-        if (Application.systemLanguage == SystemLanguage.Russian)
-            currentLang = "ru";
+        Debug.Log(YG2.isSDKEnabled);
+    }
+
+
+    void OnEnable()
+    {
+        if (_instance != null)
+            YG2.onSwitchLang += SetLanguageFromYG;
+    }
+
+    void OnDisable()
+    {
+        if (_instance != null)
+            YG2.onSwitchLang -= SetLanguageFromYG;
+    }
+
+    private void SetLanguageFromYG(string lang)
+    {
+        SetLanguage(lang);
+    }
+
+    private void InitLanguage()
+    {
+        string lang = "en";
+
+        if (_instance != null && !string.IsNullOrEmpty(YG2.lang))
+        {
+            lang = YG2.lang;
+        }
+        else if (PlayerPrefs.HasKey("lang"))
+        {
+            lang = PlayerPrefs.GetString("lang");
+        }
         else
-            currentLang = "en";
+        {
+            lang = Application.systemLanguage == SystemLanguage.Russian ? "ru" : "en";
+        }
+
+        SetLanguage(lang, false);
+    }
+
+    public void SetLanguage(string lang, bool save = true)
+    {
+        currentLang = lang;
+
+        if (save)
+            PlayerPrefs.SetString("lang", currentLang);
+
+        OnLanguageChanged?.Invoke();
     }
 
     public string GetText(string key)
@@ -109,13 +130,6 @@ public class LocalizationManager : MonoBehaviour
         return key;
     }
 
-    public void SetLanguage(string lang)
-    {
-        currentLang = lang;
-        PlayerPrefs.SetString("lang", currentLang);
-        OnLanguageChanged?.Invoke();
-    }
-
     public string GetText(string key, params object[] args)
     {
         string value = GetText(key);
@@ -123,8 +137,7 @@ public class LocalizationManager : MonoBehaviour
     }
 
     void OnApplicationQuit()
-{
-    isQuitting = true;
-}
-
+    {
+        isQuitting = true;
+    }
 }
