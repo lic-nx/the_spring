@@ -17,6 +17,7 @@ using System.IO;
 
 public class LevelMenu : MonoBehaviour
 {
+    private Canvas canvas;
     public Button[] buttons;
     public Image Complite;
     public Image Lock;         // Объект с компонентом Image
@@ -103,11 +104,14 @@ public class LevelMenu : MonoBehaviour
         buttons = new Button[childCount];
         for (int i = 0; i < childCount; i++)
         {
-            buttons[i] = levelButtons.transform.GetChild(i).GetComponent<Button>();
+            var btn = levelButtons.transform.GetChild(i).GetComponent<Button>();
+            buttons[i] = btn;
             // Assign button label based on its index (1‑based)
-            var txt = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
+            var txt = btn.GetComponentInChildren<TextMeshProUGUI>();
             if (txt != null) txt.text = (i + 1).ToString();
         }
+        // Cache for visibility checks
+        canvas = GetComponentInParent<Canvas>();
     }
 
     public void OpenLevel(int buttonIndex)

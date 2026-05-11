@@ -7,10 +7,10 @@ public class player_move : MonoBehaviour
     public GameObject Sun;
     public static player_move _instance;
 
-    // Ответственное за рисование стебля цветка 
+    // Ответственное за рисование стебля цветка
     public Line_rendered line_render;
     public Trigger_checker[] Triggers;
-    Vector3 body_position;
+    private Vector3 body_position;
     private Vector3 currentGrowDirection;
     public bool enabled = false;
     public GameObject first_dot;
@@ -36,11 +36,22 @@ public class player_move : MonoBehaviour
     // Ссылка на текущий целевой триггер для проверки во время движения
     private Trigger_checker currentTargetTrigger = null;
 
+    // Cached components
+    private Rigidbody2D rb;
+    private CapsuleCollider2D capsule;
+
     public void change_enabled()
     {
         Debug.Log("change enabled");
         enabled = !enabled;
         player_move._instance?.OnWorldChanged();
+    }
+
+    private void Awake()
+    {
+        // Cache frequently used components
+        rb = GetComponent<Rigidbody2D>();
+        capsule = GetComponent<CapsuleCollider2D>();
     }
 
     void Start()
@@ -75,7 +86,8 @@ public class player_move : MonoBehaviour
 
     bool CanFitAt(Vector3 position)
     {
-        CapsuleCollider2D col = GetComponent<CapsuleCollider2D>();
+        // Use cached capsule collider when available
+        CapsuleCollider2D col = capsule ?? GetComponent<CapsuleCollider2D>();
         if (col == null) return true;
 
         Vector2 size = col.size * 0.9f;
