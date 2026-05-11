@@ -40,7 +40,7 @@ namespace YG.EditorScr
             serializedObject = new SerializedObject(scr);
 
             isExampleFiles = Directory.Exists(InfoYG.PATCH_PC_EXAMPLE);
-            ExampleScenes.LoadSceneList();
+            // ExampleScenes.LoadSceneList();
 
             if (scr != null && scr.Basic.platform != null)
             {
@@ -427,26 +427,12 @@ namespace YG.EditorScr
 
                 GUILayout.Label(Langs.demoScenesInBuildSettings, styleOrange);
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button(Langs.addDemoScenes, YGEditorStyles.button))
-                    ExampleScenes.AddScenesToBuildSettings();
-                if (GUILayout.Button(Langs.delete, YGEditorStyles.button))
-                    ExampleScenes.RemoveScenesFromBuildSettings();
                 GUILayout.EndHorizontal();
 
                 string scenesStr;
-                if (ExampleScenes.sceneNames.Length > 0)
-                {
-                    scenesStr = Langs.demoScenes;
-                    foreach (var scene in ExampleScenes.sceneNames)
-                    {
-                        scenesStr += $"{scene},  ";
-                    }
-                    scenesStr = scenesStr.TrimEnd(',', ' ');
-                }
-                else
-                {
-                    scenesStr = Langs.demoNotAdded;
-                }
+                
+                scenesStr = Langs.demoNotAdded;
+                
                 GUILayout.Label(scenesStr, EditorStyles.helpBox);
 
                 GUILayout.Space(7);
@@ -454,8 +440,7 @@ namespace YG.EditorScr
                 {
                     if (EditorUtility.DisplayDialog(Langs.removeAllDemoMaterials, Langs.removeAllDemoDialog, Langs.removeAllDemoMaterials, Langs.cancel))
                     {
-                        ExampleScenes.RemoveScenesFromBuildSettings();
-
+                
                         List<string> directories = Directory.GetDirectories(InfoYG.PATCH_PC_MODULES).ToList();
                         for (int i = 0; i < directories.Count; i++)
                         {
