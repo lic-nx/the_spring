@@ -1,17 +1,25 @@
-using UnityEngine;
+using UnityEngine; // Подключаем пространство имён UnityEngine
 
+// ------------------------------------------------------------ // Разделитель для визуального оформления
+// IDraggable.cs // Название файла
+// ------------------------------------------------------------
+// Интерфейс, определяющий контракты для объектов, которые могут // Описание интерфейса
+// перемещаться в садовом режиме (перетаскивание). Реализации должны // Описание продолжение
+// реализовать методы начала, процесса и завершения перетаскивания. // Описание продолжение
+// ------------------------------------------------------------
 /// <summary>
-/// Simple drag‑and‑drop contract for objects that can be dragged in the garden.
-/// Implementations should handle visual feedback elsewhere (e.g., via FlowerCareSystem).
+/// Простой контракт перетаскивания для объектов в саду. // Краткое описание
+/// Реализации должны обрабатывать визуальную обратную связь в // Описание
+/// других системах (например, в FlowerCareSystem). // Описание
 /// </summary>
-public interface IDraggable
+public interface IDraggable // Объявление интерфейса IDraggable
 {
-    /// <summary>Called when the drag operation starts.</summary>
-    void OnDragStart();
+    // Вызывается при начале операции перетаскивания.
+    void OnDragStart(); // Метод вызывается в начале перетаскивания
 
-    /// <summary>Called every frame while the object is being dragged.</summary>
-    void OnDrag();
+    // Вызывается каждый кадр, пока объект находится в режиме перетаскивания.
+    void OnDrag(); // Метод вызывается каждый кадр во время переткивания
 
-    /// <summary>Called when the drag operation ends.</summary>
-    void OnDragEnd();
+    // Вызывается при завершении операции перетаскивания.
+    void OnDragEnd(); // Метод вызывается в конце перетаскивания
 }

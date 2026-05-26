@@ -22,7 +22,7 @@ public class ZoneSelector : MonoBehaviour
     private void Awake()
     {
         // Find all Pot components that are children of this manager.
-        var pots = GetComponentsInChildren<Pot>(includeInactive: true);
+        var pots = GetComponentsInChildren<Pot>(includeInactive: true); // ищем дочерние компоненты 
         if (pots.Length == 0)
         {
             Debug.LogWarning($"ZoneSelector on '{name}' found no Pot components in its children.");
@@ -34,8 +34,7 @@ public class ZoneSelector : MonoBehaviour
             return;
         }
 
-        // Distribute the snap points evenly among pots (or assign all points to each pot).
-        // Here we assign the full list to every pot so each pot can snap to any zone.
+        // Преобразует объекты точек привязки (SnapPoints) в массив координат (positions), которые понятны методу SetAllowedPositions.
         foreach (var pot in pots)
         {
             var positions = new Vector2[SnapPoints.Length];

@@ -1,30 +1,42 @@
-using UnityEngine;
+// ------------------------------------------------------------
+// GrowthConditions.cs – конфигурация условий роста цветка (ScriptableObject)
+// ------------------------------------------------------------
+// Этот скрипт описывает набор параметров, определяющих требования к уходу и
+// временные интервалы роста для каждого вида цветка. Параметры задаются в
+// инспекторе Unity и сохраняются в виде отдельного ассета ScriptableObject.
+// ------------------------------------------------------------
+using UnityEngine; // Базовые типы Unity, включая ScriptableObject и Mathf
+
 /// <summary>
-/// Holds configuration values that define how a flower grows and what care it needs.
-/// These values are typically set per flower species in the Unity inspector.
+/// ScriptableObject, содержащий конфигурационные параметры, определяющие
+/// как цветок растёт и какой уход требуется. Значения обычно задаются в
+/// инспекторе для каждого вида цветка.
 /// </summary>
 [CreateAssetMenu(fileName = "GrowthConditions", menuName = "Garden/Growth Conditions")]
-public class GrowthConditions : ScriptableObject
+public class GrowthConditions : ScriptableObject // Наследуем от ScriptableObject, а не MonoBehaviour
 {
-    [Header("Care timing (seconds)")]
+    // ------------------- Параметры ухода (в секундах) -------------------
+    [Header("Care timing (seconds)")] // Заголовок группы в инспекторе
+    [Min(0f)] // Минимальное значение – не допускаем отрицательных чисел
+    public float TimeBetweenWatering = 30f; // Интервал между поливами
     [Min(0f)]
-    public float TimeBetweenWatering = 30f;
+    public float TimeBetweenFertilizing = 60f; // Интервал между удобрениями
     [Min(0f)]
-    public float TimeBetweenFertilizing = 60f;
-    [Min(0f)]
-    public float TimeBetweenSunlight = 45f;
+    public float TimeBetweenSunlight = 45f; // Интервал между воздействием света
 
+    // ----------------- Параметры роста (в секундах) -------------------
     [Header("Growth timing (seconds)")]
     [Min(0f)]
-    public float TimeToSprout = 20f;
+    public float TimeToSprout = 20f; // Время от семени до всхода
     [Min(0f)]
-    public float TimeToYoungShoot = 40f;
+    public float TimeToYoungShoot = 40f; // Время от всхода до молодого побега
     [Min(0f)]
-    public float TimeToBloom = 80f;
+    public float TimeToBloom = 80f; // Время от молодого побега до цветения
 
+    // Unity‑callback, вызываемый при изменении значения в инспекторе
     private void OnValidate()
     {
-        // Ensure no negative timings.
+        // Защищаем от отрицательных значений, принудительно задавая минимум 0
         TimeBetweenWatering = Mathf.Max(0f, TimeBetweenWatering);
         TimeBetweenFertilizing = Mathf.Max(0f, TimeBetweenFertilizing);
         TimeBetweenSunlight = Mathf.Max(0f, TimeBetweenSunlight);

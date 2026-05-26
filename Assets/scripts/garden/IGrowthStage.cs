@@ -1,43 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Rendering.PostProcessing;
+// ------------------------------------------------------------ // Разделитель заголовка
+// IGrowthStage.cs // Название файла
+// ------------------------------------------------------------ // Разделитель
+// Интерфейс и базовая реализация стадий роста цветка. // Описание назначения
+// Здесь определяются методы, которые вызываются каждый кадр // Описание поведения
+// и переход к следующей стадии. // Описание поведения
+// ------------------------------------------------------------
+using System.Collections; // Подключаем пространство имён для коллекций
+using System.Collections.Generic; // Подключаем обобщённые коллекции
+using UnityEngine; // Основное пространство имён Unity
+using UnityEngine.SceneManagement; // Управление сценами (может не использоваться здесь)
+using UnityEngine.Rendering.PostProcessing; // Пост‑процессинг (не используется в этом файле)
 
+// Интерфейс, описывающий поведение отдельной стадии роста.
 public interface IGrowthStage
 {
-    /// <summary>
-    /// Called each frame while the flower is in this growth stage.
-    /// </summary>
-    void Update();
+    // Вызывается каждый кадр, пока цветок находится в данной стадии.
+    void Update(); // Метод обновления каждый кадр
 
-    /// <summary>
-    /// Returns the next growth stage instance. Returns the same instance if this is the final stage.
-    /// </summary>
-    IGrowthStage NextStage();
+    // Возвращает объект следующей стадии роста.
+    // Если текущая стадия последняя, может вернуть себя же.
+    IGrowthStage NextStage(); // Метод получения следующей стадии
 }
 
+// Реализация первой стадии – семя.
 public class SeedStage : IGrowthStage
 {
-    private Flower _flower;
-    private float _timeInStage;
+    // Ссылка на объект цветка, к которому относится данная стадия.
+    private Flower _flower; // Поле ссылки на Flower
+    // Счётчик времени, проведённого в текущей стадии.
+    private float _timeInStage; // Таймер текущей стадии
 
+    // Конструктор принимает ссылку на Flower, чтобы иметь доступ к условиям роста.
     public SeedStage(Flower flower)
     {
-        _flower = flower;
-        _timeInStage = 0;
+        _flower = flower;               // сохраняем ссылку на цветок
+        _timeInStage = 0;               // инициализируем таймер
     }
 
+    // Обновление таймера каждый кадр; переход к следующей стадии при достижении времени прорастания.
     public void Update()
     {
-        _timeInStage += Time.deltaTime;
+        _timeInStage += Time.deltaTime; // прибавляем прошедшее время
         if (_timeInStage >= _flower.Conditions.TimeToSprout)
         {
-            _flower.AdvanceToNextStage();
+            _flower.AdvanceToNextStage(); // переключаемся на следующую стадию
         }
     }
 
-    public IGrowthStage NextStage() => new SproutStage(_flower);
+    // Создаём объект следующей стадии – SproutStage (пока заглушка, будет реализована позже).
+    public IGrowthStage NextStage() => new SproutStage(_flower); // Возвращаем новую стадию SproutStage
 }
 
-// Placeholder for other stages (SproutStage, YoungShootStage, BloomedFlowerStage) – implement similarly when needed.
+// Заглушка для остальных стадий (SproutStage, YoungShootStage, BloomedFlowerStage).
+// Реализуйте их аналогично SeedStage, учитывая специфические условия роста.

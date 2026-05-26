@@ -7,11 +7,11 @@ using UnityEngine;
 public class SeedItem : ScriptableObject
 {
     // The flower prefab that will be instantiated when the seed is bought.
-    public GameObject flowerPrefab;
+    public GameObject flowerPrefab;// Префаб цветка, который будет создан при покупке семени
 
     // Optional sprite for UI representation of the seed.
-    public Sprite seedSprite;
+    public Sprite seedSprite;// Спрайт, отображаемый в UI магазина для представления семени (опционально)
 
     // Price of the seed in whatever currency system you use.
-    public int price = 10;
+    public int price = 10; // Стоимость семени в текущей валютной системе (по умолчанию 10)
 }

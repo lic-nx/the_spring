@@ -40,7 +40,7 @@ namespace YG.EditorScr
             serializedObject = new SerializedObject(scr);
 
             isExampleFiles = Directory.Exists(InfoYG.PATCH_PC_EXAMPLE);
-            // ExampleScenes.LoadSceneList();
+            ExampleScenes.LoadSceneList();
 
             if (scr != null && scr.Basic.platform != null)
             {
@@ -134,16 +134,37 @@ namespace YG.EditorScr
 
         public static bool CreateIcon(string pach, out Texture2D textureProperty)
         {
-            if (!File.Exists(pach))
+            textureProperty = null;
+
+            if (string.IsNullOrEmpty(pach) || !File.Exists(pach))
             {
-                textureProperty = null;
                 return false;
+            }
+
+            string assetPath = GetAssetPath(pach);
+            if (!string.IsNullOrEmpty(assetPath))
+            {
+                textureProperty = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
+                if (textureProperty != null)
+                    return true;
             }
 
             byte[] fileData = File.ReadAllBytes(pach);
             textureProperty = new Texture2D(2, 2);
             textureProperty.LoadImage(fileData);
+            textureProperty.hideFlags = HideFlags.HideAndDontSave;
             return true;
+        }
+
+        private static string GetAssetPath(string fullPath)
+        {
+            string dataPath = Path.GetFullPath(Application.dataPath).Replace("\\", "/");
+            string normalizedPath = Path.GetFullPath(fullPath).Replace("\\", "/");
+
+            if (!normalizedPath.StartsWith(dataPath + "/", StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            return "Assets" + normalizedPath.Substring(dataPath.Length);
         }
 
         private void OnGUI()
@@ -159,6 +180,7 @@ namespace YG.EditorScr
             if (scr == null)
             {
                 GUILayout.Label("Error!", EditorStyles.boldLabel);
+                EditorGUILayout.EndScrollView();
                 return;
             }
             GUIStyle styleOrange = TextStyles.Orange();
@@ -427,12 +449,26 @@ namespace YG.EditorScr
 
                 GUILayout.Label(Langs.demoScenesInBuildSettings, styleOrange);
                 GUILayout.BeginHorizontal();
+                if (GUILayout.Button(Langs.addDemoScenes, YGEditorStyles.button))
+                    ExampleScenes.AddScenesToBuildSettings();
+                if (GUILayout.Button(Langs.delete, YGEditorStyles.button))
+                    ExampleScenes.RemoveScenesFromBuildSettings();
                 GUILayout.EndHorizontal();
 
                 string scenesStr;
-                
-                scenesStr = Langs.demoNotAdded;
-                
+                if (ExampleScenes.sceneNames.Length > 0)
+                {
+                    scenesStr = Langs.demoScenes;
+                    foreach (var scene in ExampleScenes.sceneNames)
+                    {
+                        scenesStr += $"{scene},  ";
+                    }
+                    scenesStr = scenesStr.TrimEnd(',', ' ');
+                }
+                else
+                {
+                    scenesStr = Langs.demoNotAdded;
+                }
                 GUILayout.Label(scenesStr, EditorStyles.helpBox);
 
                 GUILayout.Space(7);
@@ -440,7 +476,8 @@ namespace YG.EditorScr
                 {
                     if (EditorUtility.DisplayDialog(Langs.removeAllDemoMaterials, Langs.removeAllDemoDialog, Langs.removeAllDemoMaterials, Langs.cancel))
                     {
-                
+                        ExampleScenes.RemoveScenesFromBuildSettings();
+
                         List<string> directories = Directory.GetDirectories(InfoYG.PATCH_PC_MODULES).ToList();
                         for (int i = 0; i < directories.Count; i++)
                         {

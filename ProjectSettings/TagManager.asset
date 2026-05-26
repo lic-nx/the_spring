@@ -9,6 +9,7 @@ TagManager:
   - sun
   - Music
   - enemy
+  - Pot
   layers:
   - Default
   - TransparentFX
