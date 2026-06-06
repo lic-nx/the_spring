@@ -51,7 +51,7 @@ public class Shop : MonoBehaviour // Класс магазина, наследу
             return;
         }
 
-        // TODO: deduct player currency here.
+        // TODO: плата за семена 
         Debug.Log($"Purchased seed for {item.price} coins."); // Логируем покупку семени
 
         // Instantiate a seed sprite that follows the cursor.
@@ -59,8 +59,8 @@ public class Shop : MonoBehaviour // Класс магазина, наследу
         var sr = seedObj.AddComponent<SpriteRenderer>(); // Добавляем компонент SpriteRenderer
         sr.sprite = item.seedSprite; // Assign seed sprite. // Присваиваем спрайт семени
         // Add SeedFollower and assign the flower prefab to it.
-        var follower = seedObj.AddComponent<SeedFollower>(); // Добавляем скрипт следования за курсором
-        follower.FlowerPrefab = item.flowerPrefab; // We'll expose a property. // Устанавливаем префаб цветка
+        // var follower = seedObj.AddComponent<SeedDragger>(); // Добавляем скрипт Drag‑and‑Drop для семени
+        // follower.FlowerPrefab = item.flowerPrefab; // Устанавливаем префаб цветка
         // Track this instance as a pending seed.
         pendingSeeds.Add(seedObj); // Добавляем в список ожидающих семян
     }
