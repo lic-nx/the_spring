@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SeedItem", menuName = "Garden/Seed Item")]
 public class SeedItem : ScriptableObject
 {
+    public string name = "Ромашка";
     // The flower prefab that will be instantiated when the seed is bought.
     public GameObject flowerPrefab;// Префаб цветка, который будет создан при покупке семени
 
@@ -14,4 +15,5 @@ public class SeedItem : ScriptableObject
 
     // Price of the seed in whatever currency system you use.
     public int price = 10; // Стоимость семени в текущей валютной системе (по умолчанию 10)
+
 }

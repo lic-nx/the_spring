@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SeedItem
   m_EditorClassIdentifier: 
   flowerPrefab: {fileID: 5007003151080868502, guid: 453b8c372e607014c8b32f3627013126, type: 3}
-  seedSprite: {fileID: 361244775, guid: acca59fc8b63e6743b7780d8d0eca9ab, type: 3}
-  price: 0
+  seedSprite: {fileID: -1497457251, guid: 27d76a14c51712948a8fe026ac79df92, type: 3}
+  price: 10
