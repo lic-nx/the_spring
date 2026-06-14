@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEngine.EventSystems; 
 public class DragDrop: MonoBehaviour
 {
-    private BoxCollider2D _collider;
-    private Vector3 _startDragPosition;
+    public BoxCollider2D _collider;
+    public Vector3 _startDragPosition;
     private bool isFollowingMouse = false;
     public Camera mainCamera;
 
@@ -72,22 +72,22 @@ public class DragDrop: MonoBehaviour
 
     private void OnMouseUp()
     {
-        Debug.Log("Отпускаем мышку");
-        // Проверяем, куда упала карта
-        _collider.enabled = false;
-        Collider2D dropArea = Physics2D.OverlapPoint(transform.position);
-        _collider.enabled = true;
-        Debug.Log("Seed needs watering");
-        if (dropArea != null && dropArea.GetComponent<iPotDropArea>() != null)
-        {
-            Debug.Log("Мы нашли куда поставить");
-            dropArea.GetComponent<iPotDropArea>().OnPotDrop(this.gameObject);
-        }
-        else
-        {
-            Debug.Log("мы не нашли куда поместить ");
-            // Возвращаем в исходное положение
-            transform.position = _startDragPosition;
-        }
+        // Debug.Log("Отпускаем мышку");
+        // // Проверяем, куда упала карта
+        // _collider.enabled = false;
+        // Collider2D dropArea = Physics2D.OverlapPoint(transform.position);
+        // _collider.enabled = true;
+        // Debug.Log("Seed needs watering");
+        // if (dropArea != null && dropArea.GetComponent<iPotDropArea>() != null)
+        // {
+        //     Debug.Log("Мы нашли куда поставить");
+        //     dropArea.GetComponent<iPotDropArea>().OnPotDrop(this.gameObject);
+        // }
+        // else
+        // {
+        //     Debug.Log("мы не нашли куда поместить ");
+        //     // Возвращаем в исходное положение
+        //     transform.position = _startDragPosition;
+        // }
     }
 }

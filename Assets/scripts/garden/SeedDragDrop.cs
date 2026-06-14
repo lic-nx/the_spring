@@ -51,16 +51,25 @@ private void Update()
     protected void OnDropInPot(Transform potTransform)
     {
         if (seedItem.flowerPrefab != null)
-    {
-        // Создаём цветок
-        GameObject flower = Instantiate(seedItem.flowerPrefab, transform.position, Quaternion.identity);
+        {
+            // Instantiate the flower prefab
+            GameObject flowerObj = Instantiate(seedItem.flowerPrefab, transform.position, Quaternion.identity);
+            // Parent it to the pot
+            flowerObj.transform.SetParent(potTransform);
+            // Position it correctly
+            flowerObj.transform.localPosition = new Vector3(0f, 0.5f, 0f);
 
-        // Привязываем к горшку
-        flower.transform.SetParent(potTransform);
-
-        // Устанавливаем локальную позицию: по центру по X, и смещаем вверх по Y
-        flower.transform.localPosition = new Vector3(0f, 0.5f, 0f); // Смещение вверх на 0.5 единиц
-        Debug.Log("Flower planted at the top of the pot!");
-    }
+            // Initialise the Flower component with its GrowthConditions if available
+            var flowerComp = flowerObj.GetComponent<Flower>();
+            if (flowerComp != null && seedItem.growthConditions != null)
+            {
+                flowerComp.Initialize(seedItem.growthConditions);
+            }
+            else
+            {
+                Debug.LogWarning("Flower component or GrowthConditions missing on seed drop.");
+            }
+            Debug.Log("Flower planted at the top of the pot!");
+        }
     }
 }

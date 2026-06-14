@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 4119751265134757258}
   - component: {fileID: 9149968182851552595}
   - component: {fileID: 5636901764187997063}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Flower
-  m_TagString: Untagged
+  m_TagString: flower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,7 +104,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _conditions: {fileID: 11400000, guid: 88441caccbd93fa41aa7d4c8fefc1cd5, type: 2}
-  stageSprites: []
+  wateringIcon: {fileID: 21300000, guid: 5643d57cd03e83442acf97d117a9e732, type: 3}
+  fertilizingIcon: {fileID: 21300000, guid: 153bce610df1a7f4ba7e55df2dd4cc2f, type: 3}
+  sunlightIcon: {fileID: 21300000, guid: 0d77705239853914c8e2da93ec596f52, type: 3}
+  wateringIconOffset: {x: 0.5, y: 0.5, z: 0}
+  fertilizingIconOffset: {x: -0.5, y: 0.5, z: 0}
+  sunlightIconOffset: {x: 0, y: 0.8, z: 0}
 --- !u!60 &9149968182851552595
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -180,7 +185,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5007003151080868502}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

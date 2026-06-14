@@ -12,9 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af39c66a872710d4cbbbebeb6580d3b6, type: 3}
   m_Name: GrowthConditions
   m_EditorClassIdentifier: 
+  stageSprites:
+  - {fileID: -1196712000, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+  - {fileID: 663680526, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+  - {fileID: -1966310128, guid: eee214d7d91850f44a281b12d885e640, type: 3}
+  - {fileID: -2114890831, guid: eee214d7d91850f44a281b12d885e640, type: 3}
   TimeBetweenWatering: 10
   TimeBetweenFertilizing: 20
   TimeBetweenSunlight: 15
+  BaseEventCount: 4
+  StageMultiplier: 2
   TimeToSprout: 20
   TimeToYoungShoot: 40
   TimeToBloom: 80

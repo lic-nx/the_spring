@@ -10,6 +10,11 @@ public class SeedItem : ScriptableObject
     // The flower prefab that will be instantiated when the seed is bought.
     public GameObject flowerPrefab;// Префаб цветка, который будет создан при покупке семени
 
+    public IGrowthStage growthStage;
+
+    // Growth conditions asset for this seed type
+    public GrowthConditions growthConditions;
+
     // Optional sprite for UI representation of the seed.
     public Sprite seedSprite;// Спрайт, отображаемый в UI магазина для представления семени (опционально)
 
