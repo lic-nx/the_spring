@@ -1,8 +1,16 @@
 {
-    "idSave": 746,
-    "UnlockedLevel": 2,
-    "CompletedLevel": 1,
-    "MusicEnabled": 0,
-    "ReachedIndex": 1,
+    "intExample": 5,
+    "strExample": "Hello!",
+    "boolExample": [
+        false,
+        false,
+        false,
+        false
+    ],
+    "idSave": 768,
+    "UnlockedLevel": 13,
+    "CompletedLevel": 12,
+    "MusicEnabled": 1,
+    "ReachedIndex": 20,
     "EffectMusicEnabled": true
 }

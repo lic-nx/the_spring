@@ -15,5 +15,5 @@ MonoBehaviour:
   name: "\u0420\u043E\u043C\u0430\u0448\u043A\u0430"
   flowerPrefab: {fileID: 5007003151080868502, guid: 453b8c372e607014c8b32f3627013126, type: 3}
   growthConditions: {fileID: 11400000, guid: 88441caccbd93fa41aa7d4c8fefc1cd5, type: 2}
-  seedSprite: {fileID: -1497457251, guid: 27d76a14c51712948a8fe026ac79df92, type: 3}
+  seedSprite: {fileID: 21300000, guid: 87f6e6d20cf045445b796004a0b79f77, type: 3}
   price: 10

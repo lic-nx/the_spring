@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class PatrolBetweenPoints2D : MonoBehaviour
 {
+    private bool CanRotate = true;
     [Header("Patrol Points")]
     [SerializeField] private Transform pointA;
     [SerializeField] private Transform pointB;
@@ -51,13 +52,20 @@ public class PatrolBetweenPoints2D : MonoBehaviour
     void SwitchTarget()
     {
         target = (target == pointA) ? pointB : pointA;
+        StartCoroutine(Rotate());
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
         if ((blockLayers.value & (1 << col.gameObject.layer)) == 0)
             return;
-
+        if (CanRotate)
         SwitchTarget();
+    }
+    IEnumerator Rotate()
+    {
+        CanRotate = false;
+        yield return new WaitForSeconds(1f);
+        CanRotate = true;
     }
 }

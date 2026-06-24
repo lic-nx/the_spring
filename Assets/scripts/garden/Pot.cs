@@ -7,6 +7,24 @@ using UnityEngine.Rendering.PostProcessing; // Пост‑процессинг (
 
 public class Pot : DragDrop // Класс Pot, реализует интерфейс IDraggable для поддержки перетаскивания
 {
+    // Child element for attaching to a flower
+    [SerializeField] private Transform flowerAttachment;
+    // Child element for attaching to a pot zone
+    [SerializeField] private Transform zoneAttachmentPoint;
+
+    // Align pot's attachment child with the provided zone's attachment child while preserving original offset
+    public void AlignToZone(Transform zoneRoot)
+    {
+        // Zone's attachment point (first child or the zone itself)
+        Transform zoneAttach = zoneRoot.childCount > 0 ? zoneRoot.GetChild(0) : zoneRoot;
+        // Pot's attachment point (specified field or first child/fallback)
+        Transform potAttach = zoneAttachmentPoint != null ? zoneAttachmentPoint : (this.transform.childCount > 0 ? this.transform.GetChild(0) : this.transform);
+        Vector3 originalOffset = potAttach.position - this.transform.position;
+        this.transform.position = zoneAttach.position - originalOffset;
+        potAttach.position = zoneAttach.position;
+        Debug.Log("Горшок выровнен по точкам привязки к зоне");
+    }
+
         private void OnMouseUp()
     {
         Debug.Log("Отпускаем мышку");

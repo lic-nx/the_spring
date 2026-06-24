@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 5370756783337845219}
   - component: {fileID: 1220428973772505814}
   - component: {fileID: 3228436939676247210}
-  - component: {fileID: 2478899701925859018}
   m_Layer: 0
   m_Name: crush_block_splineprefab
   m_TagString: Untagged
@@ -289,10 +288,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0e1a0e4a40278fe48826186618238785, type: 3}
   - {fileID: 8300000, guid: cd384c59b11e5e64295b990d605a8cd3, type: 3}
   - {fileID: 8300000, guid: 138545fbfbf207048b4cd90d0085a432, type: 3}
-  soundClipsLast:
-  - {fileID: 8300000, guid: 77ea43e53fd1689438435a362c9ee9b3, type: 3}
-  - {fileID: 8300000, guid: 3f77fe4a63e679d43ae41395eb0bacfb, type: 3}
-  - {fileID: 8300000, guid: 4fafcb7eba4e1014da8d4082313a833f, type: 3}
 --- !u!114 &3228436939676247210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,17 +302,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.2
   magnitude: 0.1
---- !u!114 &2478899701925859018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 304750380406399298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2547b3679ce815f419c99e5e879c7105, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  amplitude: 0.1
-  frequency: 1
