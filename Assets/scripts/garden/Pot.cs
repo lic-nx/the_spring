@@ -12,6 +12,10 @@ public class Pot : DragDrop // Класс Pot, реализует интерфе
     // Child element for attaching to a pot zone
     [SerializeField] private Transform zoneAttachmentPoint;
 
+    // Reference to the currently planted flower (if any)
+    private Flower currentFlower;
+    public Flower CurrentFlower => currentFlower;
+
     // Align pot's attachment child with the provided zone's attachment child while preserving original offset
     public void AlignToZone(Transform zoneRoot)
     {
@@ -25,7 +29,35 @@ public class Pot : DragDrop // Класс Pot, реализует интерфе
         Debug.Log("Горшок выровнен по точкам привязки к зоне");
     }
 
-        private void OnMouseUp()
+    // Plant a flower in this pot. Returns true if successful.
+    public bool PlantFlower(Flower flower)
+    {
+        if (currentFlower != null)
+        {
+            Debug.LogWarning("Attempted to plant a flower in an already occupied pot.");
+            return false;
+        }
+        if (flower == null)
+        {
+            Debug.LogWarning("Cannot plant a null flower.");
+            return false;
+        }
+        // Parent the flower to the pot
+        flower.transform.SetParent(this.transform);
+        // Position the flower at the attachment point if defined, otherwise at the pot's origin
+        if (flowerAttachment != null)
+        {
+            flower.transform.position = flowerAttachment.position;
+        }
+        else
+        {
+            flower.transform.localPosition = Vector3.zero;
+        }
+        currentFlower = flower;
+        return true;
+    }
+
+    private void OnMouseUp()
     {
         Debug.Log("Отпускаем мышку");
         // Проверяем, куда упала карта
@@ -45,5 +77,5 @@ public class Pot : DragDrop // Класс Pot, реализует интерфе
             transform.position = _startDragPosition;
         }
     }
-    
+
 }

@@ -50,26 +50,44 @@ private void Update()
     // Метод для обработки падения в горшок (переопределяется в наследнике)
     protected void OnDropInPot(Transform potTransform)
     {
-        if (seedItem.flowerPrefab != null)
+        if (seedItem.flowerPrefab == null)
         {
-            // Instantiate the flower prefab
-            GameObject flowerObj = Instantiate(seedItem.flowerPrefab, transform.position, Quaternion.identity);
-            // Parent it to the pot
-            flowerObj.transform.SetParent(potTransform);
-            // Position it correctly
-            flowerObj.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-
-            // Initialise the Flower component with its GrowthConditions if available
-            var flowerComp = flowerObj.GetComponent<Flower>();
-            if (flowerComp != null && seedItem.growthConditions != null)
-            {
-                flowerComp.Initialize(seedItem.growthConditions);
-            }
-            else
-            {
-                Debug.LogWarning("Flower component or GrowthConditions missing on seed drop.");
-            }
-            Debug.Log("Flower planted at the top of the pot!");
+            Debug.LogWarning("No flower prefab assigned to seed item.");
+            return;
+        }
+        // Get Pot component
+        Pot pot = potTransform.GetComponent<Pot>();
+        if (pot == null)
+        {
+            Debug.LogWarning("Dropped object is not a Pot.");
+            return;
+        }
+        // Prevent planting if pot already occupied
+        if (pot.CurrentFlower != null)
+        {
+            Debug.LogWarning("Pot already has a flower attached. Abort planting.");
+            return;
+        }
+        // Instantiate the flower prefab
+        GameObject flowerObj = Instantiate(seedItem.flowerPrefab, Vector3.zero, Quaternion.identity);
+        Flower flowerComp = flowerObj.GetComponent<Flower>();
+        if (flowerComp == null)
+        {
+            Debug.LogWarning("Instantiated object does not contain a Flower component.");
+            Destroy(flowerObj);
+            return;
+        }
+        // Initialize growth conditions if provided
+        if (seedItem.growthConditions != null)
+        {
+            flowerComp.Initialize(seedItem.growthConditions);
+        }
+        // Use Pot's PlantFlower method to attach and position
+        bool placed = pot.PlantFlower(flowerComp);
+        if (!placed)
+        {
+            // If planting failed, destroy the instantiated flower
+            Destroy(flowerObj);
         }
     }
 }
