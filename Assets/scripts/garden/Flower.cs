@@ -125,11 +125,13 @@ public class Flower : MonoBehaviour
 
     public void Water()
     {
-        _timeSinceLastWatering = 0f;
-        _needWater = false;
-        RegisterCareEvent();
-        TryResumeTimer();
-        UpdateNeedIcons();
+        if( _timeSinceLastWatering >= Conditions.TimeBetweenWatering){
+            _timeSinceLastWatering = 0f;
+            _needWater = false;
+            RegisterCareEvent();
+            TryResumeTimer();
+            UpdateNeedIcons();
+        }
     }
 
     public void Fertilize()

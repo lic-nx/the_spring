@@ -25,7 +25,7 @@ public class DragDrop: MonoBehaviour
         {
             // Получаем позицию мыши в мировых координатах
             Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            mousePosition.z = 0f; // Устанавливаем z-координату, чтобы объект не уходил вглубь/вперёд
+            mousePosition.z = this.transform.position.z;; // Устанавливаем z-координату, чтобы объект не уходил вглубь/вперёд
 
             // Обновляем позицию объекта
             transform.position = mousePosition;
