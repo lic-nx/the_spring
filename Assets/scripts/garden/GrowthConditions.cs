@@ -31,10 +31,10 @@ public class GrowthConditions : ScriptableObject // Наследуем от Scri
     [Header("Growth event logic")]
     [Tooltip("Base number of care events required for first stage transition.")]
     [Min(1)]
-    public int BaseEventCount = 4;
+    public int BaseEventCount = 4; // сколько ухаживаний 
     [Tooltip("Multiplier applied to required events for each subsequent stage.")]
     [Min(1f)]
-    public float StageMultiplier = 2f;
+    public float StageMultiplier = 2f; //на сколько множим число ухаживаний
 
     // Helper to compute required events for a given stage index (0‑based, first sprite is stage 0)
     public int GetRequiredEventsForStage(int stageIndex)

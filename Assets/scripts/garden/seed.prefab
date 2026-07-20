@@ -555,7 +555,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 039f175c45713794fbfb674ddf323140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconImage: {fileID: 2229182273748953251}
+  iconImage: {fileID: 5800574797557061776}
+  nameText: {fileID: 0}
   priceText: {fileID: 2888133470750094142}
   quantityText: {fileID: 6523057509567457968}
   buyButton: {fileID: 4276992323027796033}

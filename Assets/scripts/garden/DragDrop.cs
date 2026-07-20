@@ -51,7 +51,7 @@ public class DragDrop: MonoBehaviour
     }
     
 
-    private void OnMouseDown()
+    public void OnMouseDown()
     {
         Debug.Log("мы нажали на объект ");
         // Сохраняем начальную позицию

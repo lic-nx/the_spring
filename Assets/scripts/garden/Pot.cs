@@ -1,35 +1,31 @@
-using System; // Подключаем базовые типы C#
-using System.Collections; // Для работы с коллекциями IEnumerable
-using System.Collections.Generic; // Для обобщённых коллекций List<T>
-using UnityEngine; // Основное пространство имён Unity
-using UnityEngine.SceneManagement; // Управление сценами (может не использоваться в этом файле)
-using UnityEngine.Rendering.PostProcessing; // Пост‑процессинг (не используется в этом файле)
+using UnityEngine;
 
-public class Pot : DragDrop // Класс Pot, реализует интерфейс IDraggable для поддержки перетаскивания
+public class Pot : DragDrop
 {
-    // Child element for attaching to a flower
     [SerializeField] private Transform flowerAttachment;
-    // Child element for attaching to a pot zone
     [SerializeField] private Transform zoneAttachmentPoint;
 
-    // Reference to the currently planted flower (if any)
     private Flower currentFlower;
     public Flower CurrentFlower => currentFlower;
 
-    // Align pot's attachment child with the provided zone's attachment child while preserving original offset
+    // Ссылка на зону, в которой сейчас находится горшок
+    private iPotDropArea currentZone;
+
+    // Метод для сохранения ссылки на зону (вызывается из LeftDropArea)
+    public void SetCurrentZone(iPotDropArea zone)
+    {
+        currentZone = zone;
+    }
+
     public void AlignToZone(Transform zoneRoot)
     {
-        // Zone's attachment point (first child or the zone itself)
         Transform zoneAttach = zoneRoot.childCount > 0 ? zoneRoot.GetChild(0) : zoneRoot;
-        // Pot's attachment point (specified field or first child/fallback)
         Transform potAttach = zoneAttachmentPoint != null ? zoneAttachmentPoint : (this.transform.childCount > 0 ? this.transform.GetChild(0) : this.transform);
         Vector3 originalOffset = potAttach.position - this.transform.position;
         this.transform.position = zoneAttach.position - originalOffset;
         potAttach.position = zoneAttach.position;
-        Debug.Log("Горшок выровнен по точкам привязки к зоне");
     }
 
-    // Plant a flower in this pot. Returns true if successful.
     public bool PlantFlower(Flower flower)
     {
         if (currentFlower != null)
@@ -42,9 +38,8 @@ public class Pot : DragDrop // Класс Pot, реализует интерфе
             Debug.LogWarning("Cannot plant a null flower.");
             return false;
         }
-        // Parent the flower to the pot
+        
         flower.transform.SetParent(this.transform);
-        // Position the flower at the attachment point if defined, otherwise at the pot's origin
         if (flowerAttachment != null)
         {
             flower.transform.position = flowerAttachment.position;
@@ -57,25 +52,49 @@ public class Pot : DragDrop // Класс Pot, реализует интерфе
         return true;
     }
 
-    private void OnMouseUp()
+    // ПЕРЕОПРЕДЕЛЯЕМ OnMouseDown из базового класса, чтобы освободить зону при поднятии
+    private void OnMouseDown()
     {
-        Debug.Log("Отпускаем мышку");
-        // Проверяем, куда упала карта
-        _collider.enabled = false;
-        Collider2D dropArea = Physics2D.OverlapPoint(transform.position);
-        _collider.enabled = true;
-        Debug.Log("Seed needs watering");
-        if (dropArea != null && dropArea.GetComponent<iPotDropArea>() != null)
+        base.OnMouseDown(); // Выполняем логику DragDrop (сохранение позиции и т.д.)
+
+        // Если горшок стоял в зоне, освобождаем её
+        if (currentZone != null)
         {
-            Debug.Log("Мы нашли куда поставить");
-            dropArea.GetComponent<iPotDropArea>().OnPotDrop(this.gameObject);
+            currentZone.FreeZone();
+            currentZone = null;
         }
-        else
+
+        // Показываем все зоны, так как мы начали перетаскивание
+        if (DropZoneManager.Instance != null)
         {
-            Debug.Log("мы не нашли куда поместить ");
-            // Возвращаем в исходное положение
-            transform.position = _startDragPosition;
+            DropZoneManager.Instance.SetZonesVisibility(true);
         }
     }
 
+    private void OnMouseUp()
+    {
+        _collider.enabled = false;
+        Collider2D dropArea = Physics2D.OverlapPoint(transform.position);
+        _collider.enabled = true;
+
+        bool isPlacedSuccessfully = false;
+
+        if (dropArea != null && dropArea.GetComponent<iPotDropArea>() != null)
+        {
+            iPotDropArea area = dropArea.GetComponent<iPotDropArea>();
+            isPlacedSuccessfully = area.OnPotDrop(this.gameObject);
+        }
+
+        if (!isPlacedSuccessfully)
+        {
+            Debug.Log("Не удалось поставить горшок, возвращаем на исходную позицию.");
+            transform.position = _startDragPosition;
+        }
+
+        // Скрываем зоны после завершения перетаскивания (независимо от успеха)
+        if (DropZoneManager.Instance != null)
+        {
+            DropZoneManager.Instance.SetZonesVisibility(false);
+        }
+    }
 }

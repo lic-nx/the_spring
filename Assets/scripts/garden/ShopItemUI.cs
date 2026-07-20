@@ -1,74 +1,153 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // <-- 1. Добавляем пространство имен TextMeshPro
+using TMPro;
+using System;
 
 public class ShopItemUI : MonoBehaviour
 {
     [Header("UI Элементы (назначаются в префабе)")]
     public Image iconImage;
-    
-    // <-- 2. Заменяем Text на TMP_Text
-    // public TMP_Text nameText;
+    public TMP_Text nameText;
     public TMP_Text priceText;
     public TMP_Text quantityText;
-    
     public Button buyButton;
 
-    private SeedItem _currentSeed;
+    private object _currentItem;
+    private Action _onBuyAction;
 
-    public void Setup(SeedItem seed)
+    /// <summary>
+    /// Универсальная настройка карточки. Принимает любой объект и действие при покупке.
+    /// </summary>
+    public void Setup(object item, Action onBuyCallback)
     {
-        _currentSeed = seed;
-
-        // Заполняем данные
-        // nameText.text = seed.name;
-        priceText.text = $"{seed.price}";
+        Debug.Log($"[ShopItemUI] Вызван Setup. Тип переданного объекта: {item?.GetType().Name ?? "null"}");
         
-        if (seed.seedSprite != null)
+        _currentItem = item;
+        _onBuyAction = onBuyCallback;
+
+        // 1. Обработка ИКОНКИ (Спрайта)
+        Sprite targetSprite = null;
+        if (item is SeedItem seed) 
         {
-            iconImage.sprite = seed.seedSprite;
+            targetSprite = seed.seedSprite;
+            Debug.Log($"[ShopItemUI] Распознан SeedItem. Спрайт: {(targetSprite != null ? targetSprite.name : "null")}");
+        }
+        else if (item is Sprite sprite) 
+        {
+            targetSprite = sprite;
+            Debug.Log($"[ShopItemUI] Распознан Sprite (горшок). Спрайт: {(targetSprite != null ? targetSprite.name : "null")}");
+        }
+        else
+        {
+            Debug.LogWarning($"[ShopItemUI] Неизвестный тип объекта: {item?.GetType().Name}. Спрайт не будет установлен.");
         }
 
-        UpdateQuantityText();
+        if (iconImage != null)
+        {
+            iconImage.sprite = targetSprite;
+            iconImage.enabled = (targetSprite != null);
+            Debug.Log($"[ShopItemUI] IconImage обновлён. Включён: {iconImage.enabled}");
+        }
+        else
+        {
+            Debug.LogWarning("[ShopItemUI] Ссылка на iconImage не назначена в инспекторе!");
+        }
 
-        buyButton.onClick.AddListener(OnBuyButtonClicked);
-        InventoryManager.Instance.OnItemQuantityChanged += HandleInventoryChange;
+        // 2. Обработка ИМЕНИ
+        string itemName = "Неизвестно";
+        if (item is SeedItem seedName) itemName = seedName.name;
+        else if (item is Sprite spriteName) itemName = spriteName.name;
+
+        if (nameText != null)
+        {
+            nameText.text = itemName;
+            nameText.enabled = !string.IsNullOrEmpty(itemName);
+            Debug.Log($"[ShopItemUI] NameText обновлён: '{itemName}', Включён: {nameText.enabled}");
+        }
+
+        // 3. Обработка ЦЕНЫ
+        int itemPrice = 0;
+        if (item is SeedItem seedPrice) 
+        {
+            itemPrice = seedPrice.price;
+        }
+        // Если это горшок (Sprite), цена остаётся 0 (или можно добавить логику для цены горшка)
+
+        if (priceText != null)
+        {
+            priceText.text = itemPrice > 0 ? $"{itemPrice}" : "Бесплатно";
+            priceText.enabled = true;
+            Debug.Log($"[ShopItemUI] PriceText обновлён: '{priceText.text}'");
+        }
+
+        // 4. Обработка КОЛИЧЕСТВА (Есть только у семян в инвентаре)
+        if (quantityText != null)
+        {
+            if (item is SeedItem seedQty)
+            {
+                quantityText.enabled = true;
+                InventoryManager.Instance.OnItemQuantityChanged += HandleInventoryChange;
+                UpdateQuantityText(seedQty);
+                Debug.Log($"[ShopItemUI] QuantityText включён. Подписка на OnItemQuantityChanged выполнена.");
+            }
+            else
+            {
+                // Если параметра нет (например, это горшок), зануляем и скрываем
+                quantityText.text = "";
+                quantityText.enabled = false;
+                Debug.Log($"[ShopItemUI] Объект не является SeedItem. QuantityText скрыт и очищен.");
+            }
+        }
+
+        // 5. Назначение действия покупки
+        if (buyButton != null)
+        {
+            buyButton.onClick.RemoveAllListeners(); // Защита от дублирования при перезапуске
+            buyButton.onClick.AddListener(() => 
+            {
+                Debug.Log($"[ShopItemUI] Нажата кнопка покупки для: {itemName}");
+                _onBuyAction?.Invoke();
+            });
+            Debug.Log("[ShopItemUI] Слушатель события onClick добавлен на кнопку покупки.");
+        }
+        else
+        {
+            Debug.LogWarning("[ShopItemUI] Ссылка на buyButton не назначена в инспекторе!");
+        }
+        
+        Debug.Log($"[ShopItemUI] Setup завершён успешно для: {itemName}");
     }
 
     private void HandleInventoryChange(SeedItem changedSeed, int newQuantity)
     {
-        if (changedSeed == _currentSeed)
+        Debug.Log($"[ShopItemUI] Событие OnItemQuantityChanged: изменён {changedSeed.name}, новое кол-во: {newQuantity}");
+        
+        if (_currentItem is SeedItem currentSeed && changedSeed == currentSeed)
         {
-            UpdateQuantityText();
+            Debug.Log($"[ShopItemUI] Изменение касается текущей карточки. Обновляем текст.");
+            UpdateQuantityText(currentSeed);
         }
     }
 
-    private void UpdateQuantityText()
+    private void UpdateQuantityText(SeedItem seed)
     {
-        int owned = InventoryManager.Instance.GetQuantity(_currentSeed);
-        quantityText.text = $"В инвентаре: {owned}";
-    }
-
-    private void OnBuyButtonClicked()
-    {
-        bool canAfford = true; // Заглушка для проверки валюты
-
-        if (canAfford)
+        if (quantityText != null)
         {
-            InventoryManager.Instance.AddItem(_currentSeed, 1);
-            Debug.Log($"Успешно куплено: {_currentSeed.name}");
-        }
-        else
-        {
-            Debug.Log("Недостаточно средств!");
+            int owned = InventoryManager.Instance.GetQuantity(seed);
+            quantityText.text = $"{owned}";
+            Debug.Log($"[ShopItemUI] QuantityText обновлён до: {owned} для {seed.name}");
         }
     }
 
     private void OnDestroy()
     {
-        if (InventoryManager.Instance != null)
+        Debug.Log($"[ShopItemUI] OnDestroy вызван для объекта: {gameObject.name}");
+        
+        // Отписываемся от событий только если это был SeedItem
+        if (_currentItem is SeedItem seed && InventoryManager.Instance != null)
         {
             InventoryManager.Instance.OnItemQuantityChanged -= HandleInventoryChange;
+            Debug.Log($"[ShopItemUI] Отписка от OnItemQuantityChanged выполнена для {seed.name}");
         }
     }
 }

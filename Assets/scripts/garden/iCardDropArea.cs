@@ -3,5 +3,7 @@ using UnityEngine.EventSystems;
 
 public interface iPotDropArea
 {
-    void OnPotDrop(GameObject pot);
+    bool OnPotDrop(GameObject pot);
+    void FreeZone(); // Новый метод для освобождения зоны
 }
+

@@ -41,7 +41,7 @@ public class SeedStage : IGrowthStage
     public void Update()
     {
         _timeInStage += Time.deltaTime; // прибавляем прошедшее время
-        if (_timeInStage >= _flower.Conditions.TimeToSprout)
+        if (_timeInStage >= _flower.Conditions.TimeToSprout);
         {
             _flower.AdvanceToNextStage(); // переключаемся на следующую стадию
         }
