@@ -8,10 +8,25 @@ public class Pot : DragDrop
     private Flower currentFlower;
     public Flower CurrentFlower => currentFlower;
 
-    // Ссылка на зону, в которой сейчас находится горшок
     private iPotDropArea currentZone;
 
-    // Метод для сохранения ссылки на зону (вызывается из LeftDropArea)
+    [Header("Визуальная подсветка")]
+    [Tooltip("Дочерний объект-спрайт (например, желтая обводка), который будет включаться при наведении лопатки")]
+    [SerializeField] private GameObject highlightIndicator;
+    
+    private SpriteRenderer _mySpriteRenderer;
+    private Color _originalColor;
+
+    private void Awake()
+    {
+        // Кэшируем спрайт-рендерер для запасного варианта подсветки (изменение яркости)
+        _mySpriteRenderer = GetComponent<SpriteRenderer>();
+        if (_mySpriteRenderer != null)
+        {
+            _originalColor = _mySpriteRenderer.color;
+        }
+    }
+
     public void SetCurrentZone(iPotDropArea zone)
     {
         currentZone = zone;
@@ -52,19 +67,48 @@ public class Pot : DragDrop
         return true;
     }
 
-    // ПЕРЕОПРЕДЕЛЯЕМ OnMouseDown из базового класса, чтобы освободить зону при поднятии
+    /// <summary>
+    /// Удаляет цветок из горшка и уничтожает его объект.
+    /// </summary>
+    public void RemoveFlower()
+    {
+        if (currentFlower != null)
+        {
+            Debug.Log($"Цветок {currentFlower.name} удален из горшка.");
+            
+            // Если нужно возвращать цветок в инвентарь, замените Destroy на вашу логику.
+            Destroy(currentFlower.gameObject);
+            currentFlower = null;
+        }
+    }
+
+    /// <summary>
+    /// Включает или выключает визуальную подсветку горшка.
+    /// </summary>
+    public void SetHighlight(bool isActive)
+    {
+        // Вариант 1: Если назначен специальный объект-обводка (рекомендуется)
+        if (highlightIndicator != null)
+        {
+            highlightIndicator.SetActive(isActive);
+        }
+        // Вариант 2: Запасной вариант - делаем основной спрайт ярче
+        else if (_mySpriteRenderer != null)
+        {
+            _mySpriteRenderer.color = isActive ? new Color(1.3f, 1.3f, 1.3f, 1f) : _originalColor;
+        }
+    }
+
     private void OnMouseDown()
     {
-        base.OnMouseDown(); // Выполняем логику DragDrop (сохранение позиции и т.д.)
+        base.OnMouseDown(); 
 
-        // Если горшок стоял в зоне, освобождаем её
         if (currentZone != null)
         {
             currentZone.FreeZone();
             currentZone = null;
         }
 
-        // Показываем все зоны, так как мы начали перетаскивание
         if (DropZoneManager.Instance != null)
         {
             DropZoneManager.Instance.SetZonesVisibility(true);
@@ -91,7 +135,6 @@ public class Pot : DragDrop
             transform.position = _startDragPosition;
         }
 
-        // Скрываем зоны после завершения перетаскивания (независимо от успеха)
         if (DropZoneManager.Instance != null)
         {
             DropZoneManager.Instance.SetZonesVisibility(false);

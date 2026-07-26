@@ -22,10 +22,17 @@ public class GrowthConditions : ScriptableObject // Наследуем от Scri
     [Header("Care timing (seconds)")]
     [Min(0f)]
     public float TimeBetweenWatering = 30f;
-    [Min(0f)]
-    public float TimeBetweenFertilizing = 60f;
-    [Min(0f)]
-    public float TimeBetweenSunlight = 45f;
+    // [Min(0f)]
+    // public float TimeBetweenFertilizing = 60f;
+    // [Min(0f)]
+    // public float TimeBetweenSunlight = 45f;
+    
+    [Header("Endgame Mechanics (Финальная стадия)")]
+    [Tooltip("Секунды между появлением иконок солнца после полного роста")]
+    public float SunGenerationInterval = 5f; 
+    
+    [Tooltip("Количество валюты (солнышек), которое получает игрок при клике")]
+    public int SunValue = 10; 
 
     // ----------------- Growth event logic -------------------
     [Header("Growth event logic")]
@@ -45,25 +52,15 @@ public class GrowthConditions : ScriptableObject // Наследуем от Scri
         return Mathf.RoundToInt(BaseEventCount * Mathf.Pow(StageMultiplier, stageIndex - 1));
     }
 
-    // ----------------- Параметры роста (в секундах) -------------------
-    [Header("Growth timing (seconds)")]
-    [Min(0f)]
-    public float TimeToSprout = 20f;
-    [Min(0f)]
-    public float TimeToYoungShoot = 40f;
-    [Min(0f)]
-    public float TimeToBloom = 80f;
-
+  
     // Unity‑callback, вызываемый при изменении значения в инспекторе
     private void OnValidate()
     {
         TimeBetweenWatering = Mathf.Max(0f, TimeBetweenWatering);
-        TimeBetweenFertilizing = Mathf.Max(0f, TimeBetweenFertilizing);
-        TimeBetweenSunlight = Mathf.Max(0f, TimeBetweenSunlight);
+        // TimeBetweenFertilizing = Mathf.Max(0f, TimeBetweenFertilizing);
+        // TimeBetweenSunlight = Mathf.Max(0f, TimeBetweenSunlight);
         BaseEventCount = Mathf.Max(1, BaseEventCount);
         StageMultiplier = Mathf.Max(1f, StageMultiplier);
-        TimeToSprout = Mathf.Max(0f, TimeToSprout);
-        TimeToYoungShoot = Mathf.Max(0f, TimeToYoungShoot);
-        TimeToBloom = Mathf.Max(0f, TimeToBloom);
+
     }
 }

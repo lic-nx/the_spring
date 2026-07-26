@@ -1,24 +1,47 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-// ScriptableObject representing a purchasable seed.
-// It stores the prefab of the flower that will be instantiated
-// and an optional sprite that can be shown in the shop UI.
 [CreateAssetMenu(fileName = "SeedItem", menuName = "Garden/Seed Item")]
 public class SeedItem : ScriptableObject
 {
     public string name = "Ромашка";
-    // The flower prefab that will be instantiated when the seed is bought.
-    public GameObject flowerPrefab;// Префаб цветка, который будет создан при покупке семени
+    public GameObject flowerPrefab;
+    public List<GrowthConditions> growthConditionsList = new List<GrowthConditions>();
+    public List<int> weights = new List<int>();
+    public Sprite seedSprite;
+    public int price = 10;
 
-    public IGrowthStage growthStage;
+    // Этот метод вызывается редактором Unity при изменении полей в Inspector
+    private void OnValidate()
+    {
+        SyncLists();
+    }
 
-    // Growth conditions asset for this seed type
-    public GrowthConditions growthConditions;
+    // Логика синхронизации
+    private void SyncLists()
+    {
+        if (growthConditionsList == null) growthConditionsList = new List<GrowthConditions>();
+        if (weights == null) weights = new List<int>();
 
-    // Optional sprite for UI representation of the seed.
-    public Sprite seedSprite;// Спрайт, отображаемый в UI магазина для представления семени (опционально)
+        // Если условий больше, чем весов -> добавляем веса со значением по умолчанию (например, 10)
+        while (weights.Count < growthConditionsList.Count)
+        {
+            weights.Add(10); 
+        }
 
-    // Price of the seed in whatever currency system you use.
-    public int price = 10; // Стоимость семени в текущей валютной системе (по умолчанию 10)
+        // Если весов больше, чем условий -> удаляем лишние веса с конца
+        while (weights.Count > growthConditionsList.Count)
+        {
+            weights.RemoveAt(weights.Count - 1);
+        }
+    }
 
+    // Дополнительная кнопка в контекстном меню (правый клик по скрипту в Inspector) 
+    // для принудительной синхронизации, если что-то пошло не так
+    [ContextMenu("Синхронизировать списки")]
+    private void ForceSync()
+    {
+        SyncLists();
+        Debug.Log("Списки синхронизированы. Количество элементов: " + weights.Count);
+    }
 }

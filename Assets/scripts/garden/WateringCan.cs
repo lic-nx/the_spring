@@ -53,11 +53,8 @@ public class WateringCan : DragDrop
                 anyWatered = true;
             }
         }
-        if (!anyWatered)
-        {
             Debug.Log("[WateringCan] No flowers found, resetting to start position.");
             transform.position = _startPosition;
-        }
     }
 
     // Визуализация области полива в редакторе

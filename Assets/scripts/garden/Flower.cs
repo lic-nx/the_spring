@@ -1,224 +1,269 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Flower : MonoBehaviour
 {
     [SerializeField] private GrowthConditions _conditions;
 
-    [Header("UI Icons")]
-    [SerializeField] private Sprite wateringIcon; // Иконка полива
-    [SerializeField] private Sprite fertilizingIcon; // Иконка удобрения
-    [SerializeField] private Sprite sunlightIcon; // Иконка света
+    [SerializeField] private GameObject wateringIconObj;
+    [SerializeField] private GameObject fertilizingIconObj;
+    [SerializeField] private GameObject sunIconObj; 
 
-    [Header("Icon Positioning")]
-    [SerializeField] private Vector3 wateringIconOffset = new Vector3(0.5f, 0.5f, 0); // Смещение для иконки полива
-    [SerializeField] private Vector3 fertilizingIconOffset = new Vector3(-0.5f, 0.5f, 0); // Смещение для иконки удобрения
-    [SerializeField] private Vector3 sunlightIconOffset = new Vector3(0f, 0.8f, 0); // Смещение для иконки света
-
-    // Ссылки на GameObject иконок
-    private GameObject wateringIconObj;
-    private GameObject fertilizingIconObj;
-    private GameObject sunlightIconObj;
-
-    public IGrowthStage CurrentStage { get; private set; }
     public GrowthConditions Conditions => _conditions;
+    public System.Action<int> OnSunCollected;
 
     private float _timeSinceLastWatering;
-    private float _timeSinceLastFertilizing;
-    private float _timeSinceLastSunlight;
+    // private float _timeSinceLastFertilizing;
+    private float _timeSinceLastSunGeneration;
 
     private bool _needWater;
     private bool _needFertilize;
-    private bool _needSunlight;
-    private bool _timerPaused;
+    private bool _isFullyGrown;
+
     private int _careEventCount;
     private int _currentStageIndex;
-
-    public void Initialize(GrowthConditions conditions)
-    {
-        _conditions = conditions;
-        CurrentStage = new SeedStage(this);
-        _timeSinceLastWatering = 0f;
-        _timeSinceLastFertilizing = 0f;
-        _timeSinceLastSunlight = 0f;
-
-        var sr = GetComponent<SpriteRenderer>();
-        if (sr != null && _conditions.StageSprites != null && _conditions.StageSprites.Length > 0)
-        {
-            sr.sprite = _conditions.StageSprites[0];
-        }
-        else
-        {
-            Debug.LogWarning("GrowthConditions missing stage sprites; flower will have no visual.");
-        }
-
-        CreateIconObjects(); // Создаем объекты иконок
-    }
 
     private void Awake()
     {
         if (_conditions == null)
         {
             _conditions = Resources.Load<GrowthConditions>("DefaultGrowthConditions");
-            if (_conditions == null)
-            {
-                _conditions = ScriptableObject.CreateInstance<GrowthConditions>();
-            }
+            if (_conditions == null) _conditions = ScriptableObject.CreateInstance<GrowthConditions>();
         }
-
-        if (CurrentStage == null)
-        {
-            CurrentStage = new SeedStage(this);
-        }
-
-        CreateIconObjects(); // Убедимся, что иконки созданы
     }
 
-    // Создание объектов для иконок
-    private void CreateIconObjects()
+    public void Initialize(GrowthConditions conditions)
     {
-        // Иконка полива
-        if (wateringIconObj == null && wateringIcon != null)
+        _conditions = conditions;
+        _currentStageIndex = 0;
+        _careEventCount = 0;
+        _isFullyGrown = false;
+        
+        ResetNeedsOnly(); 
+
+        var sr = GetComponent<SpriteRenderer>();
+        if (sr != null && _conditions.StageSprites != null && _conditions.StageSprites.Length > 0)
         {
-            wateringIconObj = new GameObject("WateringIcon");
-            wateringIconObj.transform.SetParent(transform);
-            wateringIconObj.transform.localPosition = wateringIconOffset;
-            var renderer = wateringIconObj.AddComponent<SpriteRenderer>();
-            renderer.sprite = wateringIcon;
-            renderer.sortingOrder = 10; // Отображаем поверх цветка
-            wateringIconObj.SetActive(false); // Изначально скрыта
+            sr.sprite = _conditions.StageSprites[0];
+            ResetColliderToCurrentSprite(); 
         }
 
-        // Иконка удобрения
-        if (fertilizingIconObj == null && fertilizingIcon != null)
-        {
-            fertilizingIconObj = new GameObject("FertilizingIcon");
-            fertilizingIconObj.transform.SetParent(transform);
-            fertilizingIconObj.transform.localPosition = fertilizingIconOffset;
-            var renderer = fertilizingIconObj.AddComponent<SpriteRenderer>();
-            renderer.sprite = fertilizingIcon;
-            renderer.sortingOrder = 10;
-            fertilizingIconObj.SetActive(false);
-        }
-
-        // Иконка света
-        if (sunlightIconObj == null && sunlightIcon != null)
-        {
-            sunlightIconObj = new GameObject("SunlightIcon");
-            sunlightIconObj.transform.SetParent(transform);
-            sunlightIconObj.transform.localPosition = sunlightIconOffset;
-            var renderer = sunlightIconObj.AddComponent<SpriteRenderer>();
-            renderer.sprite = sunlightIcon;
-            renderer.sortingOrder = 10;
-            sunlightIconObj.SetActive(false);
-        }
+        UpdateNeedIcons();
     }
 
     private void Update()
     {
-        _timeSinceLastWatering += Time.deltaTime;
-        _timeSinceLastFertilizing += Time.deltaTime;
-        _timeSinceLastSunlight += Time.deltaTime;
+        // 1. Сначала всегда проверяем и обновляем потребности (и для роста, и для взрослого цветка)
+        if (!_needWater && !_needFertilize)
+        {
+            _timeSinceLastWatering += Time.deltaTime;
+            // _timeSinceLastFertilizing += Time.deltaTime;
 
-        CheckGrowthConditions();
-        CurrentStage.Update();
+            bool needStateChanged = false;
+
+            if (_timeSinceLastWatering >= Conditions.TimeBetweenWatering)
+            {
+                _needWater = true;
+                needStateChanged = true;
+            }
+            
+            // if (_timeSinceLastFertilizing >= Conditions.TimeBetweenFertilizing)
+            // {
+            //     _needFertilize = true;
+            //     needStateChanged = true;
+            // }
+
+            if (needStateChanged)
+            {
+                UpdateNeedIcons();
+            }
+        }
+
+        // 2. ГЛАВНОЕ: Если есть потребность в уходе, мы БЛОКИРУЕМ всё остальное, включая генерацию солнца
+        if (_needWater || _needFertilize)
+        {
+            return; 
+        }
+
+        // 3. Если цветок вырос и потребностей НЕТ, генерируем солнце
+        if (_isFullyGrown)
+        {
+            _timeSinceLastSunGeneration += Time.deltaTime;
+            if (_timeSinceLastSunGeneration >= Conditions.SunGenerationInterval)
+            {
+                _timeSinceLastSunGeneration = 0f;
+                SpawnSunIcon();
+            }
+            return; // Дальше логика роста не нужна
+        }
     }
 
     public void Water()
     {
-        if( _timeSinceLastWatering >= Conditions.TimeBetweenWatering){
-            _timeSinceLastWatering = 0f;
-            _needWater = false;
-            RegisterCareEvent();
-            TryResumeTimer();
-            UpdateNeedIcons();
-        }
+        if (!_needWater) return;
+        _needWater = false;
+        _timeSinceLastWatering = 0f; 
+        RegisterCareEvent();
     }
 
-    public void Fertilize()
-    {
-        _timeSinceLastFertilizing = 0f;
-        _needFertilize = false;
-        RegisterCareEvent();
-        TryResumeTimer();
-        UpdateNeedIcons();
-    }
-
-    public void ProvideSunlight()
-    {
-        _timeSinceLastSunlight = 0f;
-        _needSunlight = false;
-        RegisterCareEvent();
-        TryResumeTimer();
-        UpdateNeedIcons();
-    }
+    // public void Fertilize()
+    // {
+    //     if (!_needFertilize) return;
+    //     _needFertilize = false;
+    //     _timeSinceLastFertilizing = 0f; 
+    //     RegisterCareEvent();
+    // }
 
     private void RegisterCareEvent()
     {
         _careEventCount++;
+        UpdateNeedIcons(); 
         TryAdvanceStage();
     }
 
     private void TryAdvanceStage()
     {
+        // Если цветок уже полностью вырос, нам не нужно пытаться продвинуть его дальше
+        if (_isFullyGrown) return;
+
         int required = Conditions.GetRequiredEventsForStage(_currentStageIndex + 1);
+        
         if (required > 0 && _careEventCount >= required)
         {
             if (Conditions.StageSprites != null && _currentStageIndex + 1 < Conditions.StageSprites.Length)
             {
                 _currentStageIndex++;
                 var sr = GetComponent<SpriteRenderer>();
-                if (sr != null)
+                if (sr != null) 
                 {
                     sr.sprite = Conditions.StageSprites[_currentStageIndex];
+                    ResetColliderToCurrentSprite();
                 }
             }
+            else
+            {
+                _isFullyGrown = true;
+                Debug.Log("🌸 Цветок полностью вырос! Активирована генерация солнца (при отсутствии потребностей).");
+            }
+            
             _careEventCount = 0;
-            _needWater = _needFertilize = _needSunlight = false;
-            _timerPaused = false;
+            _needWater = false;
+            _needFertilize = false;
             UpdateNeedIcons();
         }
     }
 
-    private void TryResumeTimer()
+    private void ResetColliderToCurrentSprite()
     {
-        if (!_needWater && !_needFertilize && !_needSunlight)
+        var sr = GetComponent<SpriteRenderer>();
+        if (sr == null || sr.sprite == null) return;
+
+        Vector3 worldCenter = sr.bounds.center;
+        Vector3 worldSize = sr.bounds.size;
+
+        // Преобразуем мировые координаты в локальные для корректного offset
+        Vector2 localCenter = transform.InverseTransformPoint(worldCenter);
+        Vector2 localSize = new Vector2(
+            worldSize.x / transform.lossyScale.x,
+            worldSize.y / transform.lossyScale.y
+        );
+
+        var polyCollider = GetComponent<PolygonCollider2D>();
+        if (polyCollider != null)
         {
-            _timerPaused = false;
+            bool wasTrigger = polyCollider.isTrigger;
+            DestroyImmediate(polyCollider);
+            var newPoly = gameObject.AddComponent<PolygonCollider2D>();
+            newPoly.isTrigger = wasTrigger;
+            return;
+        }
+
+        var boxCollider = GetComponent<BoxCollider2D>();
+        if (boxCollider != null)
+        {
+            bool wasTrigger = boxCollider.isTrigger;
+            DestroyImmediate(boxCollider);
+            var newBox = gameObject.AddComponent<BoxCollider2D>();
+            newBox.isTrigger = wasTrigger;
+            newBox.size = localSize;
+            newBox.offset = localCenter;
+            return;
+        }
+
+        var circleCollider = GetComponent<CircleCollider2D>();
+        if (circleCollider != null)
+        {
+            bool wasTrigger = circleCollider.isTrigger;
+            DestroyImmediate(circleCollider);
+            var newCircle = gameObject.AddComponent<CircleCollider2D>();
+            newCircle.isTrigger = wasTrigger;
+            float radius = Mathf.Max(localSize.x, localSize.y) / 2f;
+            newCircle.radius = radius;
+            newCircle.offset = localCenter;
+            return;
         }
     }
 
-    private void CheckGrowthConditions()
+    private void SpawnSunIcon()
     {
-        if (_timerPaused) return;
-
-        _needWater = _timeSinceLastWatering >= Conditions.TimeBetweenWatering;
-        _needFertilize = _timeSinceLastFertilizing >= Conditions.TimeBetweenFertilizing;
-        _needSunlight = _timeSinceLastSunlight >= Conditions.TimeBetweenSunlight;
-
-        if (_needWater || _needFertilize || _needSunlight)
+        if (sunIconObj != null)
         {
-            float minInterval = float.MaxValue;
-            if (_needWater) minInterval = Mathf.Min(minInterval, Conditions.TimeBetweenWatering);
-            if (_needFertilize) minInterval = Mathf.Min(minInterval, Conditions.TimeBetweenFertilizing);
-            if (_needSunlight) minInterval = Mathf.Min(minInterval, Conditions.TimeBetweenSunlight);
-
-            _timerPaused = true;
-            UpdateNeedIcons();
+            sunIconObj.SetActive(true);
         }
     }
 
-    // Обновление отображения иконок
+    public void CollectSun()
+    {
+        if (sunIconObj != null && sunIconObj.activeSelf)
+        {
+            sunIconObj.SetActive(false);
+            Debug.Log($"☀️ Собрано солнце! +{Conditions.SunValue} валюты.");
+            OnSunCollected?.Invoke(Conditions.SunValue);
+        }
+    }
+
+    private void ResetNeedsOnly()
+    {
+        _needWater = false;
+        _needFertilize = false;
+    }
+
+    private void CreateIconIfNull(ref GameObject iconObj, string name, Sprite sprite, Vector3 offset, bool isClickable)
+    {
+        if (iconObj != null)
+        {
+            iconObj.SetActive(false);
+            return;
+        }
+
+        if (sprite != null)
+        {
+            iconObj = new GameObject(name);
+            iconObj.transform.SetParent(transform);
+            iconObj.transform.localPosition = offset;
+            
+            var renderer = iconObj.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.sortingOrder = isClickable ? 20 : 10;
+            
+            if (isClickable)
+            {
+                iconObj.AddComponent<CircleCollider2D>().isTrigger = true;
+                var button = iconObj.AddComponent<Button>();
+                button.onClick.AddListener(CollectSun);
+                button.transition = Selectable.Transition.None;
+            }
+            
+            iconObj.SetActive(false);
+        }
+    }
+
     private void UpdateNeedIcons()
     {
-        if (wateringIconObj != null)
-            wateringIconObj.SetActive(_needWater);
+        // УБРАНО: условие if (_isFullyGrown), которое раньше принудительно скрывало иконки.
+        // Теперь иконки просто отражают реальное состояние потребностей, независимо от стадии роста.
 
-        if (fertilizingIconObj != null)
-            fertilizingIconObj.SetActive(_needFertilize);
-
-        if (sunlightIconObj != null)
-            sunlightIconObj.SetActive(_needSunlight);
+        if (wateringIconObj != null) wateringIconObj.SetActive(_needWater);
+        if (fertilizingIconObj != null) fertilizingIconObj.SetActive(_needFertilize);
     }
-
-    public void AdvanceToNextStage() => CurrentStage = CurrentStage.NextStage();
 }

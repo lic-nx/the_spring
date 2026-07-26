@@ -129,11 +129,45 @@ public class SeedDragDrop : MonoBehaviour
             return false;
         }
 
-        if (seedItem.growthConditions != null)
+        if (seedItem.growthConditionsList?.Count > 0 && seedItem.weights?.Count == seedItem.growthConditionsList.Count)
+    {
+        Debug.Log("⚙️ [SeedDragDrop] Выполняем вероятностный выбор условий роста...");
+
+        // 1. Считаем общую сумму всех весов
+        int totalWeight = 0;
+        foreach (int weight in seedItem.weights)
         {
-            Debug.Log("⚙️ [SeedDragDrop] Инициализируем условия роста (GrowthConditions)...");
-            flowerComp.Initialize(seedItem.growthConditions);
+            totalWeight += weight;
         }
+
+        // 2. Генерируем случайное число от 0 до общей суммы весов
+        int randomValue = UnityEngine.Random.Range(0, totalWeight);
+
+        // 3. Находим элемент, на который "упало" случайное число
+        int currentWeight = 0;
+        GrowthConditions selectedCondition = seedItem.growthConditionsList[0]; // fallback на всякий случай
+
+        for (int i = 0; i < seedItem.growthConditionsList.Count; i++)
+        {
+            currentWeight += seedItem.weights[i];
+            if (randomValue < currentWeight)
+            {
+                selectedCondition = seedItem.growthConditionsList[i];
+                break;
+            }
+        }
+
+        Debug.Log($"✅ [SeedDragDrop] Выбрано случайное условие роста.");
+
+        // ВАЖНО: Выберите один из вариантов ниже в зависимости от того, что принимает ваш метод Initialize:
+        
+        // Вариант А: Если Initialize принимает ОДИН объект GrowthConditions:
+        flowerComp.Initialize(selectedCondition);
+
+        // Вариант Б: Если Initialize принимает СПИСОК List<GrowthConditions> (как было в исходном коде):
+        // flowerComp.Initialize(new System.Collections.Generic.List<GrowthConditions> { selectedCondition });
+    }
+
         else
         {
             Debug.Log("⚪ [SeedDragDrop] GrowthConditions не указаны, пропускаем инициализацию.");

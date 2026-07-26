@@ -19,11 +19,8 @@ MonoBehaviour:
   - {fileID: -1260946275, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
   - {fileID: -720692341, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
   - {fileID: 983406400, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
-  TimeBetweenWatering: 10
-  TimeBetweenFertilizing: 20
+  TimeBetweenWatering: 5
+  TimeBetweenFertilizing: 10
   TimeBetweenSunlight: 15
-  BaseEventCount: 4
-  StageMultiplier: 2
-  TimeToSprout: 20
-  TimeToYoungShoot: 40
-  TimeToBloom: 80
+  BaseEventCount: 1
+  StageMultiplier: 1
