@@ -1,50 +1,73 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems; // <-- Добавляем для работы с событиями мыши
+using UnityEngine.EventSystems;
 
-// Добавляем интерфейсы IPointerDownHandler и IPointerUpHandler
-public class InventorySlotUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class InventorySlotUI : MonoBehaviour, 
+    IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("UI Элементы")]
     public Image iconImage;
     public TMP_Text nameText;
     public TMP_Text quantityText;
-
+    
     private SeedItem _currentSeed;
     private int _currentQuantity;
-
+    
+    /// <summary>
+    /// Полная настройка слота (используется при первичной отрисовке).
+    /// </summary>
     public void Setup(SeedItem seed, int quantity)
     {
         _currentSeed = seed;
         _currentQuantity = quantity;
-
-        nameText.text = seed.name;
-        quantityText.text = $"x{quantity}";
         
-        if (seed.seedSprite != null)
+        if (nameText != null) nameText.text = seed.name;
+        if (quantityText != null) quantityText.text = $"x{quantity}";
+        
+        if (iconImage != null && seed.seedSprite != null)
         {
             iconImage.sprite = seed.seedSprite;
         }
     }
-
-    // Вызывается, когда игрок нажимает левую кнопку мыши на этом слоте
-    public void OnPointerDown(PointerEventData eventData)
+    
+    /// <summary>
+    /// ТОЧЕЧНОЕ обновление: меняем только количество (без пересоздания всего слота).
+    /// </summary>
+    public void UpdateQuantity(int newQuantity)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        _currentQuantity = newQuantity;
+        if (quantityText != null)
         {
-            if (_currentQuantity > 0)
-            {
-                // Запускаем процесс перетаскивания через менеджер
-                SeedDragManager.Instance.StartDraggingSeed(_currentSeed, this);
-            }
+            quantityText.text = $"x{newQuantity}";
         }
     }
-
-    // Вызывается, когда игрок отпускает кнопку мыши
-    public void OnPointerUp(PointerEventData eventData)
+    
+    /// <summary>
+    /// Возвращает текущее семя (для поиска слота при точечном обновлении).
+    /// </summary>
+    public SeedItem GetCurrentSeed()
     {
-        // Здесь можно добавить логику, если нужно, но пока SeedDragManager 
-        // сам уничтожит объект при клике в мире или при правом клике.
+        return _currentSeed;
+    }
+    
+    // ===== Перетаскивание =====
+    
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (_currentQuantity > 0)
+        {
+            SeedDragManager.Instance.StartDraggingSeed(_currentSeed, this, eventData);
+        }
+    }
+    
+    public void OnDrag(PointerEventData eventData)
+    {
+        SeedDragManager.Instance.UpdateDragPosition(eventData);
+    }
+    
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        SeedDragManager.Instance.EndDraggingSeed(eventData);
     }
 }

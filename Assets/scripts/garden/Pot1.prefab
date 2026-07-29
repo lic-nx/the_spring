@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5408459892329044821}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: pot_zone_center
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
@@ -44,7 +44,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7993713528907741771}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: flower_place
   m_TagString: Untagged
   m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: 7927136150446953735}
   - component: {fileID: 1479000630770235714}
   - component: {fileID: 3142346071697561347}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Pot1
   m_TagString: Pot
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
@@ -175,9 +175,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90191b72fbb6fcb4493182dc2f08dd5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _collider: {fileID: 0}
-  _startDragPosition: {x: 0, y: 0, z: 0}
-  mainCamera: {fileID: 0}
+  returnOnFail: 1
+  dragSortingOrder: 100
   flowerAttachment: {fileID: 7993713528907741771}
   zoneAttachmentPoint: {fileID: 5408459892329044821}
   highlightIndicator: {fileID: 7519338984924372449}
@@ -236,7 +235,7 @@ GameObject:
   m_Component:
   - component: {fileID: 935848747437448968}
   - component: {fileID: 306512960457950050}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}

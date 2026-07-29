@@ -4,105 +4,178 @@ using UnityEngine;
 public class Shop : MonoBehaviour
 {
     [Header("Настройки магазина")]
-    public List<SeedItem> availableSeedsForSale; 
-
+    public List<SeedItem> availableSeedsForSale;
+    
     [Header("Список горшков (Спрайты)")]
     [SerializeField] private List<Sprite> potItems = new List<Sprite>();
     [SerializeField] private GameObject potDragDropPrefab;
-
+    
     [Header("UI ссылки")]
-    public GameObject shopItemPrefab; 
-    public Transform seedShopContainer;   
-    public Transform potShopContainer;   
-
+    public GameObject shopItemPrefab;
+    public Transform seedShopContainer;
+    public Transform potShopContainer;
+    
+    // Пулы для переиспользования карточек
+    private List<ShopItemUI> _seedCardPool = new List<ShopItemUI>();
+    private List<ShopItemUI> _potCardPool = new List<ShopItemUI>();
+    
     private void Start()
     {
         GenerateShopUI();
     }
-
+    
+    /// <summary>
+    /// Генерация UI магазина с переиспользованием карточек (пулинг).
+    /// </summary>
     private void GenerateShopUI()
     {
-        // Очищаем контейнеры
-        ClearContainer(seedShopContainer);
-        ClearContainer(potShopContainer);
-
+        Debug.Log("🔄 [Shop] === ЗАПУСК GenerateShopUI ===");
+        
         // 1. Генерация карточек СЕМЯН
+        int seedIndex = 0;
         foreach (SeedItem seed in availableSeedsForSale)
         {
             if (seed == null) continue;
-
-            GameObject newItem = Instantiate(shopItemPrefab, seedShopContainer);
-            ShopItemUI itemUI = newItem.GetComponent<ShopItemUI>();
             
-            if (itemUI != null)
+            // Если карточки не хватает — создаём ОДИН раз
+            if (seedIndex >= _seedCardPool.Count)
             {
-                // Передаем объект SeedItem и конкретное действие для семян
-                itemUI.Setup(seed, () => PurchaseSeed(seed));
+                Debug.Log($"🆕 [Shop] Создаём новую карточку семени (индекс {seedIndex})...");
+                GameObject newCard = Instantiate(shopItemPrefab, seedShopContainer);
+                ShopItemUI cardUI = newCard.GetComponent<ShopItemUI>();
+                
+                if (cardUI == null)
+                {
+                    Debug.LogError($"🔴 [Shop] На префабе отсутствует компонент ShopItemUI!");
+                    Destroy(newCard);
+                    continue;
+                }
+                
+                _seedCardPool.Add(cardUI);
+            }
+            
+            // Обновляем данные в существующей карточке
+            _seedCardPool[seedIndex].Setup(seed, () => PurchaseSeed(seed));
+            _seedCardPool[seedIndex].gameObject.SetActive(true);
+            
+            Debug.Log($"✅ [Shop] Карточка семени {seedIndex}: {seed.name}");
+            seedIndex++;
+        }
+        
+        // Скрываем лишние карточки семян
+        for (int i = seedIndex; i < _seedCardPool.Count; i++)
+        {
+            if (_seedCardPool[i] != null)
+            {
+                _seedCardPool[i].gameObject.SetActive(false);
+                Debug.Log($"🗑️ [Shop] Скрыта лишняя карточка семени {i}");
             }
         }
-
+        
         // 2. Генерация карточек ГОРШКОВ
+        int potIndex = 0;
         for (int i = 0; i < potItems.Count; i++)
         {
             Sprite potSprite = potItems[i];
             if (potSprite == null) continue;
-
-            GameObject newItem = Instantiate(shopItemPrefab, potShopContainer);
-            ShopItemUI itemUI = newItem.GetComponent<ShopItemUI>();
             
-            if (itemUI != null)
+            // Если карточки не хватает — создаём ОДИН раз
+            if (potIndex >= _potCardPool.Count)
             {
-                // Важно: сохраняем индекс в локальную переменную для корректной работы замыкания (closure)
-                int capturedIndex = i; 
+                Debug.Log($"🆕 [Shop] Создаём новую карточку горшка (индекс {potIndex})...");
+                GameObject newCard = Instantiate(shopItemPrefab, potShopContainer);
+                ShopItemUI cardUI = newCard.GetComponent<ShopItemUI>();
                 
-                // Передаем объект Sprite и конкретное действие для горшков
-                itemUI.Setup(potSprite, () => PurchasePot(capturedIndex));
+                if (cardUI == null)
+                {
+                    Debug.LogError($"🔴 [Shop] На префабе отсутствует компонент ShopItemUI!");
+                    Destroy(newCard);
+                    continue;
+                }
+                
+                _potCardPool.Add(cardUI);
+            }
+            
+            // Обновляем данные в существующей карточке
+            int capturedIndex = i;
+            _potCardPool[potIndex].Setup(potSprite, () => PurchasePot(capturedIndex));
+            _potCardPool[potIndex].gameObject.SetActive(true);
+            
+            Debug.Log($"✅ [Shop] Карточка горшка {potIndex}: {potSprite.name}");
+            potIndex++;
+        }
+        
+        // Скрываем лишние карточки горшков
+        for (int i = potIndex; i < _potCardPool.Count; i++)
+        {
+            if (_potCardPool[i] != null)
+            {
+                _potCardPool[i].gameObject.SetActive(false);
+                Debug.Log($"🗑️ [Shop] Скрыта лишняя карточка горшка {i}");
             }
         }
+        
+        Debug.Log($"🏁 [Shop] === ГЕНЕРАЦИЯ ЗАВЕРШЕНА. Семян: {seedIndex}, Горшков: {potIndex} ===\n");
     }
-
-    private void ClearContainer(Transform container)
-    {
-        foreach (Transform child in container)
-        {
-            Destroy(child.gameObject);
-        }
-    }
-
-    // Логика покупки семени
+    
+    /// <summary>
+    /// Логика покупки семени.
+    /// </summary>
     private void PurchaseSeed(SeedItem seed)
+{
+    if (seed == null)
     {
-        bool canAfford = true; // Заглушка для проверки валюты
-
-        if (canAfford)
-        {
-            InventoryManager.Instance.AddItem(seed, 1);
-            Debug.Log($"Успешно куплено: {seed.name}");
-        }
-        else
-        {
-            Debug.Log("Недостаточно средств!");
-        }
+        Debug.LogError("[Shop] Попытка купить null семя!");
+        return;
     }
 
-    // Логика покупки/создания горшка
+    // ✅ НОВОЕ: проверяем, хватает ли средств
+    if (CurrencyManager.Instance == null)
+    {
+        Debug.LogError("[Shop] CurrencyManager.Instance равен null!");
+        return;
+    }
+
+    if (!CurrencyManager.Instance.CanAfford(seed.price))
+    {
+        Debug.LogWarning($"⚠️ [Shop] Недостаточно средств для покупки '{seed.name}'! Нужно: {seed.price}");
+        // TODO: Здесь можно показать UI-уведомление "Недостаточно средств"
+        return;
+    }
+
+    // ✅ НОВОЕ: списываем средства
+    if (!CurrencyManager.Instance.TrySpendCurrency(seed.price))
+    {
+        Debug.LogError($"[Shop] Не удалось списать {seed.price} солнышек!");
+        return;
+    }
+
+    // Если всё хорошо — добавляем семя в инвентарь
+    InventoryManager.Instance.AddItem(seed, 1);
+    Debug.Log($"✅ [Shop] Успешно куплено: {seed.name} за {seed.price} солнышек.");
+}
+    
+    /// <summary>
+    /// Логика покупки/создания горшка.
+    /// Горшок появляется в позиции курсора и следует за ним до установки в зону.
+    /// </summary>
     public void PurchasePot(int index)
     {
         if (index < 0 || index >= potItems.Count)
         {
-            Debug.LogError($"Shop: Неверный индекс горшка {index}");
+            Debug.LogError($"🔴 [Shop] Неверный индекс горшка {index}");
             return;
         }
-
+        
         Sprite item = potItems[index];
         if (item == null) return;
-
-        // Создаем горшок сразу в позиции курсора, чтобы избежать визуального скачка из Vector3.zero
+        
+        // Создаём горшок в позиции курсора
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPos.z = 0f; 
-
+        mouseWorldPos.z = 0f;
+        
         GameObject potObj = Instantiate(potDragDropPrefab, mouseWorldPos, Quaternion.identity);
-
+        
         // Подставляем спрайт
         SpriteRenderer potSpriteRenderer = potObj.GetComponent<SpriteRenderer>();
         if (potSpriteRenderer != null)
@@ -111,121 +184,9 @@ public class Shop : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Shop: У префаба горшка отсутствует компонент SpriteRenderer!");
+            Debug.LogError("🔴 [Shop] У префаба горшка отсутствует компонент SpriteRenderer!");
         }
-
-        // Примечание: Поскольку ваш Pot наследуется от DragDrop, 
-        // он должен автоматически подхватывать перетаскивание через OnMouseDown в базовом классе.
-        // Если в вашем DragDrop есть специальный метод для начала перетаскивания (например, StartDrag()), 
-        // раскомментируйте строку ниже и вызовите его:
-        // potObj.GetComponent<Pot>()?.StartDrag();
+        
+        Debug.Log($"✅ [Shop] Горшок '{item.name}' создан в позиции курсора.");
     }
 }
-// {
-//     [SerializeField] private List<SeedItem> seedItems = new List<SeedItem>();
-//     [SerializeField] private GameObject seedDragDropPrefab;
-//     [SerializeField] private List<Sprite> potItems = new List<Sprite>();
-//     [SerializeField] private GameObject potDragDropPrefab;
-
-//     private void Awake()
-//     {
-//         if (seedItems == null)
-//             seedItems = new List<SeedItem>();
-
-//         if (potItems == null)
-//             potItems = new List<Sprite>();
-//     }
-
-//     public void PurchaseSeed(int index)
-//     {
-//         if (index < 0 || index >= seedItems.Count)
-//         {
-//             Debug.LogError($"Shop: Invalid seed index {index}");
-//             return;
-//         }
-
-//         SeedItem item = seedItems[index];
-//         if (item == null)
-//         {
-//             Debug.LogError($"Shop: Seed item at index {index} is null.");
-//             return;
-//         }
-
-//         if (item.flowerPrefab == null)
-//         {
-//             Debug.LogError($"Shop: Seed item '{item.name}' is missing a flower prefab.");
-//             return;
-//         }
-
-//         // Проверяем, хватает ли денег у игрока
-//         // if (!Player.HasEnoughMoney(item.price))
-//         // {
-//         //     Debug.LogError($"Shop: Not enough coins to buy {item.name}.");
-//         //     return;
-//         // }
-
-//         // Списываем деньги
-//         // Player.SpendCoins(item.price);
-//         GameObject seedObj = Instantiate(seedDragDropPrefab, Vector3.zero, Quaternion.identity);
-
-//         // Получаем компонент SeedDragDrop и передаём ему данные из SeedItem
-//         SeedDragDrop seedDragDrop = seedObj.GetComponent<SeedDragDrop>();
-//         if (seedDragDrop != null)
-//         {
-//             seedDragDrop.SetSeedItem(item);
-//             seedDragDrop.on_mouse_follow(); // Запускаем перетаскивание
-//         }
-//     }
-
-//     public void PurchasePot(int index)
-//     {
-//         if (index < 0 || index >= potItems.Count)
-//         {
-//             Debug.LogError($"Shop: Invalid pot index {index}");
-//             return;
-//         }
-
-//         Sprite item = potItems[index];
-//         if (item == null)
-//         {
-//             Debug.LogError($"Shop: Pot item at index {index} is null.");
-//             return;
-//         }
-
-//         // Проверяем, хватает ли денег у игрока
-//         // if (!Player.HasEnoughMoney(item.price))
-//         // {
-//         //     Debug.LogError($"Shop: Not enough coins to buy {item.name}.");
-//         //     return;
-//         // }
-
-//         // Списываем деньги
-//         // Player.SpendCoins(item.price);
-//         GameObject potObj = Instantiate(potDragDropPrefab, Vector3.zero, Quaternion.identity);
-
-//         // --- ДОБАВЛЕННЫЙ КОД: Подставляем спрайт в SpriteRenderer ---
-//         SpriteRenderer potSpriteRenderer = potObj.GetComponent<SpriteRenderer>();
-//         if (potSpriteRenderer != null)
-//         {
-//             potSpriteRenderer.sprite = item; // Меняем стандартный спрайт на спрайт из списка potItems
-//         }
-//         else
-//         {
-//             Debug.LogError("Shop: У префаба горшка отсутствует компонент SpriteRenderer!");
-//         }
-//         // -----------------------------------------------------------
-
-//         // Получаем компонент Pot и запускаем перетаскивание
-//         Pot potDragDrop = potObj.GetComponent<Pot>();
-//         if (potDragDrop != null)
-//         {
-//             potDragDrop.on_mouse_follow(); // Запускаем перетаскивание
-//         }
-//     }
-
-//     public int SeedCount => seedItems.Count;
-//     public List<SeedItem> SeedItems => seedItems;
-//     public int PotCount => potItems.Count;
-//     public List<Sprite> PotItems => potItems;
-// } 
-

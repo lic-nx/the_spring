@@ -1,63 +1,73 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Shovel : DragDrop
+/// <summary>
+/// Скрипт лопатки. При перетаскивании подсвечивает горшки с цветами под курсором.
+/// При отпускании на подсвеченный горшок открывает окно подтверждения удаления.
+/// 
+/// ВАЖНО: Лопатка ВСЕГДА возвращается на исходную позицию, 
+/// так как это инструмент, а не размещаемый объект.
+/// </summary>
+[RequireComponent(typeof(Collider2D))]
+public class Shovel : WorldDraggable
 {
-    // Ссылка на горшок, который подсвечен прямо сейчас
-    private Pot currentlyHighlightedPot;
-    
-    // Флаг для отслеживания состояния перетаскивания (если в базовом классе его нет)
-    private bool _isDragging;
+    [Header("Настройки лопатки")]
+    [Tooltip("Слой, на котором находятся горшки (для поиска при подсветке)")]
+    [SerializeField] private LayerMask potLayerMask;
 
-    private void OnMouseDown()
+    // Ссылка на горшок, который подсвечен прямо сейчас
+    private Pot _currentlyHighlightedPot;
+
+    // Исходная позиция лопатки на сцене
+    private Vector3 _startPosition;
+
+    private void Awake()
     {
-        base.OnMouseDown();
-        _isDragging = true;
+        // ⚠️ ВАЖНО: вызываем Awake базового класса
+        base.Awake();
+
+        // Если слой не задан в инспекторе — берём стандартный "pot"
+        if (potLayerMask.value == 0)
+        {
+            potLayerMask = LayerMask.GetMask("pot");
+        }
     }
 
-    private void OnMouseUp()
+    private void Start()
     {
-        _isDragging = false;
-        
-        // 1. Стандартная логика возврата лопатки на место (использует protected поля из DragDrop)
+        // Сохраняем исходную позицию лопатки (её "дом")
+        _startPosition = transform.position;
+    }
+
+    // ===== Переопределение методов перетаскивания =====
+
+    /// <summary>
+    /// Начало перетаскивания.
+    /// </summary>
+    protected override void OnDragStarted()
+    {
+        // Ничего особенного не делаем
+    }
+
+    /// <summary>
+    /// КЛЮЧЕВОЕ ПЕРЕОПРЕДЕЛЕНИЕ:
+    /// Каждый кадр во время перетаскивания проверяем, есть ли под курсором горшок с цветком.
+    /// Если есть — подсвечиваем его.
+    /// </summary>
+    protected override void OnDragging()
+    {
+        // Получаем текущую позицию лопатки (она уже обновлена в базовом классе)
+        Vector2 shovelWorldPos = transform.position;
+
+        // Временно отключаем свой коллайдер, чтобы не попасть в себя
         _collider.enabled = false;
-        // Здесь можно добавить проверку Physics2D.OverlapPoint для возврата, если нужно, 
-        // но обычно лопатка просто возвращается на базу.
-        transform.position = _startDragPosition;
+
+        // Ищем коллайдер под лопаткой
+        Collider2D hitCollider = Physics2D.OverlapPoint(shovelWorldPos, potLayerMask);
+
         _collider.enabled = true;
 
-        // 2. Если на момент отпускания мыши у нас был подсвечен горшок с цветком
-        if (currentlyHighlightedPot != null)
-        {
-            if (FlowerRemovalManager.Instance != null)
-            {
-                FlowerRemovalManager.Instance.ShowConfirmation(currentlyHighlightedPot);
-            }
-            else
-            {
-                Debug.LogError("FlowerRemovalManager не найден на сцене!");
-            }
-            
-            // Снимаем подсветку после инициации действия
-            ClearHighlight();
-        }
-    }
-
-    private void Update()
-    {
-        // Если мы не перетаскиваем лопатку, подсветка не нужна
-        if (!_isDragging)
-        {
-            ClearHighlight();
-            return;
-        }
-
-        // Получаем позицию мыши в мировых координатах
-        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        
-        // Проверяем, есть ли под курсором какой-либо коллайдер
-        Collider2D hitCollider = Physics2D.OverlapPoint(mouseWorldPos);
         Pot targetPot = null;
-
         if (hitCollider != null)
         {
             // Ищем компонент Pot на самом объекте или на его родителе (если кликнули по цветку)
@@ -68,11 +78,11 @@ public class Shovel : DragDrop
         if (targetPot != null && targetPot.CurrentFlower != null)
         {
             // Если навели на НОВЫЙ горшок с цветком
-            if (targetPot != currentlyHighlightedPot)
+            if (targetPot != _currentlyHighlightedPot)
             {
                 ClearHighlight(); // Снимаем подсветку со старого
-                currentlyHighlightedPot = targetPot;
-                currentlyHighlightedPot.SetHighlight(true); // Включаем на новом
+                _currentlyHighlightedPot = targetPot;
+                _currentlyHighlightedPot.SetHighlight(true); // Включаем на новом
             }
         }
         else
@@ -83,21 +93,60 @@ public class Shovel : DragDrop
     }
 
     /// <summary>
-    /// Гарантированно снимает подсветку и очищает ссылку
+    /// КЛЮЧЕВОЕ ПЕРЕОПРЕДЕЛЕНИЕ:
+    /// Лопатка ВСЕГДА возвращается на исходную позицию.
+    /// Если был подсвечен горшок — открываем окно подтверждения удаления.
     /// </summary>
-    private void ClearHighlight()
+    protected override void OnDragEnded(bool success)
     {
-        if (currentlyHighlightedPot != null)
+        // 1. ВСЕГДА возвращаем лопатку на её "домашнюю" позицию
+        transform.position = _startPosition;
+
+        // 2. Если на момент отпускания у нас был подсвечен горшок с цветком
+        if (_currentlyHighlightedPot != null)
         {
-            currentlyHighlightedPot.SetHighlight(false);
-            currentlyHighlightedPot = null;
+            if (FlowerRemovalManager.Instance != null)
+            {
+                FlowerRemovalManager.Instance.ShowConfirmation(_currentlyHighlightedPot);
+            }
+            else
+            {
+                Debug.LogError("FlowerRemovalManager не найден на сцене!");
+            }
+
+            // Снимаем подсветку после инициации действия
+            ClearHighlight();
         }
     }
 
+    /// <summary>
+    /// Переопределяем базовую логику TryDrop.
+    /// Лопатка не "садится" никуда — она всегда возвращается.
+    /// Поэтому TryDrop всегда возвращает false (чтобы базовый класс не пытался "посадить" лопатку).
+    /// </summary>
+    protected override bool TryDrop(Vector2 screenPosition)
+    {
+        // Лопатка не "садится" никуда — она всегда возвращается
+        return false;
+    }
+
+    /// <summary>
+    /// Гарантированно снимает подсветку и очищает ссылку.
+    /// </summary>
+    private void ClearHighlight()
+    {
+        if (_currentlyHighlightedPot != null)
+        {
+            _currentlyHighlightedPot.SetHighlight(false);
+            _currentlyHighlightedPot = null;
+        }
+    }
+
+    /// <summary>
+    /// На случай, если объект лопатки будет деактивирован во время перетаскивания.
+    /// </summary>
     private void OnDisable()
     {
-        // На случай, если объект лопатки будет деактивирован во время перетаскивания
         ClearHighlight();
-        _isDragging = false;
     }
 }
