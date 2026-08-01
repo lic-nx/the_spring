@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using YG;
 
 /// <summary>
 /// Простой UI-счётчик валюты. Вешается на TMP_Text.
@@ -23,7 +24,7 @@ public class CurrencyUIText : MonoBehaviour
         if (CurrencyManager.Instance != null)
         {
             CurrencyManager.Instance.OnCurrencyChanged += UpdateText;
-            UpdateText(CurrencyManager.Instance.CurrentCurrency);
+            UpdateText(YG2.saves.Coins);
         }
     }
 

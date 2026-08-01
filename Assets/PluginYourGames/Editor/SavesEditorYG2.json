@@ -1,16 +1,9 @@
 {
-    "intExample": 5,
-    "strExample": "Hello!",
-    "boolExample": [
-        false,
-        false,
-        false,
-        false
-    ],
-    "idSave": 768,
+    "idSave": 788,
     "UnlockedLevel": 13,
     "CompletedLevel": 12,
     "MusicEnabled": 1,
     "ReachedIndex": 20,
-    "EffectMusicEnabled": true
+    "EffectMusicEnabled": true,
+    "Coins": 70
 }

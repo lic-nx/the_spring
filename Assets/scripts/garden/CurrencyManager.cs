@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using YG;
 
 /// <summary>
 /// Менеджер валюты (солнышек). 
@@ -10,9 +11,6 @@ public class CurrencyManager : MonoBehaviour
 {
     public static CurrencyManager Instance { get; private set; }
 
-    [Header("Начальные настройки")]
-    [Tooltip("Количество солнышек при старте новой игры")]
-    [SerializeField] private int startingCurrency = 50;
 
     /// <summary>
     /// Событие: количество валюты изменилось.
@@ -20,12 +18,10 @@ public class CurrencyManager : MonoBehaviour
     /// </summary>
     public event Action<int> OnCurrencyChanged;
 
-    private int _currentCurrency;
 
     /// <summary>
     /// Текущее количество валюты (только для чтения).
     /// </summary>
-    public int CurrentCurrency => _currentCurrency;
 
     private void Awake()
     {
@@ -42,15 +38,13 @@ public class CurrencyManager : MonoBehaviour
             return;
         }
 
-        // Инициализируем начальную валюту
-        _currentCurrency = startingCurrency;
-        Debug.Log($"💰 [CurrencyManager] Стартовая валюта: {_currentCurrency}");
+        Debug.Log($"💰 [CurrencyManager] Стартовая валюта: {YG2.saves.Coins}");
     }
 
     private void Start()
     {
         // Уведомляем всех подписчиков о начальном значении
-        OnCurrencyChanged?.Invoke(_currentCurrency);
+        OnCurrencyChanged?.Invoke(YG2.saves.Coins);
     }
 
     /// <summary>
@@ -64,9 +58,10 @@ public class CurrencyManager : MonoBehaviour
             return;
         }
 
-        _currentCurrency += amount;
-        Debug.Log($"💰 [CurrencyManager] +{amount} солнышек. Итого: {_currentCurrency}");
-        OnCurrencyChanged?.Invoke(_currentCurrency);
+        YG2.saves.Coins += amount;
+        YG2.SaveProgress();
+        Debug.Log($"💰 [CurrencyManager] +{amount} солнышек. Итого: {YG2.saves.Coins}");
+        OnCurrencyChanged?.Invoke(YG2.saves.Coins);
     }
 
     /// <summary>
@@ -74,7 +69,7 @@ public class CurrencyManager : MonoBehaviour
     /// </summary>
     public bool CanAfford(int amount)
     {
-        return _currentCurrency >= amount;
+        return YG2.saves.Coins >= amount;
     }
 
     /// <summary>
@@ -90,23 +85,25 @@ public class CurrencyManager : MonoBehaviour
 
         if (!CanAfford(amount))
         {
-            Debug.LogWarning($"⚠️ [CurrencyManager] Недостаточно средств! Нужно: {amount}, есть: {_currentCurrency}");
+            Debug.LogWarning($"⚠️ [CurrencyManager] Недостаточно средств! Нужно: {amount}, есть: {YG2.saves.Coins}");
             return false;
         }
 
-        _currentCurrency -= amount;
-        Debug.Log($"💰 [CurrencyManager] -{amount} солнышек. Итого: {_currentCurrency}");
-        OnCurrencyChanged?.Invoke(_currentCurrency);
+        YG2.saves.Coins -= amount;
+        YG2.SaveProgress();
+        Debug.Log($"💰 [CurrencyManager] -{amount} солнышек. Итого: {YG2.saves.Coins}");
+        OnCurrencyChanged?.Invoke(YG2.saves.Coins);
         return true;
     }
 
     /// <summary>
     /// Принудительно установить значение (для загрузок сохранения).
     /// </summary>
-    public void SetCurrency(int amount)
-    {
-        _currentCurrency = Mathf.Max(0, amount);
-        Debug.Log($"💰 [CurrencyManager] Установлено значение: {_currentCurrency}");
-        OnCurrencyChanged?.Invoke(_currentCurrency);
-    }
+    // public void SetCurrency(int amount)
+    // {
+    //     YG2.saves.Coins = Mathf.Max(0, amount);
+    //     YG2.SaveProgress();
+    //     Debug.Log($"💰 [CurrencyManager] Установлено значение: {YG2.saves.Coins}");
+    //     OnCurrencyChanged?.Invoke(YG2.saves.Coins);
+    // }
 }

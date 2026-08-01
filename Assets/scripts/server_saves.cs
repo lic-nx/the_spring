@@ -8,6 +8,7 @@ namespace YG
         public int MusicEnabled = 1; // ��� ���� ������
         public int ReachedIndex = 0; //����������� ����������
         public bool EffectMusicEnabled = true;
+        public int Coins = 500; // игровая валюта 
 
     }
 }
