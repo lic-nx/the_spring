@@ -1,9 +1,31 @@
 {
-    "idSave": 788,
+    "idSave": 894,
     "UnlockedLevel": 13,
     "CompletedLevel": 12,
     "MusicEnabled": 1,
     "ReachedIndex": 20,
     "EffectMusicEnabled": true,
-    "Coins": 70
+    "Coins": 60,
+    "occupiedZones": [
+        {
+            "zoneId": "PotZone (1)",
+            "potSpriteName": "Pot_Base_Green_T"
+        },
+        {
+            "zoneId": "PotZone (2)",
+            "potSpriteName": "Pot_Base_Green_T"
+        },
+        {
+            "zoneId": "PotZone",
+            "potSpriteName": "Pot_Base_Green_T"
+        },
+        {
+            "zoneId": "PotZone (3)",
+            "potSpriteName": "Pot_Base_Green_T"
+        },
+        {
+            "zoneId": "PotZone (4)",
+            "potSpriteName": "Pot_Base_Green_T"
+        }
+    ]
 }

@@ -47,6 +47,7 @@ public class WorldDraggable : MonoBehaviour,
     /// </summary>
     public virtual void OnPointerDown(PointerEventData eventData)
     {
+        Debug.Log($"[WorldDraggable] OnPointerDown on {gameObject.name}");
         // Можно использовать для подсветки, звуков и т.д.
     }
 
@@ -55,6 +56,7 @@ public class WorldDraggable : MonoBehaviour,
     /// </summary>
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
+        Debug.Log($"[WorldDraggable] OnBeginDrag on {gameObject.name}");
         _isDragging = true;
         _startPosition = transform.position;
 
@@ -74,6 +76,8 @@ public class WorldDraggable : MonoBehaviour,
     /// </summary>
     public virtual void OnDrag(PointerEventData eventData)
     {
+        if (!_isDragging) return;
+        Debug.Log($"[WorldDraggable] OnDrag on {gameObject.name}");
         if (!_isDragging) return;
 
         Vector3 worldPoint = ScreenToWorld(eventData.position);

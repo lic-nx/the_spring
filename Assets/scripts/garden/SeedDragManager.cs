@@ -2,13 +2,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Менеджер перетаскивания семян из инвентаря на сцену.
-/// Создаёт UI-призрак на Canvas, который следует за курсором/пальцем.
+/// Менеджер перетаскивания семян из инвентаря.
+/// Создаёт UI-призрак на Canvas, который следует за курсором/пальцем
+/// и перекрывает собой остальной UI (SetAsLastSibling).
 /// При отпускании проверяет попадание в горшок и сажает цветок.
 /// 
 /// ТРЕБОВАНИЯ:
 /// 1. Этот объект должен быть дочерним элементом Canvas
-/// 2. В инспекторе должен быть назначен seedGhostPrefab (UI-префаб призрака)
+/// 2. В инспекторе должен быть назначен seedGhostPrefab (UI-префаб с SeedGhostUI и Image)
 /// </summary>
 public class SeedDragManager : MonoBehaviour
 {
@@ -56,8 +57,10 @@ public class SeedDragManager : MonoBehaviour
         _currentSeed = seed;
         _sourceSlot = sourceSlot;
         
-        // Создаём UI-призрак
+        // Создаём UI-призрак как последний дочерний элемент Canvas (поверх всего UI)
         _currentGhost = Instantiate(seedGhostPrefab, _canvas.transform);
+        _currentGhost.transform.SetAsLastSibling();
+        
         SeedGhostUI ghostUI = _currentGhost.GetComponent<SeedGhostUI>();
         if (ghostUI != null)
         {
@@ -74,28 +77,32 @@ public class SeedDragManager : MonoBehaviour
     
     /// <summary>
     /// Обновление позиции призрака во время перетаскивания.
+    /// Использует RectTransformUtility для корректного позиционирования
+    /// внутри Canvas (независимо от режима рендеринга Canvas).
     /// </summary>
     public void UpdateDragPosition(PointerEventData eventData)
-{
-    if (_currentGhost != null)
     {
-        // 1. Берем экранные координаты курсора/касания
-        Vector3 screenPos = eventData.position;
+        if (_currentGhost == null) return;
         
-        // 2. Указываем Z как расстояние от камеры до мировой плоскости Z = 0.
-        // Для стандартной 2D-камеры это модуль её координаты Z (например, если камера в -10, расстояние = 10).
-        screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
+        RectTransform canvasRect = _canvas.transform as RectTransform;
+        RectTransform ghostRect = _currentGhost.GetComponent<RectTransform>();
         
-        // 3. Конвертируем в мировые координаты
-        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
+        if (canvasRect == null || ghostRect == null) return;
         
-        // 4. Явно фиксируем Z = 0 для страховки от погрешностей float
-        worldPos.z = 0f;
+        // Для ScreenSpaceOverlay камера не нужна (null),
+        // для ScreenSpaceCamera / WorldSpace — используем основную камеру
+        Camera canvasCamera = (_canvas.renderMode == RenderMode.ScreenSpaceOverlay) 
+            ? null 
+            : _mainCamera;
         
-        // 5. Применяем позицию к объекту
-        _currentGhost.transform.position = worldPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            eventData.position,
+            canvasCamera,
+            out Vector2 localPoint);
+        
+        ghostRect.anchoredPosition = localPoint;
     }
-}
     
     /// <summary>
     /// Завершение перетаскивания: проверяет попадание в горшок и сажает цветок.
@@ -104,14 +111,13 @@ public class SeedDragManager : MonoBehaviour
     {
         if (_currentGhost == null) return;
     
-    // 1. Получаем мировые координаты так же, как и при перетаскивании
+        // Конвертируем экранные координаты в мировые для проверки коллайдеров
         Vector3 screenPos = eventData.position;
         screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
         Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
         worldPos.z = 0f;
         
-        // 2. ПРОВЕРКА: Для проверки коллайдера в конкретной точке в 2D 
-        // лучше использовать Physics2D.OverlapPoint, а не Raycast с нулевым направлением.
+        // Проверяем, попали ли в горшок
         Collider2D hitCollider = Physics2D.OverlapPoint(worldPos);
         RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
         bool planted = false;

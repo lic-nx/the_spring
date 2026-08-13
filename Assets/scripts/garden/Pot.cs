@@ -1,28 +1,30 @@
 using UnityEngine;
+using YG;
 
 public class Pot : WorldDraggable
 {
     [SerializeField] private Transform flowerAttachment;
     [SerializeField] private Transform zoneAttachmentPoint;
-
     private Flower currentFlower;
     public Flower CurrentFlower => currentFlower;
-
     private iPotDropArea currentZone;
 
     [Header("Визуальная подсветка")]
     [Tooltip("Дочерний объект-спрайт (например, желтая обводка), который будет включаться при наведении лопатки")]
     [SerializeField] private GameObject highlightIndicator;
-
+    
     private SpriteRenderer _mySpriteRenderer;
     private Color _originalColor;
 
-    private void Awake()
+    // 1. Обязательно используем protected override, чтобы правильно переопределить метод
+    protected override void Awake()
     {
-        // ⚠️ ВАЖНО: вызываем Awake базового класса, 
-        // иначе не инициализируются _mainCamera и _collider
-        base.Awake();
-
+        // 2. СНАЧАЛА вызываем базовый Awake. 
+        // Именно в нем инициализируются _mainCamera и _collider
+        base.Awake(); 
+        
+        Debug.Log($"[Pot] Initialized. Collider: {_collider != null}, Camera: {_mainCamera != null}");
+        
         _mySpriteRenderer = GetComponent<SpriteRenderer>();
         if (_mySpriteRenderer != null)
         {
@@ -30,8 +32,9 @@ public class Pot : WorldDraggable
         }
     }
 
-    // ===== Логика работы с зоной =====
+    // Метод Start больше не нужен, удаляем его
 
+    // ===== Логика работы с зоной =====
     public void SetCurrentZone(iPotDropArea zone)
     {
         currentZone = zone;
@@ -43,14 +46,12 @@ public class Pot : WorldDraggable
         Transform potAttach = zoneAttachmentPoint != null
             ? zoneAttachmentPoint
             : (transform.childCount > 0 ? transform.GetChild(0) : transform);
-
         Vector3 originalOffset = potAttach.position - transform.position;
         transform.position = zoneAttach.position - originalOffset;
         potAttach.position = zoneAttach.position;
     }
 
     // ===== Логика цветка =====
-
     public bool PlantFlower(Flower flower)
     {
         if (currentFlower != null)
@@ -63,7 +64,6 @@ public class Pot : WorldDraggable
             Debug.LogWarning("Cannot plant a null flower.");
             return false;
         }
-
         flower.transform.SetParent(transform);
         if (flowerAttachment != null)
         {
@@ -88,7 +88,6 @@ public class Pot : WorldDraggable
     }
 
     // ===== Подсветка (для лопатки) =====
-
     public void SetHighlight(bool isActive)
     {
         if (highlightIndicator != null)
@@ -104,19 +103,15 @@ public class Pot : WorldDraggable
     }
 
     // ===== Переопределение методов перетаскивания =====
-
-    /// <summary>
-    /// Вызывается в начале перетаскивания (вместо старого OnMouseDown).
-    /// </summary>
     protected override void OnDragStarted()
     {
-        // Освобождаем зону, в которой стоял горшок
+        // Освобождаем зону, в которой стоял горшок (внутри FreeZone теперь вызывается YG.SaveProgress)
         if (currentZone != null)
         {
             currentZone.FreeZone();
             currentZone = null;
         }
-
+        
         // Показываем все свободные зоны как подсказку
         if (DropZoneManager.Instance != null)
         {
@@ -124,10 +119,6 @@ public class Pot : WorldDraggable
         }
     }
 
-    /// <summary>
-    /// Вызывается при отпускании (вместо старого OnMouseUp).
-    /// Базовый класс УЖЕ проверил, куда упал горшок, через TryDrop().
-    /// </summary>
     protected override void OnDragEnded(bool success)
     {
         // Скрываем зоны после завершения перетаскивания
@@ -135,12 +126,10 @@ public class Pot : WorldDraggable
         {
             DropZoneManager.Instance.SetZonesVisibility(false);
         }
-
+        
         if (!success)
         {
             Debug.Log("Не удалось поставить горшок в зону.");
-            // Возврат на исходную позицию уже обрабатывается в базовом классе
-            // (благодаря returnOnFail = true в Inspector)
         }
     }
 }
