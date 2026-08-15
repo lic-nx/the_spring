@@ -154,7 +154,7 @@ public class LeftDropArea : MonoBehaviour, iPotDropArea
         YG2.saves.occupiedZones.Add(new ZoneSaveData
         {
             zoneId = this.zoneId,
-            zoneEmpty = this.isEmpty;
+            // zoneEmpty = this.isEmpty;
             potSpriteName = spriteName
         });
 

@@ -7,7 +7,7 @@ namespace YG
     public class ZoneSaveData
     {
         public string zoneId;
-        public bool zoneEmpty;
+        // public bool zoneEmpty;
         public string potSpriteName;
     }
 
