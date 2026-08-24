@@ -11,7 +11,7 @@ public class Shop : MonoBehaviour
     
     [Header("Список горшков (Спрайты)")]
     [SerializeField] private List<Sprite> potItems = new List<Sprite>();
-    [SerializeField] public GameObject potDragDropPrefab; // Сделал public для доступа из LeftDropArea
+    [SerializeField] public GameObject potDragDropPrefab; // Сделал public для доступа из PotZoneArea
     
     [Header("UI ссылки")]
     public GameObject shopItemPrefab;

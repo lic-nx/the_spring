@@ -212,4 +212,49 @@ public class Flower : MonoBehaviour
         if (wateringIconObj != null) wateringIconObj.SetActive(_needWater);
         if (fertilizingIconObj != null) fertilizingIconObj.SetActive(_needFertilize);
     }
+
+    // ===== Save/Load Methods =====
+    // public void SaveState()
+    // {
+    //     if (GameSaveManager.Instance != null)
+    //     {
+    //         GameSaveManager.Instance.SaveFlowerState(this);
+    //     }
+    // }
+
+    // public void LoadState(GameSaveManager.FlowerData flowerData)
+    // {
+    //     _currentStageIndex = flowerData.currentStageIndex;
+    //     _timeSinceLastWatering = flowerData.timeSinceLastWatering;
+    //     _timeSinceLastSunGeneration = flowerData.timeSinceLastSunGeneration;
+    //     _needWater = flowerData.needWater;
+    //     _needFertilize = flowerData.needFertilize;
+    //     _isFullyGrown = flowerData.isFullyGrown;
+    //     _careEventCount = flowerData.careEventCount;
+
+    //     transform.position = flowerData.position;
+
+    //     if (!string.IsNullOrEmpty(flowerData.spriteName))
+    //     {
+    //         var sprite = Resources.Load<Sprite>(flowerData.spriteName);
+    //         if (sprite != null)
+    //         {
+    //             var spriteRenderer = GetComponent<SpriteRenderer>();
+    //             if (spriteRenderer != null)
+    //             {
+    //                 spriteRenderer.sprite = sprite;
+    //                 UpdateColliderToCurrentSprite();
+    //             }
+    //         }
+    //     }
+
+    //     if (!string.IsNullOrEmpty(flowerData.growthConditionsName))
+    //     {
+    //         var conditions = Resources.Load<GrowthConditions>(flowerData.growthConditionsName);
+    //         if (conditions != null)
+    //         {
+    //             _conditions = conditions;
+    //         }
+    //     }
+    // }
 }

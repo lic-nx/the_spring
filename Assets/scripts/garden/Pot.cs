@@ -1,27 +1,33 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using YG;
 
-public class Pot : WorldDraggable
+public class Pot : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private Transform flowerAttachment;
     [SerializeField] private Transform zoneAttachmentPoint;
     private Flower currentFlower;
     public Flower CurrentFlower => currentFlower;
     private iPotDropArea currentZone;
+    public iPotDropArea CurrentZone => currentZone;
 
     [Header("Визуальная подсветка")]
     [Tooltip("Дочерний объект-спрайт (например, желтая обводка), который будет включаться при наведении лопатки")]
     [SerializeField] private GameObject highlightIndicator;
     
+    [Header("Меню действий")]
+    [Tooltip("Объект меню действий (дочерний объект горшка)")]
+    [SerializeField] private GameObject actionMenu;
+    
     private SpriteRenderer _mySpriteRenderer;
     private Color _originalColor;
+    private Camera _mainCamera;
+    private Collider2D _collider;
 
-    // 1. Обязательно используем protected override, чтобы правильно переопределить метод
-    protected override void Awake()
+    private void Awake()
     {
-        // 2. СНАЧАЛА вызываем базовый Awake. 
-        // Именно в нем инициализируются _mainCamera и _collider
-        base.Awake(); 
+        _mainCamera = Camera.main;
+        _collider = GetComponent<Collider2D>();
         
         Debug.Log($"[Pot] Initialized. Collider: {_collider != null}, Camera: {_mainCamera != null}");
         
@@ -87,6 +93,28 @@ public class Pot : WorldDraggable
         }
     }
 
+    // ===== Save/Load Methods =====
+    // public void SaveState()
+    // {
+    //     if (GameSaveManager.Instance != null)
+    //     {
+    //         GameSaveManager.Instance.SavePotState(this);
+    //     }
+    // }
+
+    // public void LoadState(GameSaveManager.PotData potData)
+    // {
+    //     if (!string.IsNullOrEmpty(potData.spriteName))
+    //     {
+    //         var sprite = Shop.Instance?.GetPotSpriteByName(potData.spriteName);
+    //         if (sprite != null && _mySpriteRenderer != null)
+    //         {
+    //             _mySpriteRenderer.sprite = sprite;
+    //         }
+    //     }
+    //     transform.position = potData.position;
+    // }
+
     // ===== Подсветка (для лопатки) =====
     public void SetHighlight(bool isActive)
     {
@@ -102,34 +130,95 @@ public class Pot : WorldDraggable
         }
     }
 
-    // ===== Переопределение методов перетаскивания =====
-    protected override void OnDragStarted()
+    // ===== Обработка кликов для меню действий =====
+    public void OnPointerClick(PointerEventData eventData)
     {
-        // Освобождаем зону, в которой стоял горшок (внутри FreeZone теперь вызывается YG.SaveProgress)
+        Debug.Log("clic on pot !!");
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            Debug.Log("left clic on pot !!");
+            ToggleActionMenu();
+        }
+    }
+
+    private void ToggleActionMenu()
+    {
+        if (actionMenu == null)
+        {
+            Debug.LogError("[Pot] actionMenu не назначен!");
+            return;
+        }
+
+        bool isActive = actionMenu.activeSelf;
+        actionMenu.SetActive(!isActive);
+        
+        if (actionMenu.activeSelf)
+        {
+            var menu = actionMenu.GetComponent<PotActionMenu>();
+            if (menu != null)
+            {
+                menu.Initialize();
+            }
+        }
+    }
+
+    // ===== Методы для работы с меню =====
+    public void DeletePot()
+    {
+        HideActionMenu();
+        
         if (currentZone != null)
         {
             currentZone.FreeZone();
-            currentZone = null;
         }
         
-        // Показываем все свободные зоны как подсказку
+        if (currentFlower != null)
+        {
+            RemoveFlower();
+        }
+        
+        Debug.Log($"[Pot] Горшок {gameObject.name} удален.");
+        Destroy(gameObject);
+    }
+
+    public void ReplaceSprite(Sprite newSprite)
+    {
+        HideActionMenu();
+        
+        if (_mySpriteRenderer != null && newSprite != null)
+        {
+            _mySpriteRenderer.sprite = newSprite;
+            Debug.Log($"[Pot] Спрайт горшка заменен на {newSprite.name}");
+            
+            if (currentZone != null)
+            {
+                currentZone.FreeZone();
+                currentZone.OnPotDrop(gameObject);
+            }
+        }
+    }
+
+    public void StartMoving()
+    {
+        HideActionMenu();
+        
         if (DropZoneManager.Instance != null)
         {
             DropZoneManager.Instance.SetZonesVisibility(true);
         }
+        
+        var dragManager = FindObjectOfType<PotDragManager>();
+        if (dragManager != null)
+        {
+            dragManager.StartMovingExistingPot(this);
+        }
     }
 
-    protected override void OnDragEnded(bool success)
+    public void HideActionMenu()
     {
-        // Скрываем зоны после завершения перетаскивания
-        if (DropZoneManager.Instance != null)
+        if (actionMenu != null)
         {
-            DropZoneManager.Instance.SetZonesVisibility(false);
-        }
-        
-        if (!success)
-        {
-            Debug.Log("Не удалось поставить горшок в зону.");
+            actionMenu.SetActive(false);
         }
     }
 }

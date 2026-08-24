@@ -41,4 +41,10 @@ public class DropZoneManager : MonoBehaviour
             }
         }
     }
+
+    // Возвращает список всех зон
+    public List<GameObject> GetAllZones()
+    {
+        return new List<GameObject>(allZones);
+    }
 }
