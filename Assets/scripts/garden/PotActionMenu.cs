@@ -6,7 +6,7 @@ public class PotActionMenu : MonoBehaviour
     [Header("Кнопки меню")]
     [SerializeField] private Button deleteButton;
     [SerializeField] private Button replaceSpriteButton;
-    [SerializeField] private Button moveButton;
+
 
     [Header("Меню замены спрайта")]
     [SerializeField] private GameObject spriteReplacePanel;
@@ -39,15 +39,6 @@ public class PotActionMenu : MonoBehaviour
             Debug.LogWarning("PotActionMenu: Replace sprite button is not assigned.");
         }
 
-        if (moveButton != null)
-        {
-            moveButton.onClick.AddListener(OnMoveClicked);
-            Debug.Log("PotActionMenu: Move button listener added.");
-        }
-        else
-        {
-            Debug.LogWarning("PotActionMenu: Move button is not assigned.");
-        }
 
         for (int i = 0; i < spriteOptionButtons.Length && i < availablePotSprites.Length; i++)
         {
@@ -115,17 +106,4 @@ public class PotActionMenu : MonoBehaviour
         }
     }
 
-    private void OnMoveClicked()
-    {
-        Debug.Log("PotActionMenu: Move button clicked.");
-        if (targetPot != null)
-        {
-            Debug.Log($"PotActionMenu: Starting to move pot: {targetPot.name}");
-            targetPot.StartMoving();
-        }
-        else
-        {
-            Debug.LogWarning("PotActionMenu: Target pot is null. Cannot move.");
-        }
-    }
 }

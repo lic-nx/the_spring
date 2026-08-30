@@ -1,5 +1,5 @@
 {
-    "idSave": 939,
+    "idSave": 993,
     "UnlockedLevel": 13,
     "CompletedLevel": 12,
     "MusicEnabled": 1,
@@ -10,6 +10,19 @@
         {
             "zoneId": "PotZone (8)",
             "potSpriteName": "Pot_Base_Blue_T"
+        },
+        {
+            "zoneId": "PotZone (4)",
+            "potSpriteName": "Pot_Base_Green_T"
+        },
+        {
+            "zoneId": "PotZone (7)",
+            "potSpriteName": "Pot_Base_Green_T"
         }
-    ]
+    ],
+    "gardenData": {
+        "pots": [],
+        "flowers": [],
+        "currency": 0
+    }
 }

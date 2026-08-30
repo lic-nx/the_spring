@@ -81,6 +81,7 @@ public class PotDragManager : MonoBehaviour
     private Sprite _currentPotSprite;
     private Camera _mainCamera;
     private bool _isDragging = false;
+    private int _originalPotSortingOrder;
     
     /// <summary>
     /// Отдельный Canvas для призраков — ScreenSpaceOverlay,
@@ -162,80 +163,39 @@ public class PotDragManager : MonoBehaviour
         Debug.Log($"[PotDragManager] Начато перетаскивание горшка '{potSprite.name}'");
     }
 
-    /// <summary>
-    /// Начало перемещения существующего горшка.
-    /// Вызывается из Pot.StartMoving().
-    /// </summary>
-     public void StartMovingExistingPot(Pot pot)
-     {
-         if (_isDragging)
-         {
-             Debug.Log("[PotDragManager] Уже перетаскиваем горшок!");
-             return;
-         }
-         
-         if (pot == null)
-         {
-             Debug.LogError("[PotDragManager] Горшок для перемещения не указан!");
-             return;
-         }
-         
-         _currentMovingPot = pot;
-         _currentPotSprite = pot.GetComponent<SpriteRenderer>()?.sprite;
-         _isDragging = true;
-
-         // Hide the original pot's sprite while dragging
-         SpriteRenderer potRenderer = pot.GetComponent<SpriteRenderer>();
-         if (potRenderer != null)
-         {
-             potRenderer.enabled = false;
-         }
-        
-        if (potGhostPrefab == null)
-        {
-            Debug.LogError("[PotDragManager] potGhostPrefab не назначен в инспекторе!");
-            return;
-        }
-        
-        // Создаём UI-призрак как дочерний элемент overlay-Canvas
-        _currentGhost = Instantiate(potGhostPrefab, _ghostCanvas.transform);
-        _currentGhost.transform.SetAsLastSibling();
-        
-        // Устанавливаем спрайт
-        SetSpriteOnGhost(_currentPotSprite);
-        
-        // Добавляем компонент для обработки кликов через EventSystem
-        var ghostHandler = _currentGhost.AddComponent<PotGhostDragHandler>();
-        ghostHandler.SetMovingPot(pot);
-        
-        // Убеждаемся, что Image на призраке принимает raycast
-        Image ghostImage = _currentGhost.GetComponent<Image>();
-        if (ghostImage != null && !ghostImage.raycastTarget)
-        {
-            ghostImage.raycastTarget = true;
-        }
-        
-        // Сразу ставим призрак под курсор
-        SetGhostPosition(Input.mousePosition);
-        
-        // Показываем зоны для горшков
-        if (DropZoneManager.Instance != null)
-        {
-            DropZoneManager.Instance.SetZonesVisibility(true);
-        }
-        
-        Debug.Log($"[PotDragManager] Начато перемещение горшка '{pot.name}'");
-    }
+     /// <summary>
+     /// Начало перемещения существующего горшка.
+     /// Вызывается из Pot.StartMoving().
+     /// Теперь перетаскивание обрабатывается напрямую в классе Pot.
+     /// </summary>
+      public void StartMovingExistingPot(Pot pot)
+      {
+          Debug.Log("[PotDragManager] StartMovingExistingPot is now handled by Pot's drag-and-drop logic.");
+      }
     
-    /// <summary>
-    /// Призрак преследует курсор каждый кадр.
-    /// </summary>
-    private void Update()
-    {
-        if (!_isDragging || _currentGhost == null) return;
-
-        SetGhostPosition(Input.mousePosition);
-    }
+     /// <summary>
+     /// Призрак преследует курсор каждый кадр.
+     /// Для существующих горшков, перемещаем сам горшок.
+     /// </summary>
+     private void Update()
+     {
+         if (!_isDragging) return;
+ 
+         if (_currentMovingPot != null)
+         {
+             // Drag the entire pot (including its children like flowers)
+             Vector3 screenPos = Input.mousePosition;
+             screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
+             Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
+             worldPos.z = _currentMovingPot.transform.position.z;
+             _currentMovingPot.transform.position = worldPos;
+         }
+         else if (_currentGhost != null)
+         {
+             // For new pots, use the ghost
+             SetGhostPosition(Input.mousePosition);
+         }
+     }
     
     /// <summary>
     /// Устанавливает позицию призрака по экранным координатам.
@@ -328,69 +288,66 @@ public class PotDragManager : MonoBehaviour
         Debug.Log("[PotDragManager] Не попали в зону для горшков. Попробуйте ещё раз.");
     }
 
-    /// <summary>
-    /// Пытается разместить существующий горшок в новой зоне.
-    /// </summary>
-     public void TryPlaceExistingPot(Pot pot)
-     {
-         Vector3 screenPos = Input.mousePosition;
-         screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
-         Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
-         worldPos.z = 0f;
-         
-         Collider2D[] hits = Physics2D.OverlapPointAll(worldPos);
-         
-         foreach (Collider2D hit in hits)
-         {
-             var dropArea = hit.GetComponent<iPotDropArea>();
-             if (dropArea != null)
-             {
-                 if (dropArea == pot.CurrentZone)
-                 {
-                     Debug.Log("[PotDragManager] Горшок уже в этой зоне!");
-                     ShowOriginalPot();
-                     DestroyGhost();
-                     return;
-                 }
-                 
-                 if (!dropArea.OnPotDrop(pot.gameObject))
-                 {
-                     Debug.LogWarning("[PotDragManager] Зона отклонила размещение существующего горшка.");
-                     ShowOriginalPot();
-                     return;
-                 }
-                 
-                 pot.SetCurrentZone(dropArea);
-                 pot.AlignToZone(hit.transform);
-                 
-                 Debug.Log($"[PotDragManager] Горшок '{pot.name}' успешно перемещён в новую зону!");
-                 
-                 YG2.SaveProgress();
-                 
-                 ShowOriginalPot();
-                 DestroyGhost();
-                 return;
-             }
-         }
-         
-         Debug.Log("[PotDragManager] Не попали в зону для горшков. Горшок возвращается на место.");
-         ShowOriginalPot();
-         DestroyGhost();
-     }
+     /// <summary>
+     /// Пытается разместить существующий горшок в новой зоне.
+     /// </summary>
+      public void TryPlaceExistingPot(Pot pot)
+      {
+          Vector3 screenPos = Input.mousePosition;
+          screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
+          Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
+          worldPos.z = 0f;
+          
+          Collider2D[] hits = Physics2D.OverlapPointAll(worldPos);
+          
+          foreach (Collider2D hit in hits)
+          {
+              var dropArea = hit.GetComponent<iPotDropArea>();
+              if (dropArea != null)
+              {
+                  if (dropArea == pot.CurrentZone)
+                  {
+                      Debug.Log("[PotDragManager] Горшок уже в этой зоне!");
+                      RestorePotState(pot);
+                      return;
+                  }
+                  
+                  if (!dropArea.OnPotDrop(pot.gameObject))
+                  {
+                      Debug.LogWarning("[PotDragManager] Зона отклонила размещение существующего горшка.");
+                      RestorePotState(pot);
+                      return;
+                  }
+                  
+                  pot.SetCurrentZone(dropArea);
+                  pot.AlignToZone(hit.transform);
+                  
+                  Debug.Log($"[PotDragManager] Горшок '{pot.name}' успешно перемещён в новую зону!");
+                  
+                  YG2.SaveProgress();
+                  
+                  RestorePotState(pot);
+                  return;
+              }
+          }
+          
+          Debug.Log("[PotDragManager] Не попали в зону для горшков. Горшок возвращается на место.");
+          RestorePotState(pot);
+      }
     
-    /// <summary>
-    /// Отмена перетаскивания (правый клик).
-    /// </summary>
-     public void CancelDrag()
-     {
-         Debug.Log("[PotDragManager] Отмена размещения горшка.");
-         ShowOriginalPot();
-         if (_currentMovingPot != null)
-         {
-             _currentMovingPot = null;
-         }
-         DestroyGhost();
-     }
+     /// <summary>
+     /// Отмена перетаскивания (правый клик).
+     /// </summary>
+      public void CancelDrag()
+      {
+          Debug.Log("[PotDragManager] Отмена размещения горшка.");
+          if (_currentMovingPot != null)
+          {
+              RestorePotState(_currentMovingPot);
+              _currentMovingPot = null;
+          }
+          DestroyGhost();
+      }
     
     /// <summary>
     /// Устанавливает спрайт на призрак.
@@ -423,40 +380,47 @@ public class PotDragManager : MonoBehaviour
     }
     
      /// <summary>
-     /// Показывает оригинальный горшок, если он был скрыт во время перетаскивания.
+     /// Восстанавливает состояние горшка после перетаскивания.
      /// </summary>
-     private void ShowOriginalPot()
-     {
-         if (_currentMovingPot != null)
-         {
-             SpriteRenderer potRenderer = _currentMovingPot.GetComponent<SpriteRenderer>();
-             if (potRenderer != null)
-             {
-                 potRenderer.enabled = true;
-             }
-         }
-     }
+      private void RestorePotState(Pot pot)
+      {
+          if (pot != null)
+          {
+              // Re-enable the collider
+              Collider2D potCollider = pot.GetComponent<Collider2D>();
+              if (potCollider != null)
+              {
+                  potCollider.enabled = true;
+              }
+              
+              // Restore the original sorting order
+              SpriteRenderer potRenderer = pot.GetComponent<SpriteRenderer>();
+              if (potRenderer != null)
+              {
+                  potRenderer.sortingOrder = _originalPotSortingOrder;
+              }
+          }
+      }
 
      /// <summary>
      /// Уничтожает призрак и сбрасывает состояние.
      /// </summary>
-     private void DestroyGhost()
-     {
-         if (_currentGhost != null)
-         {
-             Destroy(_currentGhost);
-             _currentGhost = null;
-         }
-         
-         _isDragging = false;
-         _currentPotSprite = null;
-         _currentMovingPot = null;
-         
-         if (DropZoneManager.Instance != null)
-         {
-             DropZoneManager.Instance.SetZonesVisibility(false);
-         }
-     }
+      private void DestroyGhost()
+      {
+          if (_currentGhost != null)
+          {
+              Destroy(_currentGhost);
+              _currentGhost = null;
+          }
+          
+          _isDragging = false;
+          _currentPotSprite = null;
+          
+          if (DropZoneManager.Instance != null)
+          {
+              DropZoneManager.Instance.SetZonesVisibility(false);
+          }
+      }
 }
 
 /// <summary>

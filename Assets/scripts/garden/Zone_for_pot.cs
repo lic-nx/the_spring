@@ -266,31 +266,39 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
     //      Debug.Log($"{LogPrefix} // SaveZoneState: --- СОХРАНЕНИЕ УСПЕШНО ЗАВЕРШЕНО ---");
     //  }
 
-     public void FreeZone()
-     {
-         Debug.Log($"{LogPrefix} FreeZone: Начало очистки зоны. Текущий isEmpty: {isEmpty}.");
-         isEmpty = true;
-         Debug.Log($"{LogPrefix} FreeZone: Статус изменен на isEmpty = true.");
-         
-        //  if (GameSaveManager.Instance != null)
-        //  {
-        //      Debug.Log($"{LogPrefix} FreeZone: Используем GameSaveManager для очистки сохранения...");
-        //      GameSaveManager.Instance.ClearZoneSaveData(this.zoneId);
-        //  }
-        //  else if (YG2.saves != null && YG2.saves.occupiedZones != null)
-        //  {
-        //      int removedCount = YG2.saves.occupiedZones.RemoveAll(z => z.zoneId == this.zoneId);
-        //      Debug.Log($"{LogPrefix} FreeZone: Удалено записей из сейва: {removedCount}.");
-             
-        //      Debug.Log($"{LogPrefix} FreeZone: Вызов YG2.SaveProgress() для фиксации очистки...");
-        //      YG2.SaveProgress();
-        //      Debug.Log($"{LogPrefix} FreeZone: Очистка успешно сохранена в Яндексе!");
-        //  }
-        //  else
-        //  {
-        //      Debug.LogWarning($"{LogPrefix} FreeZone: YG2.saves или occupiedZones равны null. Очистка из сейва пропущена.");
-        //  }
-         
-         Debug.Log($"{LogPrefix} FreeZone: Процесс завершен. Зона полностью свободна.");
-     }
+      public void FreeZone()
+      {
+          Debug.Log($"{LogPrefix} FreeZone: Начало очистки зоны. Текущий isEmpty: {isEmpty}.");
+          isEmpty = true;
+          Debug.Log($"{LogPrefix} FreeZone: Статус изменен на isEmpty = true.");
+          
+         //  if (GameSaveManager.Instance != null)
+         //  {
+         //      Debug.Log($"{LogPrefix} FreeZone: Используем GameSaveManager для очистки сохранения...");
+         //      GameSaveManager.Instance.ClearZoneSaveData(this.zoneId);
+         //  }
+         //  else if (YG2.saves != null && YG2.saves.occupiedZones != null)
+         //  {
+         //      int removedCount = YG2.saves.occupiedZones.RemoveAll(z => z.zoneId == this.zoneId);
+         //      Debug.Log($"{LogPrefix} FreeZone: Удалено записей из сейва: {removedCount}.");
+         //      
+         //      Debug.Log($"{LogPrefix} FreeZone: Вызов YG2.SaveProgress() для фиксации очистки...");
+         //      YG2.SaveProgress();
+         //      Debug.Log($"{LogPrefix} FreeZone: Очистка успешно сохранена в Яндексе!");
+         //  }
+         //  else
+         //  {
+         //      Debug.LogWarning($"{LogPrefix} FreeZone: YG2.saves или occupiedZones равны null. Очистка из сейва пропущена.");
+         //  }
+          
+          Debug.Log($"{LogPrefix} FreeZone: Процесс завершен. Зона полностью свободна.");
+      }
+
+      public void AlignPotToZone(Pot pot)
+      {
+          if (pot != null)
+          {
+              pot.AlignToZone(this.transform);
+          }
+      }
 }

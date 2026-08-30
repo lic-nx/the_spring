@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using YG;
 
-public class Pot : MonoBehaviour, IPointerClickHandler
+public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private Transform flowerAttachment;
     [SerializeField] private Transform zoneAttachmentPoint;
@@ -23,6 +23,9 @@ public class Pot : MonoBehaviour, IPointerClickHandler
     private Color _originalColor;
     private Camera _mainCamera;
     private Collider2D _collider;
+    private bool _isDragging = false;
+    private Vector3 _dragOffset;
+    private int _originalSortingOrder;
 
     private void Awake()
     {
@@ -35,6 +38,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler
         if (_mySpriteRenderer != null)
         {
             _originalColor = _mySpriteRenderer.color;
+            _originalSortingOrder = _mySpriteRenderer.sortingOrder;
         }
     }
 
@@ -133,12 +137,129 @@ public class Pot : MonoBehaviour, IPointerClickHandler
     // ===== Обработка кликов для меню действий =====
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (_isDragging) return;
+        
         Debug.Log("clic on pot !!");
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             Debug.Log("left clic on pot !!");
             ToggleActionMenu();
         }
+    }
+
+    // ===== Drag and Drop for moving the pot directly =====
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (currentZone == null) return;
+        
+        _isDragging = true;
+        
+        // Calculate drag offset
+        Vector3 worldPoint = ScreenToWorld(eventData.position);
+        _dragOffset = transform.position - worldPoint;
+        
+        // Disable collider to avoid interference
+        if (_collider != null)
+        {
+            _collider.enabled = false;
+        }
+        
+        // Bring to front
+        if (_mySpriteRenderer != null)
+        {
+            _mySpriteRenderer.sortingOrder = 100;
+        }
+        
+        // Show drop zones
+        if (DropZoneManager.Instance != null)
+        {
+            DropZoneManager.Instance.SetZonesVisibility(true);
+        }
+        
+        Debug.Log($"[Pot] OnBeginDrag: {gameObject.name}");
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!_isDragging) return;
+        
+        Vector3 worldPoint = ScreenToWorld(eventData.position);
+        transform.position = new Vector3(
+            worldPoint.x + _dragOffset.x,
+            worldPoint.y + _dragOffset.y,
+            transform.position.z
+        );
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (!_isDragging) return;
+        
+        _isDragging = false;
+        
+        // Re-enable collider
+        if (_collider != null)
+        {
+            _collider.enabled = true;
+        }
+        
+        // Restore sorting order
+        if (_mySpriteRenderer != null)
+        {
+            _mySpriteRenderer.sortingOrder = _originalSortingOrder;
+        }
+        
+        // Check if dropped in a valid zone
+        Vector3 worldPoint = ScreenToWorld(eventData.position);
+        Collider2D[] hits = Physics2D.OverlapPointAll(worldPoint);
+        
+        bool placed = false;
+        foreach (Collider2D hit in hits)
+        {
+            var dropArea = hit.GetComponent<iPotDropArea>();
+            if (dropArea != null)
+            {
+                if (dropArea == currentZone)
+                {
+                    Debug.Log("[Pot] Already in this zone!");
+                    placed = true;
+                    break;
+                }
+                
+                if (dropArea.OnPotDrop(gameObject))
+                {
+                    currentZone.FreeZone();
+                    SetCurrentZone(dropArea);
+                    AlignToZone(hit.transform);
+                    placed = true;
+                    Debug.Log($"[Pot] Successfully moved to new zone!");
+                    YG2.SaveProgress();
+                    break;
+                }
+            }
+        }
+        
+        if (!placed)
+        {
+            Debug.Log("[Pot] Not placed in any zone. Returning to original position.");
+            // Return to original position if not placed
+            if (currentZone != null)
+            {
+                currentZone.AlignPotToZone(this);
+            }
+        }
+        
+        // Hide drop zones
+        if (DropZoneManager.Instance != null)
+        {
+            DropZoneManager.Instance.SetZonesVisibility(false);
+        }
+    }
+
+    private Vector3 ScreenToWorld(Vector2 screenPos)
+    {
+        Vector3 pos = new Vector3(screenPos.x, screenPos.y, -_mainCamera.transform.position.z);
+        return _mainCamera.ScreenToWorldPoint(pos);
     }
 
     private void ToggleActionMenu()
@@ -201,17 +322,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler
     public void StartMoving()
     {
         HideActionMenu();
-        
-        if (DropZoneManager.Instance != null)
-        {
-            DropZoneManager.Instance.SetZonesVisibility(true);
-        }
-        
-        var dragManager = FindObjectOfType<PotDragManager>();
-        if (dragManager != null)
-        {
-            dragManager.StartMovingExistingPot(this);
-        }
+        Debug.Log($"[Pot] StartMoving called for {gameObject.name}");
     }
 
     public void HideActionMenu()
