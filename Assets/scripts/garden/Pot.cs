@@ -15,9 +15,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
     [Tooltip("Дочерний объект-спрайт (например, желтая обводка), который будет включаться при наведении лопатки")]
     [SerializeField] private GameObject highlightIndicator;
     
-    [Header("Меню действий")]
-    [Tooltip("Объект меню действий (дочерний объект горшка)")]
-    [SerializeField] private GameObject actionMenu;
+
     
     private SpriteRenderer _mySpriteRenderer;
     private Color _originalColor;
@@ -26,6 +24,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
     private bool _isDragging = false;
     private Vector3 _dragOffset;
     private int _originalSortingOrder;
+    private bool _wasMenuActiveBeforeDrag = false;
 
     private void Awake()
     {
@@ -154,6 +153,12 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         
         _isDragging = true;
         
+        // Track if menu was active before dragging
+        _wasMenuActiveBeforeDrag = currentActionMenu != null && currentActionMenu.gameObject.activeSelf;
+        
+        // Hide action menu when starting to drag
+        HideActionMenu();
+        
         // Calculate drag offset
         Vector3 worldPoint = ScreenToWorld(eventData.position);
         _dragOffset = transform.position - worldPoint;
@@ -254,6 +259,19 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         {
             DropZoneManager.Instance.SetZonesVisibility(false);
         }
+        
+        // Restore action menu if it was active before dragging
+        if (_wasMenuActiveBeforeDrag)
+        {
+            currentActionMenu = PotActionMenuPool.Instance.GetMenu();
+            if (currentActionMenu != null)
+            {
+                currentActionMenu.SetTargetPot(this);
+                Vector3 menuPosition = transform.position + new Vector3(1.5f, 0f, 0f);
+                currentActionMenu.transform.position = menuPosition;
+            }
+        }
+        _wasMenuActiveBeforeDrag = false;
     }
 
     private Vector3 ScreenToWorld(Vector2 screenPos)
@@ -262,23 +280,30 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         return _mainCamera.ScreenToWorldPoint(pos);
     }
 
+    private PotActionMenu currentActionMenu;
+
     private void ToggleActionMenu()
     {
-        if (actionMenu == null)
+        if (PotActionMenuPool.Instance == null)
         {
-            Debug.LogError("[Pot] actionMenu не назначен!");
+            Debug.LogError("[Pot] PotActionMenuPool is not available!");
             return;
         }
 
-        bool isActive = actionMenu.activeSelf;
-        actionMenu.SetActive(!isActive);
-        
-        if (actionMenu.activeSelf)
+        if (currentActionMenu != null && currentActionMenu.gameObject.activeSelf)
         {
-            var menu = actionMenu.GetComponent<PotActionMenu>();
-            if (menu != null)
+            currentActionMenu.ReturnToPool();
+            currentActionMenu = null;
+        }
+        else
+        {
+            PotActionMenuPool.Instance.ReturnAllMenus();
+            currentActionMenu = PotActionMenuPool.Instance.GetMenu();
+            if (currentActionMenu != null)
             {
-                menu.Initialize();
+                currentActionMenu.SetTargetPot(this);
+                Vector3 menuPosition = transform.position + new Vector3(1.5f, 0f, 0f);
+                currentActionMenu.transform.position = menuPosition;
             }
         }
     }
@@ -327,9 +352,10 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
 
     public void HideActionMenu()
     {
-        if (actionMenu != null)
+        if (currentActionMenu != null)
         {
-            actionMenu.SetActive(false);
+            currentActionMenu.ReturnToPool();
+            currentActionMenu = null;
         }
     }
 }
