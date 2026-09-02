@@ -10,6 +10,13 @@ public class enemy : MonoBehaviour
         Debug.Log("who touch me " + other.tag);
         if (other.CompareTag("Player"))
         {
+            FlowerProtection protection = other.GetComponentInParent<FlowerProtection>();
+            if (protection != null && protection.TryConsumeAndTransform(this))
+            {
+                Debug.Log("Caterpillar hit was absorbed and transformed into a butterfly.");
+                return;
+            }
+
             Debug.Log("change enabled");
             EventControllerScr.Instance.PlayerLose();
         }
