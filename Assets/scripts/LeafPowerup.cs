@@ -6,6 +6,19 @@ public class LeafPowerup : MonoBehaviour
     [SerializeField] private GameObject butterflyPrefab;
     private bool consumed;
 
+    private void Awake()
+    {
+        // When the leaves are attached to a movable block, their colliders must
+        // belong to that block's Rigidbody2D so they extend its solid shape.
+        // Standalone leaves still need a body for trigger callbacks.
+        if (GetComponentInParent<Rigidbody2D>() == null)
+        {
+            Rigidbody2D body = gameObject.AddComponent<Rigidbody2D>();
+            body.bodyType = RigidbodyType2D.Kinematic;
+            body.gravityScale = 0f;
+        }
+    }
+
     public void Configure(GameObject butterfly)
     {
         butterflyPrefab = butterfly;

@@ -1166,13 +1166,6 @@ public class ForestLevelGeneratorWindow : EditorWindow
         if (caterpillar == null || host == null || !TryGetWorldBounds(host, out Bounds hostBounds))
             return;
 
-        Rigidbody2D body = caterpillar.GetComponent<Rigidbody2D>();
-        if (body == null)
-            body = Undo.AddComponent<Rigidbody2D>(caterpillar);
-        body.bodyType = RigidbodyType2D.Kinematic;
-        body.gravityScale = 0f;
-        body.freezeRotation = true;
-
         if (rng.NextDouble() < 0.36)
         {
             var pivot = new GameObject("Caterpillar circular patrol pivot");

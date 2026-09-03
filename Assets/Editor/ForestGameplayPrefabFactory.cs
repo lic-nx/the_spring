@@ -18,15 +18,6 @@ public static class ForestGameplayPrefabFactory
         EditorApplication.delayCall += EnsureGameplayPrefabs;
     }
 
-    [MenuItem("Tools/Forest/Rebuild Gameplay Prefabs")]
-    public static void RebuildGameplayPrefabs()
-    {
-        EnsureFolder();
-        AssetDatabase.DeleteAsset(LeavesPrefabPath);
-        AssetDatabase.DeleteAsset(ButterflyPrefabPath);
-        BuildPrefabs();
-    }
-
     private static void EnsureGameplayPrefabs()
     {
         if (EditorApplication.isCompiling || EditorApplication.isUpdating)
@@ -81,12 +72,13 @@ public static class ForestGameplayPrefabFactory
     private static void BuildLeavesPrefab(GameObject butterflyPrefab)
     {
         var root = new GameObject("LeavesGameplay");
-        Rigidbody2D body = root.AddComponent<Rigidbody2D>();
-        body.bodyType = RigidbodyType2D.Kinematic;
-        body.gravityScale = 0f;
-        var trigger = root.AddComponent<CircleCollider2D>();
-        trigger.isTrigger = true;
-        trigger.radius = 0.58f;
+        var solidCollider = root.AddComponent<CircleCollider2D>();
+        solidCollider.isTrigger = false;
+        solidCollider.radius = 0.58f;
+
+        var interactionTrigger = root.AddComponent<CircleCollider2D>();
+        interactionTrigger.isTrigger = true;
+        interactionTrigger.radius = 0.6f;
         LeafPowerup powerup = root.AddComponent<LeafPowerup>();
         powerup.Configure(butterflyPrefab);
 
