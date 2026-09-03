@@ -133,7 +133,6 @@ MonoBehaviour:
   - {fileID: -1497571176, guid: e89c1d8031cdcb8438ca444c168932bd, type: 3}
   - {fileID: -583201083, guid: e89c1d8031cdcb8438ca444c168932bd, type: 3}
   - {fileID: -959728196, guid: e89c1d8031cdcb8438ca444c168932bd, type: 3}
-  - {fileID: 1065333342, guid: e89c1d8031cdcb8438ca444c168932bd, type: 3}
   frameRate: 9
   upwardSpeed: 2.4
   sidewaysAmplitude: 0.55

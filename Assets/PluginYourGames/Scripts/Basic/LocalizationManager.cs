@@ -14,6 +14,23 @@ public class LocalizationManager : MonoBehaviour
 
     private static bool isQuitting = false;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics()
+    {
+        _instance = null;
+        isQuitting = false;
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void EnsureInstanceExists()
+    {
+        if (_instance != null || isQuitting)
+            return;
+
+        var managerObject = new GameObject(nameof(LocalizationManager));
+        managerObject.AddComponent<LocalizationManager>();
+    }
+
     private Dictionary<string, string> ru = new Dictionary<string, string>()
     {
         {"play", "Играть"},
@@ -139,5 +156,11 @@ public class LocalizationManager : MonoBehaviour
     void OnApplicationQuit()
     {
         isQuitting = true;
+    }
+
+    void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
     }
 }

@@ -21,7 +21,9 @@ public class CirclePatrol2D : MonoBehaviour
     void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
-
+        
+        Vector3 startPos = transform.localPosition;
+        angle = Mathf.Atan2(startPos.y, startPos.x) * Mathf.Rad2Deg;
         UpdateFlip();
     }
 

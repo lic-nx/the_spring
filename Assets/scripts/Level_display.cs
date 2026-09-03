@@ -9,40 +9,55 @@ public class Level_display : MonoBehaviour
     public bool Win;
     public bool Pause;
 
+    private LocalizationManager localizationManager;
+
     private void Start()
     {
+        if (levelText == null)
+        {
+            Debug.LogError($"{nameof(Level_display)} on '{name}' has no levelText assigned.", this);
+            enabled = false;
+            return;
+        }
+
+        localizationManager = LocalizationManager.Instance;
+        if (localizationManager == null)
+        {
+            Debug.LogError($"{nameof(LocalizationManager)} is not available.", this);
+            enabled = false;
+            return;
+        }
+
         var match = Regex.Match(SceneManager.GetActiveScene().name, @"\d+$");
         levelText.text = match.Success
             ? $"{match.Value}"
             : $"?";
 
         UpdateText();
-        LocalizationManager.Instance.OnLanguageChanged += UpdateText;
+        localizationManager.OnLanguageChanged += UpdateText;
     }
 
     void OnDestroy()
     {
-        if (LocalizationManager.Instance != null)
-        {
-            LocalizationManager.Instance.OnLanguageChanged -= UpdateText;
-        }
+        if (localizationManager != null)
+            localizationManager.OnLanguageChanged -= UpdateText;
     }
 
     void UpdateText()
     {
         if (Pause)
         {
-            levelText.text = LocalizationManager.Instance.GetText("level", levelText.text);
+            levelText.text = localizationManager.GetText("level", levelText.text);
             return;
         }
         if (Win)
         {
-            levelText.text = LocalizationManager.Instance.GetText("win", levelText.text);
+            levelText.text = localizationManager.GetText("win", levelText.text);
             return;
         }
         else
         {
-            levelText.text = LocalizationManager.Instance.GetText("loose", levelText.text);
+            levelText.text = localizationManager.GetText("loose", levelText.text);
             return;
         }
 
