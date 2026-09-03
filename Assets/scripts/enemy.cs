@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class enemy : MonoBehaviour
 {
+    private bool encounterResolved;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         // ���������, ��� �������� ������ � ��� �����
         Debug.Log("who touch me " + other.tag);
         if (other.CompareTag("Player"))
         {
+            if (encounterResolved)
+                return;
+
+            encounterResolved = true;
+
             FlowerProtection protection = other.GetComponentInParent<FlowerProtection>();
             if (protection != null && protection.TryConsumeAndTransform(this))
             {

@@ -47,6 +47,7 @@ public class LocalizationManager : MonoBehaviour
         {"win", "Уровень {0} \nпройден!"},
         {"thanks", "Спасибо \nза прохождение \nвсех уровней!"},
         {"build", "Мы уже \nстроим новые"},
+        {"t4_1", "Пройди сквозь куст, чтобы надеть защиту из листьев"},
     };
 
     private Dictionary<string, string> en = new Dictionary<string, string>()
@@ -65,6 +66,7 @@ public class LocalizationManager : MonoBehaviour
         {"win", "Level {0} \ncompleted!"},
         {"thanks", "Thank you \nfor completing \nall the levels!"},
         {"build", "We’re already \nbuilding new ones"},
+        {"t4_1", "Go through leaves to take it and protect yourself"},
     };
 
     void Awake()
