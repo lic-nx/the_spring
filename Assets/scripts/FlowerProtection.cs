@@ -3,30 +3,34 @@ using UnityEngine;
 public class FlowerProtection : MonoBehaviour
 {
     [SerializeField] private bool isProtected;
-    [SerializeField] private GameObject attachedLeaves;
+    [SerializeField] private GameObject leavesVisual;
     [SerializeField] private GameObject butterflyPrefab;
 
     public bool IsProtected => isProtected;
 
-    public void Grant(GameObject leavesVisual, Transform visualParent, GameObject butterfly)
+    private void Awake()
     {
-        if (attachedLeaves != null && attachedLeaves != leavesVisual)
-            Destroy(attachedLeaves);
+        FindLeavesVisual();
+        if (leavesVisual != null && !isProtected)
+            leavesVisual.SetActive(false);
+    }
+
+    public void Grant(GameObject collectedLeaves, GameObject butterfly)
+    {
+        FindLeavesVisual();
 
         isProtected = true;
-        attachedLeaves = leavesVisual;
         butterflyPrefab = butterfly;
-        if (attachedLeaves == null)
-            return;
+        if (leavesVisual != null)
+            leavesVisual.SetActive(true);
+        else
+            Debug.LogWarning("Leaves visual was not found inside the player prefab.", this);
 
-        attachedLeaves.transform.SetParent(visualParent != null ? visualParent : transform, true);
-        attachedLeaves.transform.localPosition = new Vector3(0f, 0.08f, -0.15f);
-        attachedLeaves.transform.localRotation = Quaternion.identity;
-
-        foreach (Collider2D collider in attachedLeaves.GetComponentsInChildren<Collider2D>(true))
-            collider.enabled = false;
-        if (attachedLeaves.TryGetComponent(out Rigidbody2D body))
-            body.simulated = false;
+        if (collectedLeaves != null)
+        {
+            collectedLeaves.SetActive(false);
+            Destroy(collectedLeaves);
+        }
     }
 
     public bool TryConsumeAndTransform(enemy caterpillar)
@@ -35,9 +39,8 @@ public class FlowerProtection : MonoBehaviour
             return false;
 
         isProtected = false;
-        if (attachedLeaves != null)
-            Destroy(attachedLeaves);
-        attachedLeaves = null;
+        if (leavesVisual != null)
+            leavesVisual.SetActive(false);
 
         if (caterpillar != null)
         {
@@ -56,5 +59,20 @@ public class FlowerProtection : MonoBehaviour
 
         butterflyPrefab = null;
         return true;
+    }
+
+    private void FindLeavesVisual()
+    {
+        if (leavesVisual != null)
+            return;
+
+        foreach (Transform child in GetComponentsInChildren<Transform>(true))
+        {
+            if (child.name == "Leaves")
+            {
+                leavesVisual = child.gameObject;
+                return;
+            }
+        }
     }
 }

@@ -135,6 +135,7 @@ MonoBehaviour:
   - {fileID: -959728196, guid: e89c1d8031cdcb8438ca444c168932bd, type: 3}
   frameRate: 9
   upwardSpeed: 2.4
+  sidewaysSpeed: 0.8
   sidewaysAmplitude: 0.55
   sidewaysFrequency: 2.2
   lifetime: 5

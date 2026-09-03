@@ -5,6 +5,7 @@ public class ButterflyFlyAway : MonoBehaviour
     [SerializeField] private Sprite[] frames;
     [SerializeField] private float frameRate = 9f;
     [SerializeField] private float upwardSpeed = 2.4f;
+    [SerializeField] private float sidewaysSpeed = 0.8f;
     [SerializeField] private float sidewaysAmplitude = 0.55f;
     [SerializeField] private float sidewaysFrequency = 2.2f;
     [SerializeField] private float lifetime = 5f;
@@ -31,7 +32,9 @@ public class ButterflyFlyAway : MonoBehaviour
     private void Update()
     {
         age += Time.deltaTime;
-        float sideways = Mathf.Sin(age * sidewaysFrequency + phase) * sidewaysAmplitude * sideSign;
+        float drift = sidewaysSpeed * sideSign;
+        float flutter = Mathf.Sin(age * sidewaysFrequency + phase) * sidewaysAmplitude;
+        float sideways = drift + flutter;
         transform.position += new Vector3(sideways, upwardSpeed, 0f) * Time.deltaTime;
 
         if (spriteRenderer != null && frames != null && frames.Length > 0)

@@ -53,9 +53,6 @@ public class LeafPowerup : MonoBehaviour
         if (protection == null)
             protection = player.gameObject.AddComponent<FlowerProtection>();
 
-        Transform visualParent = flower._instance != null
-            ? flower._instance.transform
-            : player.transform;
-        protection.Grant(gameObject, visualParent, butterflyPrefab);
+        protection.Grant(gameObject, butterflyPrefab);
     }
 }
