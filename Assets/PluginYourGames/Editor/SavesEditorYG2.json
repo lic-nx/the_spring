@@ -1,11 +1,11 @@
 {
-    "idSave": 993,
+    "idSave": 1097,
     "UnlockedLevel": 13,
     "CompletedLevel": 12,
     "MusicEnabled": 1,
     "ReachedIndex": 20,
     "EffectMusicEnabled": true,
-    "Coins": 60,
+    "Coins": 300,
     "occupiedZones": [
         {
             "zoneId": "PotZone (8)",
