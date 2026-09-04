@@ -3,15 +3,13 @@ Shader "Spring/2D/Minimal Sprite Moss"
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+        [Enum(Final,0,FullGreen,1,HeightMask,2,Noise,3)] _DebugMode ("Debug Mode", Float) = 0
 
-        [Header(Moss Colors)]
+        [Header(Moss)]
         _MossColor ("Moss Color", Color) = (0.4, 0.545, 0.157, 1)
-        _MossHighlightColor ("Moss Highlight Color", Color) = (0.596, 0.722, 0.243, 1)
-
-        [Header(Moss Shape)]
-        [Range(0, 1)] _MossAmount ("Moss Amount", Float) = 0.8
-        [Range(0, 1)] _MossHeight ("Moss Height", Float) = 0.78
-        [Range(0.001, 0.3)] _MossSoftness ("Moss Softness", Float) = 0.12
+        [Range(0, 1)] _MossAmount ("Moss Amount", Float) = 1
+        [Range(0, 1)] _MossHeight ("Moss Height", Float) = 0.72
+        [Range(0.001, 0.3)] _MossSoftness ("Moss Softness", Float) = 0.04
 
         [Header(Noise)]
         [NoScaleOffset] _NoiseTex ("Noise Texture", 2D) = "gray" {}
@@ -19,8 +17,8 @@ Shader "Spring/2D/Minimal Sprite Moss"
         [Range(0, 0.35)] _NoiseStrength ("Noise Strength", Float) = 0.12
         _Seed ("Seed", Float) = 0
 
-        [Header(Depth)]
-        [Range(0, 0.15)] _MossShadow ("Moss Shadow", Float) = 0.06
+        [HideInInspector] _MossLocalMinY ("Moss Local Min Y", Float) = -0.5
+        [HideInInspector] _MossLocalMaxY ("Moss Local Max Y", Float) = 0.5
 
         // SpriteRenderer compatibility properties.
         [HideInInspector] _Color ("Tint", Color) = (1, 1, 1, 1)
@@ -34,17 +32,17 @@ Shader "Spring/2D/Minimal Sprite Moss"
     {
         Tags
         {
+            "RenderPipeline" = "UniversalPipeline"
             "Queue" = "Transparent"
             "RenderType" = "Transparent"
-            "RenderPipeline" = "UniversalPipeline"
             "IgnoreProjector" = "True"
             "CanUseSpriteAtlas" = "True"
             "PreviewType" = "Plane"
         }
 
         Blend SrcAlpha OneMinusSrcAlpha
-        Cull Off
         ZWrite Off
+        Cull Off
 
         Pass
         {
@@ -72,6 +70,7 @@ Shader "Spring/2D/Minimal Sprite Moss"
                 float4 positionCS : SV_POSITION;
                 half4 color : COLOR;
                 float2 uv : TEXCOORD0;
+                float positionOSY : TEXCOORD1;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -86,14 +85,15 @@ Shader "Spring/2D/Minimal Sprite Moss"
             half4 _Color;
             half4 _RendererColor;
             half4 _MossColor;
-            half4 _MossHighlightColor;
+            half _DebugMode;
             half _MossAmount;
             half _MossHeight;
             half _MossSoftness;
             half _NoiseScale;
             half _NoiseStrength;
             half _Seed;
-            half _MossShadow;
+            float _MossLocalMinY;
+            float _MossLocalMaxY;
             half _EnableExternalAlpha;
 
             Varyings MossVertex(Attributes input)
@@ -104,6 +104,7 @@ Shader "Spring/2D/Minimal Sprite Moss"
 
                 output.positionCS = TransformObjectToHClip(input.positionOS);
                 output.uv = TRANSFORM_TEX(input.uv, _MainTex);
+                output.positionOSY = input.positionOS.y;
                 output.color = input.color * _Color * _RendererColor;
                 return output;
             }
@@ -124,53 +125,182 @@ Shader "Spring/2D/Minimal Sprite Moss"
             {
                 half4 sprite = SampleSprite(input.uv) * input.color;
 
-                float2 noiseUV = input.uv * _NoiseScale + float2(_Seed, _Seed * 0.37);
-                half noise = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, frac(noiseUV)).r;
+                if (_DebugMode == 1)
+                    return half4(0.0h, 1.0h, 0.0h, sprite.a);
 
-                // Centering the noise keeps Moss Height intuitive while breaking the flat border.
-                half distortedHeight = input.uv.y + (noise - 0.5h) * _NoiseStrength;
-                half softness = max(_MossSoftness, 0.001h);
-                half topMask = smoothstep(
-                    _MossHeight - softness,
-                    _MossHeight + softness,
-                    distortedHeight
+                float localY = saturate(
+                    (input.positionOSY - _MossLocalMinY) /
+                    max(0.0001, _MossLocalMaxY - _MossLocalMinY)
                 );
 
-                // A single extra mask makes small gaps near the lower edge, but keeps the top solid.
-                half noiseMask = smoothstep(0.2h, 0.55h, noise + topMask * 0.35h);
-                half mossMask = saturate(topMask * noiseMask);
-
-                // Thin hand-painted highlight along the irregular lower moss boundary.
-                half highlightMask = smoothstep(
-                    _MossHeight - softness,
-                    _MossHeight,
-                    distortedHeight
-                ) - smoothstep(
-                    _MossHeight,
-                    _MossHeight + softness,
-                    distortedHeight
+                float heightMask = smoothstep(
+                    _MossHeight - _MossSoftness,
+                    _MossHeight + _MossSoftness,
+                    localY
                 );
-                highlightMask = saturate(highlightMask) * noiseMask;
 
-                half highlightAmount = saturate(noise * 0.35h + highlightMask * 0.8h);
-                half3 mossColor = lerp(_MossColor.rgb, _MossHighlightColor.rgb, highlightAmount);
+                if (_DebugMode == 2)
+                    return half4(heightMask.xxx, sprite.a);
 
-                // Narrow contact shadow directly below the moss; no blur or extra texture sample.
-                half shadowStart = _MossHeight - softness * 1.35h;
-                half shadowEnd = _MossHeight - softness;
-                half shadowMask = smoothstep(shadowStart, shadowEnd, distortedHeight);
-                shadowMask *= 1.0h - smoothstep(0.0h, 0.25h, topMask);
-                sprite.rgb *= 1.0h - saturate(shadowMask) * _MossShadow * _MossAmount;
+                float noise = SAMPLE_TEXTURE2D(
+                    _NoiseTex,
+                    sampler_NoiseTex,
+                    input.uv * _NoiseScale + float2(_Seed, _Seed * 0.37)
+                ).r;
 
-                half mossBlend = saturate(mossMask * _MossAmount) * sprite.a;
-                half3 finalColor = lerp(sprite.rgb, mossColor, mossBlend);
+                if (_DebugMode == 3)
+                    return half4(noise.xxx, sprite.a);
 
-                // The original sprite alpha owns the silhouette.
-                return half4(finalColor, sprite.a);
+                float distortedY = localY + (noise - 0.5) * _NoiseStrength;
+                float mossMask = smoothstep(
+                    _MossHeight - _MossSoftness,
+                    _MossHeight + _MossSoftness,
+                    distortedY
+                );
+
+                float3 finalRGB = lerp(
+                    sprite.rgb,
+                    _MossColor.rgb,
+                    mossMask * _MossAmount
+                );
+
+                return half4(finalRGB, sprite.a);
             }
             ENDHLSL
         }
     }
 
-    Fallback "Universal Render Pipeline/2D/Sprite-Unlit-Default"
+    // The project's Graphics/Quality settings currently reference a missing URP
+    // asset. This equivalent pass prevents a silent fallback to Sprites/Default.
+    SubShader
+    {
+        Tags
+        {
+            "Queue" = "Transparent"
+            "RenderType" = "Transparent"
+            "IgnoreProjector" = "True"
+            "CanUseSpriteAtlas" = "True"
+            "PreviewType" = "Plane"
+        }
+
+        Blend SrcAlpha OneMinusSrcAlpha
+        ZWrite Off
+        Cull Off
+
+        Pass
+        {
+            Name "MinimalSpriteMossBuiltIn"
+
+            HLSLPROGRAM
+            #pragma target 2.0
+            #pragma vertex MossVertex
+            #pragma fragment MossFragment
+            #pragma multi_compile _ ETC1_EXTERNAL_ALPHA
+
+            #include "UnityCG.cginc"
+
+            struct Attributes
+            {
+                float3 positionOS : POSITION;
+                half4 color : COLOR;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+                half4 color : COLOR;
+                float2 uv : TEXCOORD0;
+                float positionOSY : TEXCOORD1;
+            };
+
+            sampler2D _MainTex;
+            sampler2D _NoiseTex;
+            sampler2D _AlphaTex;
+            float4 _MainTex_ST;
+            half4 _Color;
+            half4 _RendererColor;
+            half4 _MossColor;
+            half _DebugMode;
+            half _MossAmount;
+            half _MossHeight;
+            half _MossSoftness;
+            half _NoiseScale;
+            half _NoiseStrength;
+            half _Seed;
+            float _MossLocalMinY;
+            float _MossLocalMaxY;
+            half _EnableExternalAlpha;
+
+            Varyings MossVertex(Attributes input)
+            {
+                Varyings output;
+                output.positionCS = UnityObjectToClipPos(input.positionOS);
+                output.uv = TRANSFORM_TEX(input.uv, _MainTex);
+                output.positionOSY = input.positionOS.y;
+                output.color = input.color * _Color * _RendererColor;
+                return output;
+            }
+
+            half4 SampleSprite(float2 uv)
+            {
+                half4 sprite = tex2D(_MainTex, uv);
+
+                #if defined(ETC1_EXTERNAL_ALPHA)
+                    half externalAlpha = tex2D(_AlphaTex, uv).r;
+                    sprite.a = lerp(sprite.a, externalAlpha, _EnableExternalAlpha);
+                #endif
+
+                return sprite;
+            }
+
+            half4 MossFragment(Varyings input) : SV_Target
+            {
+                half4 sprite = SampleSprite(input.uv) * input.color;
+
+                if (_DebugMode == 1)
+                    return half4(0.0h, 1.0h, 0.0h, sprite.a);
+
+                float localY = saturate(
+                    (input.positionOSY - _MossLocalMinY) /
+                    max(0.0001, _MossLocalMaxY - _MossLocalMinY)
+                );
+
+                float heightMask = smoothstep(
+                    _MossHeight - _MossSoftness,
+                    _MossHeight + _MossSoftness,
+                    localY
+                );
+
+                if (_DebugMode == 2)
+                    return half4(heightMask.xxx, sprite.a);
+
+                float noise = tex2D(
+                    _NoiseTex,
+                    input.uv * _NoiseScale + float2(_Seed, _Seed * 0.37)
+                ).r;
+
+                if (_DebugMode == 3)
+                    return half4(noise.xxx, sprite.a);
+
+                float distortedY = localY + (noise - 0.5) * _NoiseStrength;
+                float mossMask = smoothstep(
+                    _MossHeight - _MossSoftness,
+                    _MossHeight + _MossSoftness,
+                    distortedY
+                );
+
+                float3 finalRGB = lerp(
+                    sprite.rgb,
+                    _MossColor.rgb,
+                    mossMask * _MossAmount
+                );
+
+                return half4(finalRGB, sprite.a);
+            }
+            ENDHLSL
+        }
+    }
+
+    Fallback "Sprites/Default"
 }
