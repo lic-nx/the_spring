@@ -69,13 +69,10 @@ public class EventControllerScr : Button_sound_controller
             int.TryParse(nameParts[nameParts.Length - 1], out levelType);
         }
         
-        UnityEngine.Debug.Log($"Уровень обучающий: {isTutorial} | Текущий индекс сцены: {levelType} | ReachedIndex: {YG2.saves.ReachedIndex}");
-
-        if (levelType >= YG2.saves.ReachedIndex && !isTutorial)
+        if (levelType >= YG2.saves.CompletedLevel && !isTutorial)
         {
             YG2.saves.UnlockedLevel += 1;
             YG2.saves.CompletedLevel += 1;
-            YG2.saves.ReachedIndex += 1;
             YG2.SaveProgress();
         }
         

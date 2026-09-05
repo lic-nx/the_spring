@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 public class Level_display : MonoBehaviour
 {
     public TextMeshProUGUI levelText;
+    public bool Tutorial=false;
     public bool Win;
     public bool Pause;
 
@@ -52,12 +53,12 @@ public class Level_display : MonoBehaviour
         }
         if (Win)
         {
-            levelText.text = localizationManager.GetText("win", levelText.text);
+            levelText.text = localizationManager.GetText(Tutorial ? "tutorial_win" : "win", levelText.text);
             return;
         }
         else
         {
-            levelText.text = localizationManager.GetText("loose", levelText.text);
+            levelText.text = localizationManager.GetText(Tutorial ? "tutorial_loose" :"loose", levelText.text);
             return;
         }
 
