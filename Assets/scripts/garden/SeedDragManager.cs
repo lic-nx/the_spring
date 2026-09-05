@@ -175,6 +175,7 @@ public class SeedDragManager : MonoBehaviour
         // Выбираем случайное условие роста
         GrowthConditions selectedCondition = SelectRandomCondition();
         flowerComp.Initialize(selectedCondition);
+        flowerComp.PrefabName = _currentSeed.flowerPrefab.name;
         
         // Сажаем в горшок
         bool placed = pot.PlantFlower(flowerComp);

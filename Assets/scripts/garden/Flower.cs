@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class Flower : MonoBehaviour
 {
@@ -7,6 +8,10 @@ public class Flower : MonoBehaviour
     [SerializeField] private GameObject wateringIconObj;
     [SerializeField] private GameObject fertilizingIconObj;
     [SerializeField] private GameObject sunIconObj;
+
+    [Header("Настройки сохранения")]
+    [Tooltip("Уникальный идентификатор цветка. Если оставить пустым, будет сгенерирован автоматически.")]
+    [SerializeField] private string flowerId;
 
     public GrowthConditions Conditions => _conditions;
     public System.Action<int> OnSunCollected;
@@ -18,6 +23,8 @@ public class Flower : MonoBehaviour
     private bool _isFullyGrown;
     private int _careEventCount;
     private int _currentStageIndex;
+    private bool _hasGivenSun;
+    private string _prefabName;
 
     private void Awake()
     {
@@ -62,6 +69,7 @@ public class Flower : MonoBehaviour
             if (needStateChanged)
             {
                 UpdateNeedIcons();
+                SaveState();
             }
         }
 
@@ -89,6 +97,7 @@ public class Flower : MonoBehaviour
         _needWater = false;
         _timeSinceLastWatering = 0f;
         RegisterCareEvent();
+        SaveState();
     }
 
     private void RegisterCareEvent()
@@ -172,6 +181,8 @@ public class Flower : MonoBehaviour
         {
             sunIconObj.SetActive(true);
         }
+        _hasGivenSun = true;
+        SaveState();
     }
 
     /// <summary>
@@ -183,6 +194,7 @@ public class Flower : MonoBehaviour
         if (sunIconObj != null && sunIconObj.activeSelf)
         {
             sunIconObj.SetActive(false);
+            _hasGivenSun = false;
             Debug.Log($"☀️ Собрано солнце! +{Conditions.SunValue} валюты.");
             
             // ✅ НОВОЕ: начисляем валюту через CurrencyManager
@@ -198,6 +210,7 @@ public class Flower : MonoBehaviour
             // Старое событие можно оставить для обратной совместимости, 
             // но теперь оно не обязательно
             OnSunCollected?.Invoke(Conditions.SunValue);
+            SaveState();
         }
     }
 
@@ -213,48 +226,83 @@ public class Flower : MonoBehaviour
         if (fertilizingIconObj != null) fertilizingIconObj.SetActive(_needFertilize);
     }
 
-    // ===== Save/Load Methods =====
-    // public void SaveState()
-    // {
-    //     if (GameSaveManager.Instance != null)
-    //     {
-    //         GameSaveManager.Instance.SaveFlowerState(this);
-    //     }
-    // }
+    // ===== Сохранение / загрузка состояния цветка =====
+    public string FlowerId
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(flowerId))
+            {
+                flowerId = System.Guid.NewGuid().ToString();
+            }
+            return flowerId;
+        }
+    }
 
-    // public void LoadState(GameSaveManager.FlowerData flowerData)
-    // {
-    //     _currentStageIndex = flowerData.currentStageIndex;
-    //     _timeSinceLastWatering = flowerData.timeSinceLastWatering;
-    //     _timeSinceLastSunGeneration = flowerData.timeSinceLastSunGeneration;
-    //     _needWater = flowerData.needWater;
-    //     _needFertilize = flowerData.needFertilize;
-    //     _isFullyGrown = flowerData.isFullyGrown;
-    //     _careEventCount = flowerData.careEventCount;
+    /// <summary>Восстанавливает сохранённый идентификатор цветка (используется при загрузке).</summary>
+    public void AssignFlowerId(string id)
+    {
+        if (!string.IsNullOrEmpty(id)) flowerId = id;
+    }
+    public string PrefabName { get => _prefabName; set => _prefabName = value; }
+    public string SpriteName
+    {
+        get
+        {
+            var sr = GetComponent<SpriteRenderer>();
+            return sr != null && sr.sprite != null ? sr.sprite.name : string.Empty;
+        }
+    }
+    public int CurrentStageIndex => _currentStageIndex;
+    public float TimeSinceLastWatering => _timeSinceLastWatering;
+    public float TimeSinceLastSunGeneration => _timeSinceLastSunGeneration;
+    public bool NeedWater => _needWater;
+    public bool NeedFertilize => _needFertilize;
+    public bool IsFullyGrown => _isFullyGrown;
+    public int CareEventCount => _careEventCount;
+    public string GrowthConditionsName => _conditions != null ? _conditions.name : string.Empty;
+    public bool HasGivenSun => _hasGivenSun;
 
-    //     transform.position = flowerData.position;
+    /// <summary>
+    /// Передаёт текущее состояние цветка в GameSaveManager для сохранения.
+    /// Вызывается при любом изменении статуса (полив, рост, солнце, потребности).
+    /// </summary>
+    public void SaveState()
+    {
+        if (GameSaveManager.IsLoading) return;
+        if (GameSaveManager.Instance != null)
+        {
+            GameSaveManager.Instance.SaveFlower(this);
+        }
+    }
 
-    //     if (!string.IsNullOrEmpty(flowerData.spriteName))
-    //     {
-    //         var sprite = Resources.Load<Sprite>(flowerData.spriteName);
-    //         if (sprite != null)
-    //         {
-    //             var spriteRenderer = GetComponent<SpriteRenderer>();
-    //             if (spriteRenderer != null)
-    //             {
-    //                 spriteRenderer.sprite = sprite;
-    //                 UpdateColliderToCurrentSprite();
-    //             }
-    //         }
-    //     }
+    /// <summary>
+    /// Применяет к цветку данные из сохранения.
+    /// Вызывается GameSaveManager при загрузке игры.
+    /// </summary>
+    public void LoadFromData(FlowerSaveData data)
+    {
+        if (data == null) return;
 
-    //     if (!string.IsNullOrEmpty(flowerData.growthConditionsName))
-    //     {
-    //         var conditions = Resources.Load<GrowthConditions>(flowerData.growthConditionsName);
-    //         if (conditions != null)
-    //         {
-    //             _conditions = conditions;
-    //         }
-    //     }
-    // }
+        _prefabName = data.prefabName;
+        _currentStageIndex = data.currentStageIndex;
+        _timeSinceLastWatering = data.timeSinceLastWatering;
+        _timeSinceLastSunGeneration = data.timeSinceLastSunGeneration;
+        _needWater = data.needWater;
+        _needFertilize = data.needFertilize;
+        _isFullyGrown = data.isFullyGrown;
+        _careEventCount = data.careEventCount;
+        _hasGivenSun = data.hasGivenSun;
+
+        var sr = GetComponent<SpriteRenderer>();
+        if (sr != null && _conditions != null && _conditions.StageSprites != null && _conditions.StageSprites.Length > 0)
+        {
+            sr.sprite = _conditions.StageSprites[Mathf.Clamp(_currentStageIndex, 0, _conditions.StageSprites.Length - 1)];
+            UpdateColliderToCurrentSprite();
+        }
+
+        transform.position = data.position;
+        if (sunIconObj != null) sunIconObj.SetActive(_hasGivenSun);
+        UpdateNeedIcons();
+    }
 }

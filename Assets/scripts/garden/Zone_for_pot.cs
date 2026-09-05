@@ -10,6 +10,9 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
     [Tooltip("Уникальный идентификатор зоны. Если оставить пустым, будет автоматически использовано имя объекта в иерархии.")]
     [SerializeField] private string zoneId;
 
+    /// <summary>Публичный доступ к идентификатору зоны для сохранений.</summary>
+    public string ZoneId => zoneId;
+
     // Вспомогательное свойство для красивых и понятных логов
     private string LogPrefix => $"[PotZoneArea | {zoneId}]";
 
@@ -37,6 +40,9 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
         {
             Debug.LogWarning($"{LogPrefix} DropZoneManager.Instance не найден! Регистрация пропущена.");
         }
+
+        GameSaveManager.RequestLoad();
+        Debug.Log($"{LogPrefix} Запрошена загрузка состояния сада из сохранения.");
         
         this.gameObject.SetActive(false); 
         Debug.Log($"{LogPrefix} Объект зоны деактивирован (SetActive(false)).");
@@ -92,9 +98,19 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
     //      }
     //  }
 
-    private void RestorePot(string spriteName)
+    /// <summary>
+    /// Восстанавливает горшок в зоне из сохранения (по имени спрайта).
+    /// Используется GameSaveManager при загрузке игры.
+    /// </summary>
+    public void RestorePot(string spriteName)
     {
         Debug.Log($"{LogPrefix} RestorePot: Начало создания горшка со спрайтом '{spriteName}'.");
+
+        if (!isEmpty)
+        {
+            Debug.Log($"{LogPrefix} RestorePot: Зона уже занята. Восстановление пропущено.");
+            return;
+        }
 
         if (Shop.Instance == null || Shop.Instance.potDragDropPrefab == null)
         {
@@ -168,9 +184,8 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
             isEmpty = false;
             potComponent.AlignToZone(this.transform);
             potComponent.SetCurrentZone(this);
-            
-            // // SaveZoneState(potComponent);
-            
+            SaveZoneState(potComponent);
+
             Debug.Log($"{LogPrefix} OnPotDrop: Горшок успешно установлен и сохранен.");
             return true;
         }
@@ -194,7 +209,7 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
                 oldZone.FreeZone();
             }
             potComponent.SetCurrentZone(this);
-            // // SaveZoneState(potComponent);
+            SaveZoneState(potComponent);
         }
         else
         {
@@ -203,6 +218,30 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
         }
         
         return true;
+    }
+
+    /// <summary>
+    /// Передаёт состояние зоны (и спрайт горшка в ней) в GameSaveManager для сохранения.
+    /// </summary>
+    private void SaveZoneState(Pot pot)
+    {
+        if (GameSaveManager.Instance == null) return;
+
+        string spriteName = string.Empty;
+        if (pot != null)
+        {
+            spriteName = pot.PotSpriteName;
+            if (string.IsNullOrEmpty(spriteName))
+            {
+                var sr = pot.GetComponent<SpriteRenderer>();
+                if (sr != null && sr.sprite != null)
+                {
+                    spriteName = sr.sprite.name;
+                }
+            }
+        }
+
+        GameSaveManager.Instance.SaveZone(zoneId, spriteName);
     }
 
     //  private void // SaveZoneState(Pot potComponent)
@@ -266,31 +305,17 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
     //      Debug.Log($"{LogPrefix} // SaveZoneState: --- СОХРАНЕНИЕ УСПЕШНО ЗАВЕРШЕНО ---");
     //  }
 
-      public void FreeZone()
+public void FreeZone()
       {
           Debug.Log($"{LogPrefix} FreeZone: Начало очистки зоны. Текущий isEmpty: {isEmpty}.");
           isEmpty = true;
           Debug.Log($"{LogPrefix} FreeZone: Статус изменен на isEmpty = true.");
-          
-         //  if (GameSaveManager.Instance != null)
-         //  {
-         //      Debug.Log($"{LogPrefix} FreeZone: Используем GameSaveManager для очистки сохранения...");
-         //      GameSaveManager.Instance.ClearZoneSaveData(this.zoneId);
-         //  }
-         //  else if (YG2.saves != null && YG2.saves.occupiedZones != null)
-         //  {
-         //      int removedCount = YG2.saves.occupiedZones.RemoveAll(z => z.zoneId == this.zoneId);
-         //      Debug.Log($"{LogPrefix} FreeZone: Удалено записей из сейва: {removedCount}.");
-         //      
-         //      Debug.Log($"{LogPrefix} FreeZone: Вызов YG2.SaveProgress() для фиксации очистки...");
-         //      YG2.SaveProgress();
-         //      Debug.Log($"{LogPrefix} FreeZone: Очистка успешно сохранена в Яндексе!");
-         //  }
-         //  else
-         //  {
-         //      Debug.LogWarning($"{LogPrefix} FreeZone: YG2.saves или occupiedZones равны null. Очистка из сейва пропущена.");
-         //  }
-          
+
+          if (GameSaveManager.Instance != null)
+          {
+              GameSaveManager.Instance.FreeZone(zoneId);
+          }
+
           Debug.Log($"{LogPrefix} FreeZone: Процесс завершен. Зона полностью свободна.");
       }
 

@@ -60,6 +60,8 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"📢 [InventoryManager] Отправка событий обновления UI для '{seed.name}'...");
         OnItemQuantityChanged?.Invoke(seed, _inventory[seed]);
         OnInventoryRefreshed?.Invoke();
+
+        SaveState();
     }
 
     // Получение количества (быстрый поиск O(1))
@@ -119,6 +121,49 @@ public class InventoryManager : MonoBehaviour
         int currentQty = GetQuantity(seed);
         Debug.Log($"📢 [InventoryManager] Отправка событий обновления UI для '{seed.name}' (текущее кол-во: {currentQty})...");
         OnItemQuantityChanged?.Invoke(seed, currentQty);
+        OnInventoryRefreshed?.Invoke();
+
+        SaveState();
+    }
+
+    // ===== Сохранение / загрузка инвентаря =====
+
+    /// <summary>
+    /// Передаёт текущий инвентарь в GameSaveManager для сохранения.
+    /// Вызывается при каждом изменении количества.
+    /// </summary>
+    public void SaveState()
+    {
+        if (GameSaveManager.IsLoading) return;
+        if (GameSaveManager.Instance != null)
+        {
+            GameSaveManager.Instance.SaveInventory();
+        }
+    }
+
+    /// <summary>
+    /// Полностью заменяет содержимое инвентаря данными из сохранения.
+    /// Вызывается GameSaveManager при загрузке игры.
+    /// </summary>
+    public void ApplyInventory(Dictionary<SeedItem, int> data)
+    {
+        _inventory.Clear();
+        if (data != null)
+        {
+            foreach (var pair in data)
+            {
+                if (pair.Key != null && pair.Value > 0)
+                {
+                    _inventory[pair.Key] = pair.Value;
+                }
+            }
+        }
+
+        if (_inventory.Count > 0)
+        {
+            Debug.Log($"📥 [InventoryManager] Инвентарь восстановлен из сохранения: {_inventory.Count} типов семян.");
+        }
+
         OnInventoryRefreshed?.Invoke();
     }
 }

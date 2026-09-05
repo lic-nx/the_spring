@@ -11,6 +11,34 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
     private iPotDropArea currentZone;
     public iPotDropArea CurrentZone => currentZone;
 
+    public string PotId
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(potId))
+            {
+                potId = System.Guid.NewGuid().ToString();
+            }
+            return potId;
+        }
+    }
+
+    /// <summary>Восстанавливает сохранённый идентификатор горшка (используется при загрузке).</summary>
+    public void AssignId(string id)
+    {
+        if (!string.IsNullOrEmpty(id))
+        {
+            potId = id;
+        }
+    }
+
+    public string PotSpriteName =>
+        _mySpriteRenderer != null && _mySpriteRenderer.sprite != null ? _mySpriteRenderer.sprite.name : string.Empty;
+
+    [Header("Настройки сохранения")]
+    [Tooltip("Уникальный идентификатор горшка. Если оставить пустым, будет сгенерирован автоматически.")]
+    [SerializeField] private string potId;
+
     [Header("Визуальная подсветка")]
     [Tooltip("Дочерний объект-спрайт (например, желтая обводка), который будет включаться при наведении лопатки")]
     [SerializeField] private GameObject highlightIndicator;
@@ -83,6 +111,11 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
             flower.transform.localPosition = Vector3.zero;
         }
         currentFlower = flower;
+        SaveState();
+        if (GameSaveManager.Instance != null)
+        {
+            GameSaveManager.Instance.SaveFlower(flower);
+        }
         return true;
     }
 
@@ -91,32 +124,29 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         if (currentFlower != null)
         {
             Debug.Log($"Цветок {currentFlower.name} удален из горшка.");
+            if (GameSaveManager.Instance != null)
+            {
+                GameSaveManager.Instance.RemoveFlower(currentFlower.FlowerId);
+            }
             Destroy(currentFlower.gameObject);
             currentFlower = null;
+            SaveState();
         }
     }
 
     // ===== Save/Load Methods =====
-    // public void SaveState()
-    // {
-    //     if (GameSaveManager.Instance != null)
-    //     {
-    //         GameSaveManager.Instance.SavePotState(this);
-    //     }
-    // }
-
-    // public void LoadState(GameSaveManager.PotData potData)
-    // {
-    //     if (!string.IsNullOrEmpty(potData.spriteName))
-    //     {
-    //         var sprite = Shop.Instance?.GetPotSpriteByName(potData.spriteName);
-    //         if (sprite != null && _mySpriteRenderer != null)
-    //         {
-    //             _mySpriteRenderer.sprite = sprite;
-    //         }
-    //     }
-    //     transform.position = potData.position;
-    // }
+    /// <summary>
+    /// Передаёт текущее состояние горшка в GameSaveManager для сохранения.
+    /// Вызывается при любом изменении статуса (размещение, посадка, удаление цветка и т.д.).
+    /// </summary>
+    public void SaveState()
+    {
+        if (GameSaveManager.IsLoading) return;
+        if (GameSaveManager.Instance != null)
+        {
+            GameSaveManager.Instance.SavePot(this);
+        }
+    }
 
     // ===== Подсветка (для лопатки) =====
     public void SetHighlight(bool isActive)
@@ -238,7 +268,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
                     AlignToZone(hit.transform);
                     placed = true;
                     Debug.Log($"[Pot] Successfully moved to new zone!");
-                    YG2.SaveProgress();
+                    SaveState();
                     break;
                 }
             }
@@ -323,6 +353,11 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
             RemoveFlower();
         }
         
+        if (GameSaveManager.Instance != null)
+        {
+            GameSaveManager.Instance.RemovePotAndContents(this);
+        }
+        
         Debug.Log($"[Pot] Горшок {gameObject.name} удален.");
         Destroy(gameObject);
     }
@@ -341,6 +376,8 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
                 currentZone.FreeZone();
                 currentZone.OnPotDrop(gameObject);
             }
+
+            SaveState();
         }
     }
 

@@ -174,6 +174,7 @@ public class SeedDragDrop : MonoBehaviour
         }
 
         Debug.Log("📞 [SeedDragDrop] Вызываем метод pot.PlantFlower(flowerComp)...");
+        flowerComp.PrefabName = seedItem.flowerPrefab.name;
         bool placed = pot.PlantFlower(flowerComp);
         
         if (placed)

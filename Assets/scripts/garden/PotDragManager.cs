@@ -265,6 +265,7 @@ public class PotDragManager : MonoBehaviour
                     if (pot != null)
                     {
                         pot.SetCurrentZone(dropArea);
+                        pot.SaveState();
                     }
                     
                     Debug.Log($"[PotDragManager] Горшок '{_currentPotSprite.name}' успешно размещён в зоне!");
@@ -319,10 +320,13 @@ public class PotDragManager : MonoBehaviour
                       return;
                   }
                   
-                  pot.SetCurrentZone(dropArea);
-                  pot.AlignToZone(hit.transform);
-                  
-                  Debug.Log($"[PotDragManager] Горшок '{pot.name}' успешно перемещён в новую зону!");
+pot.SetCurrentZone(dropArea);
+                   pot.AlignToZone(hit.transform);
+                   
+                   // Сохраняем горшок (и его цветок), чтобы zoneId и позиция в сейве были актуальными
+                   pot.SaveState();
+                   
+                   Debug.Log($"[PotDragManager] Горшок '{pot.name}' успешно перемещён в новую зону!");
                   
                   YG2.SaveProgress();
                   
