@@ -55,7 +55,9 @@ public class Flower : MonoBehaviour
     private void Update()
     {
         // 1. Проверяем потребности (всегда, независимо от стадии)
-        if (!_needWater && !_needFertilize)
+        // Таймер полива ставится на паузу, пока на экране есть неубранная иконка солнца
+        bool hasActiveSun = sunIconObj != null && (sunIconObj.activeSelf || _hasGivenSun);
+        if (!_needWater && !_needFertilize && !hasActiveSun)
         {
             _timeSinceLastWatering += Time.deltaTime;
             bool needStateChanged = false;
@@ -73,8 +75,8 @@ public class Flower : MonoBehaviour
             }
         }
 
-        // 2. Генерация солнца (работает НЕЗАВИСИМО от потребностей!)
-        if (_isFullyGrown)
+        // 2. Генерация солнца (таймер не тикает, пока у цветка есть нерешённая потребность)
+        if (_isFullyGrown && !_needWater && !_needFertilize)
         {
             _timeSinceLastSunGeneration += Time.deltaTime;
             if (_timeSinceLastSunGeneration >= Conditions.SunGenerationInterval)
