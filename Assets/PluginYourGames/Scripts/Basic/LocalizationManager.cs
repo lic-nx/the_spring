@@ -14,6 +14,23 @@ public class LocalizationManager : MonoBehaviour
 
     private static bool isQuitting = false;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics()
+    {
+        _instance = null;
+        isQuitting = false;
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void EnsureInstanceExists()
+    {
+        if (_instance != null || isQuitting)
+            return;
+
+        var managerObject = new GameObject(nameof(LocalizationManager));
+        managerObject.AddComponent<LocalizationManager>();
+    }
+
     private Dictionary<string, string> ru = new Dictionary<string, string>()
     {
         {"play", "Играть"},
@@ -28,8 +45,11 @@ public class LocalizationManager : MonoBehaviour
         {"t3_2", "Постарайся с ней не сталкиваться"},
         {"loose", "Уровень {0} \nне пройден"},
         {"win", "Уровень {0} \nпройден!"},
+        {"tutorial_win", "Туториал \nпройден!"},
+        {"tutorial_loos", "Туториал \nне пройден"},
         {"thanks", "Спасибо \nза прохождение \nвсех уровней!"},
         {"build", "Мы уже \nстроим новые"},
+        {"t4_1", "Пройди сквозь куст, чтобы надеть защиту из листьев"},
     };
 
     private Dictionary<string, string> en = new Dictionary<string, string>()
@@ -46,8 +66,10 @@ public class LocalizationManager : MonoBehaviour
         {"t3_2", "Try to avoid it"},
         {"loose", "Level {0} \nfailed"},
         {"win", "Level {0} \ncompleted!"},
+        {"tutorial", "Tutorial \ncompleted!"},
         {"thanks", "Thank you \nfor completing \nall the levels!"},
         {"build", "We’re already \nbuilding new ones"},
+        {"t4_1", "Go through leaves to take it and protect yourself"},
     };
 
     void Awake()
@@ -139,5 +161,11 @@ public class LocalizationManager : MonoBehaviour
     void OnApplicationQuit()
     {
         isQuitting = true;
+    }
+
+    void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
     }
 }
