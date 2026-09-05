@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+// Этот код нужен для кнопок горшка. представляет из себя пулл объектов. в нашем случае кнопки для удаления горшка и для смены его спрайта
 public class ActionButtonObjectPool : MonoBehaviour
 {
     public static ActionButtonObjectPool Instance { get; private set; }

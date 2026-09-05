@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+// Зоны для горшков. грубо говоря места на которые можно поставить горшки 
 public class DropZoneManager : MonoBehaviour
 {
     public static DropZoneManager Instance { get; private set; }
