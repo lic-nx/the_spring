@@ -1,28 +1,207 @@
 {
-    "idSave": 1097,
+    "idSave": 1185,
     "UnlockedLevel": 13,
     "CompletedLevel": 12,
     "MusicEnabled": 1,
     "ReachedIndex": 20,
     "EffectMusicEnabled": true,
-    "Coins": 300,
+    "Coins": 170,
     "occupiedZones": [
-        {
-            "zoneId": "PotZone (8)",
-            "potSpriteName": "Pot_Base_Blue_T"
-        },
         {
             "zoneId": "PotZone (4)",
             "potSpriteName": "Pot_Base_Green_T"
         },
         {
-            "zoneId": "PotZone (7)",
+            "zoneId": "PotZone (5)",
+            "potSpriteName": "Pot_Base_Blue_T"
+        },
+        {
+            "zoneId": "PotZone (6)",
             "potSpriteName": "Pot_Base_Green_T"
+        },
+        {
+            "zoneId": "PotZone (8)",
+            "potSpriteName": "Pot_Base_Blue_T"
         }
     ],
     "gardenData": {
-        "pots": [],
-        "flowers": [],
-        "currency": 0
-    }
+        "pots": [
+            {
+                "potId": "4d85ae8e-608a-40c4-9261-39b6e55250e7",
+                "spriteName": "Pot_Base_Green_T",
+                "zoneId": "PotZone (7)",
+                "position": {
+                    "x": -1.6347016096115113,
+                    "y": -7.813794136047363,
+                    "z": 0.7400000095367432
+                },
+                "isOccupied": true,
+                "flowerId": "Flower(Clone)"
+            },
+            {
+                "potId": "b6a47d76-6767-4898-9be5-cfba097be87c",
+                "spriteName": "Pot_Base_Green_T",
+                "zoneId": "PotZone (4)",
+                "position": {
+                    "x": -3.124701499938965,
+                    "y": -6.323794841766357,
+                    "z": 0.7400000095367432
+                },
+                "isOccupied": true,
+                "flowerId": "6e4e3390-6631-4758-83ff-2c798efb547c"
+            },
+            {
+                "potId": "52459e43-9626-4016-b8a1-0bdb0d11c495",
+                "spriteName": "Pot_Base_Blue_T",
+                "zoneId": "PotZone (5)",
+                "position": {
+                    "x": 0.135298490524292,
+                    "y": -6.163794040679932,
+                    "z": 0.7400000095367432
+                },
+                "isOccupied": true,
+                "flowerId": "044bdff6-14e9-45d1-a7da-60051a385ece"
+            },
+            {
+                "potId": "ce98e524-bc47-42e3-a169-466ac51b2b76",
+                "spriteName": "Pot_Base_Green_T",
+                "zoneId": "PotZone (6)",
+                "position": {
+                    "x": 3.0452980995178224,
+                    "y": -6.103794097900391,
+                    "z": 0.7400000095367432
+                },
+                "isOccupied": true,
+                "flowerId": "70050dc5-dbea-44fc-af2a-81d856783ee8"
+            },
+            {
+                "potId": "95b747ee-00aa-4478-b86d-b903db0b2127",
+                "spriteName": "Pot_Base_Green_T",
+                "zoneId": "PotZone (7)",
+                "position": {
+                    "x": -1.6347016096115113,
+                    "y": -7.813794136047363,
+                    "z": 0.7400000095367432
+                },
+                "isOccupied": true,
+                "flowerId": "b757a926-c7b2-468f-bf8d-6cadb224e328"
+            },
+            {
+                "potId": "1ac09c20-166f-42e9-89f9-f71b7350c674",
+                "spriteName": "Pot_Base_Blue_T",
+                "zoneId": "PotZone (8)",
+                "position": {
+                    "x": 1.9052983522415162,
+                    "y": -7.703794479370117,
+                    "z": 0.7400000095367432
+                },
+                "isOccupied": true,
+                "flowerId": "32da0496-882a-4a88-92cf-5776026585bc"
+            }
+        ],
+        "flowers": [
+            {
+                "flowerId": "6e4e3390-6631-4758-83ff-2c798efb547c",
+                "prefabName": "Flower",
+                "spriteName": "flower_3",
+                "position": {
+                    "x": -3.1997015476226808,
+                    "y": -5.848794937133789,
+                    "z": 0.320000022649765
+                },
+                "currentStageIndex": 0,
+                "timeSinceLastWatering": 0.0,
+                "timeSinceLastSunGeneration": 0.0,
+                "needWater": false,
+                "needFertilize": false,
+                "isFullyGrown": false,
+                "careEventCount": 0,
+                "growthConditionsName": "test2",
+                "hasGivenSun": false
+            },
+            {
+                "flowerId": "044bdff6-14e9-45d1-a7da-60051a385ece",
+                "prefabName": "Flower",
+                "spriteName": "flower_3",
+                "position": {
+                    "x": 0.06029848754405975,
+                    "y": -5.688794136047363,
+                    "z": 0.320000022649765
+                },
+                "currentStageIndex": 0,
+                "timeSinceLastWatering": 0.0,
+                "timeSinceLastSunGeneration": 0.0,
+                "needWater": false,
+                "needFertilize": false,
+                "isFullyGrown": false,
+                "careEventCount": 0,
+                "growthConditionsName": "test2",
+                "hasGivenSun": false
+            },
+            {
+                "flowerId": "b757a926-c7b2-468f-bf8d-6cadb224e328",
+                "prefabName": "Flower",
+                "spriteName": "flower_3",
+                "position": {
+                    "x": -1.709701657295227,
+                    "y": -7.338794231414795,
+                    "z": 0.320000022649765
+                },
+                "currentStageIndex": 0,
+                "timeSinceLastWatering": 0.0,
+                "timeSinceLastSunGeneration": 0.0,
+                "needWater": false,
+                "needFertilize": false,
+                "isFullyGrown": false,
+                "careEventCount": 0,
+                "growthConditionsName": "test2",
+                "hasGivenSun": false
+            },
+            {
+                "flowerId": "32da0496-882a-4a88-92cf-5776026585bc",
+                "prefabName": "Flower",
+                "spriteName": "flower_3",
+                "position": {
+                    "x": 1.8302983045578004,
+                    "y": -7.228794574737549,
+                    "z": 0.320000022649765
+                },
+                "currentStageIndex": 0,
+                "timeSinceLastWatering": 0.0,
+                "timeSinceLastSunGeneration": 0.0,
+                "needWater": false,
+                "needFertilize": false,
+                "isFullyGrown": false,
+                "careEventCount": 0,
+                "growthConditionsName": "test2",
+                "hasGivenSun": false
+            },
+            {
+                "flowerId": "70050dc5-dbea-44fc-af2a-81d856783ee8",
+                "prefabName": "Flower",
+                "spriteName": "FlowerGrow_T_3",
+                "position": {
+                    "x": 2.9702980518341066,
+                    "y": -5.628794193267822,
+                    "z": 0.320000022649765
+                },
+                "currentStageIndex": 3,
+                "timeSinceLastWatering": 5.00193452835083,
+                "timeSinceLastSunGeneration": 0.0,
+                "needWater": true,
+                "needFertilize": false,
+                "isFullyGrown": false,
+                "careEventCount": 0,
+                "growthConditionsName": "GrowthConditions",
+                "hasGivenSun": false
+            }
+        ],
+        "currency": 170
+    },
+    "inventory": [
+        {
+            "seedId": "Ромашка",
+            "quantity": 1
+        }
+    ]
 }

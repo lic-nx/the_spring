@@ -48,6 +48,13 @@ namespace YG
         public System.DateTime lastSaveTime;
     }
 
+    [System.Serializable]
+    public class InventorySlotData
+    {
+        public string seedId;
+        public int quantity;
+    }
+
     public partial class SavesYG
     {
         public int UnlockedLevel = 1;
@@ -57,7 +64,10 @@ namespace YG
         public bool EffectMusicEnabled = true;
         public int Coins = 500;
 
+        
         public List<ZoneSaveData> occupiedZones = new List<ZoneSaveData>();
         public GardenSaveData gardenData;
+
+        public List<InventorySlotData> inventory = new List<InventorySlotData>();
     }
 }
