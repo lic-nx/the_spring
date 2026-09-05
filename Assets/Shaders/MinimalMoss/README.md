@@ -1,22 +1,46 @@
 # Minimal Sprite Moss
 
-Single-pass unlit moss overlay for `SpriteRenderer` in the URP 2D Renderer.
+Минималистичная зелёная шапка для `SpriteRenderer`.
 
-## Use
+## Подключение
 
-1. Assign `MinimalSpriteMoss.mat` to a SpriteRenderer.
-2. Keep the SpriteRenderer sprite and color/tint as usual; `_MainTex` is supplied by the renderer.
-3. Duplicate the material, or set `_Seed` with a `MaterialPropertyBlock`, to vary the contour between blocks.
+1. Назначить `MinimalSpriteMoss.mat` в `SpriteRenderer`.
+2. Добавить на тот же объект компонент `MinimalMossSpriteParams`.
+3. Не создавать отдельный material для каждого объекта: компонент передаёт `_MossLocalMinY`, `_MossLocalMaxY` и `_Seed` через `MaterialPropertyBlock`.
 
-The defaults target a thin moss cap over roughly the top 10–25% of an upright sprite. The shader preserves the original sprite alpha and therefore does not expand its silhouette.
+Компонент берёт диапазон высоты из `SpriteRenderer.sprite.bounds`, поэтому маска не зависит от положения спрайта в SpriteAtlas или sprite sheet. `_MainTex`, альфа и `SpriteRenderer.color` продолжают обрабатываться самим SpriteRenderer.
 
-## Cost
+## Debug Mode
 
-- one sprite sample;
-- one 64 x 64 repeatable noise sample;
-- one transparent `Universal2D` pass;
-- no loops, blur, normal maps, displacement, procedural noise, or lighting.
+- `FullGreen` — весь непрозрачный спрайт ярко-зелёный. Проверяет material, pass, `_MainTex` и альфу.
+- `HeightMask` — низ чёрный, верх белый. Проверяет локальную высоту спрайта.
+- `Noise` — показывает используемую noise texture.
+- `Final` — итоговая зелёная шапка.
 
-Android ETC1 external alpha is supported only in the corresponding shader variant and adds its required alpha sample there.
+Рекомендуемые значения первой рабочей версии:
 
-The vertical mask uses the sprite UV `y` axis. The project's current block textures are individual, upright sprites, which matches this setup.
+```text
+MossHeight = 0.72
+MossSoftness = 0.04
+NoiseScale = 4
+NoiseStrength = 0.12
+MossAmount = 1
+```
+
+При `NoiseStrength = 0` граница ровная. При `0.12` noise только деформирует границу; дополнительных edge/crack/hanging/shadow/highlight-масок в шейдере нет.
+
+## Render setup
+
+Основной pass использует:
+
+```text
+RenderPipeline = UniversalPipeline
+Queue = Transparent
+RenderType = Transparent
+LightMode = Universal2D
+Blend SrcAlpha OneMinusSrcAlpha
+ZWrite Off
+Cull Off
+```
+
+В текущем проекте ссылки `GraphicsSettings` и `QualitySettings` указывают на отсутствующий URP pipeline asset. Поэтому в шейдере оставлен эквивалентный совместимый pass: без него Unity молча показывала `Sprites/Default`, из-за чего material визуально ничего не менял. После восстановления URP asset автоматически используется основной `Universal2D` pass.
