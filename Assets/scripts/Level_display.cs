@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 public class Level_display : MonoBehaviour
 {
     public TextMeshProUGUI levelText;
+    public bool Tutorial=false;
     public bool Win;
     public bool Pause;
 
@@ -38,34 +39,31 @@ public class Level_display : MonoBehaviour
             index = val;
         }
         levelText.text = index > 0 ? index.ToString() : "?";
-
         UpdateText();
-        LocalizationManager.Instance.OnLanguageChanged += UpdateText;
+        localizationManager.OnLanguageChanged += UpdateText;
     }
 
     void OnDestroy()
     {
-        if (LocalizationManager.Instance != null)
-        {
-            LocalizationManager.Instance.OnLanguageChanged -= UpdateText;
-        }
+        if (localizationManager != null)
+            localizationManager.OnLanguageChanged -= UpdateText;
     }
 
     void UpdateText()
     {
         if (Pause)
         {
-            levelText.text = LocalizationManager.Instance.GetText("level", levelText.text);
+            levelText.text = localizationManager.GetText("level", levelText.text);
             return;
         }
         if (Win)
         {
-            levelText.text = LocalizationManager.Instance.GetText("win", levelText.text);
+            levelText.text = localizationManager.GetText(Tutorial ? "tutorial_win" : "win", levelText.text);
             return;
         }
         else
         {
-            levelText.text = LocalizationManager.Instance.GetText("loose", levelText.text);
+            levelText.text = localizationManager.GetText(Tutorial ? "tutorial_loose" :"loose", levelText.text);
             return;
         }
 

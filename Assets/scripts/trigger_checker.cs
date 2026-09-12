@@ -9,7 +9,7 @@ public class Trigger_checker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("enemy"))
+        if (!ShouldIgnore(other))
         {
             CounterTrigger++;
             Debug.Log("An object entered.");
@@ -26,7 +26,7 @@ public class Trigger_checker : MonoBehaviour
             Debug.Log("find sun = " + other.transform.position);
             StartCoroutine(HandleSunInteraction(other.transform));
         }
-        else if (!other.CompareTag("Player") && !other.CompareTag("enemy"))
+        else if (!ShouldIgnore(other))
         {
             OnTriggerEnter_ = true;
         }
@@ -44,14 +44,21 @@ public class Trigger_checker : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag("enemy"))
+        if (!ShouldIgnore(other))
         {
-                CounterTrigger--;
+            CounterTrigger--;
             if (CounterTrigger <= 0)
             {
                 OnTriggerEnter_ = false;
             }
         }
+    }
+
+    private static bool ShouldIgnore(Collider2D other)
+    {
+        return other.CompareTag("Player") ||
+               other.CompareTag("enemy") ||
+               other.GetComponentInParent<LeafPowerup>() != null;
     }
 
 }
