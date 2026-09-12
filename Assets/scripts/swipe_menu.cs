@@ -3,30 +3,32 @@ using UnityEngine.UI;
 
 public class swipe_menu : MonoBehaviour
 {
-    [Header("Ссылки")]
-    public ScrollRect scrollRect;        // Ссылка на ScrollRect
-    public int MaxCountOfLists = 3;
-    public int NowList = 1;
-    [Header("Настройки")]
-    public bool isHorizontal = true;     // Горизонтальная прокрутка?
-    public float stepSize = 200f;        // На сколько пикселей сдвигать контент
-    public float scrollSpeed = 10f;      // Скорость прокрутки (в пикселях/сек)
-    public bool smoothScroll = true;     // Плавная прокрутка или мгновенная?
+    [Header("?????????")]
+    public ScrollRect scrollRect;        // ScrollRect component
+    public int MaxCountOfLists = 3;      // total pages
+    public int NowList = 1;              // current page (1?based)
+    [Header("????????? ?????????")]
+    public bool isHorizontal = true;    // horizontal or vertical scroll
+    public float stepSize = 200f;        // distance per page
+    public float scrollSpeed = 10f;      // lerp speed when smoothScroll
+    public bool smoothScroll = true;    // smooth (lerp) or instant
 
+    // Cached reference and state
     private RectTransform content;
     private Vector2 targetAnchoredPosition;
+    private bool isScrolling = false;   // update only during animation
 
     void Awake()
     {
         if (scrollRect == null)
         {
-            Debug.LogError("ScrollByFixedStep: ScrollRect не назначен!");
+            Debug.LogError("SwipeMenu: ScrollRect not assigned!");
             return;
         }
         content = scrollRect.content;
         if (content == null)
         {
-            Debug.LogError("ScrollByFixedStep: Content не найден в ScrollRect!");
+            Debug.LogError("SwipeMenu: ScrollRect has no content!");
             return;
         }
         targetAnchoredPosition = content.anchoredPosition;
@@ -34,11 +36,16 @@ public class swipe_menu : MonoBehaviour
 
     void Update()
     {
-        if (smoothScroll && content != null)
+        if (!isScrolling) return;
+        // Smoothly lerp to target
+        Vector2 current = content.anchoredPosition;
+        content.anchoredPosition = Vector2.Lerp(current, targetAnchoredPosition,
+            Mathf.Clamp01(scrollSpeed * Time.unscaledDeltaTime));
+        // Stop when close enough
+        if (Vector2.Distance(content.anchoredPosition, targetAnchoredPosition) < 0.1f)
         {
-            Vector2 current = content.anchoredPosition;
-            content.anchoredPosition = Vector2.Lerp(current, targetAnchoredPosition,
-                Mathf.Clamp01(scrollSpeed * Time.unscaledDeltaTime));
+            content.anchoredPosition = targetAnchoredPosition;
+            isScrolling = false;
         }
     }
 
@@ -46,7 +53,7 @@ public class swipe_menu : MonoBehaviour
     {
         if (content == null) return;
         if (NowList <= 1) return;
-        NowList-=1;
+        NowList--;
         float delta = isHorizontal ? +stepSize : -stepSize;
         MoveContent(delta);
     }
@@ -55,7 +62,7 @@ public class swipe_menu : MonoBehaviour
     {
         if (content == null) return;
         if (NowList >= MaxCountOfLists) return;
-        NowList+=1;
+        NowList++;
         float delta = isHorizontal ? -stepSize : +stepSize;
         MoveContent(delta);
     }
@@ -64,25 +71,23 @@ public class swipe_menu : MonoBehaviour
     {
         Vector2 currentPos = smoothScroll ? targetAnchoredPosition : content.anchoredPosition;
         Vector2 newPos = currentPos + (isHorizontal ? Vector2.right : Vector2.up) * delta;
-
-        // Ограничим прокрутку, чтобы не уйти "за край"
-        // Unity автоматически ограничивает прокрутку через ScrollRect,
-        // но мы можем дополнительно ограничить вручную, если нужно.
-        // Для упрощения здесь просто обновляем позицию.
-
         targetAnchoredPosition = newPos;
-
-        if (!smoothScroll)
+        if (smoothScroll)
+            isScrolling = true; // trigger Update
+        else
         {
             content.anchoredPosition = targetAnchoredPosition;
+            isScrolling = false;
         }
     }
 
-    // Опционально: сброс в начало
+    // Reset to first page
     public void ResetToStart()
     {
         targetAnchoredPosition = Vector2.zero;
-        if (!smoothScroll && content != null)
+        if (smoothScroll)
+            isScrolling = true;
+        else if (content != null)
             content.anchoredPosition = Vector2.zero;
     }
 }

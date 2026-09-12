@@ -10,30 +10,35 @@ public class Level_display : MonoBehaviour
     public bool Win;
     public bool Pause;
 
-    private LocalizationManager localizationManager;
+    private static readonly System.Collections.Generic.Dictionary<string, int> sceneIndices;
+    static Level_display()
+    {
+        var path = System.IO.Path.Combine(Application.dataPath, "scripts/SceneList.txt");
+        var dict = new System.Collections.Generic.Dictionary<string, int>();
+        if (System.IO.File.Exists(path))
+        {
+            var lines = System.IO.File.ReadAllLines(path);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var name = lines[i].Trim();
+                if (!string.IsNullOrEmpty(name) && !dict.ContainsKey(name))
+                {
+                    dict[name] = i + 1; // 1‑based index
+                }
+            }
+        }
+        sceneIndices = dict;
+    }
 
     private void Start()
     {
-        if (levelText == null)
+        var sceneName = SceneManager.GetActiveScene().name;
+        int index = 0;
+        if (sceneIndices != null && sceneIndices.TryGetValue(sceneName, out var val))
         {
-            Debug.LogError($"{nameof(Level_display)} on '{name}' has no levelText assigned.", this);
-            enabled = false;
-            return;
+            index = val;
         }
-
-        localizationManager = LocalizationManager.Instance;
-        if (localizationManager == null)
-        {
-            Debug.LogError($"{nameof(LocalizationManager)} is not available.", this);
-            enabled = false;
-            return;
-        }
-
-        var match = Regex.Match(SceneManager.GetActiveScene().name, @"\d+$");
-        levelText.text = match.Success
-            ? $"{match.Value}"
-            : $"?";
-
+        levelText.text = index > 0 ? index.ToString() : "?";
         UpdateText();
         localizationManager.OnLanguageChanged += UpdateText;
     }

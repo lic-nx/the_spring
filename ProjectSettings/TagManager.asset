@@ -9,6 +9,8 @@ TagManager:
   - sun
   - Music
   - enemy
+  - Pot
+  - flower
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - Water
   - UI
   - Block
-  - 
-  - 
+  - plant
+  - Pot
   - 
   - 
   - 
