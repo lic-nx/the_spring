@@ -396,7 +396,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2958561681051083078}
   m_HandleRect: {fileID: 1997307826522457081}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -524,4 +524,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteButtonPrefab: {fileID: 8129317222358271961, guid: cf7ff82a4c057384bb13c3158ba62fae, type: 3}
+  contentTransform: {fileID: 0}
   buttonSize: 0.8
