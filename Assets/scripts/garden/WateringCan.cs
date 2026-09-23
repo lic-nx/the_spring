@@ -25,9 +25,7 @@ public class WateringCan : WorldDraggable
     [Tooltip("Спрайт-круг/прямоугольник, показывающий зону полива во время перетаскивания. Можно оставить пустым.")]
     [SerializeField] private GameObject wateringAreaIndicator;
 
-    private Vector3 _startPosition; // Исходная позиция лейки на сцене
-
-    private void Awake()
+    protected override void Awake()
     {
         // ⚠️ ВАЖНО: вызываем Awake базового класса
         base.Awake();
@@ -39,8 +37,9 @@ public class WateringCan : WorldDraggable
         }
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         // Сохраняем исходную позицию лейки (её "дом")
         _startPosition = transform.position;
     }

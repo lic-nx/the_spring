@@ -13,6 +13,10 @@ using YG;
 /// </summary>
 public class GameSaveManager : MonoBehaviour
 {
+    private const string GardenSceneName = "Garden";
+    private const float AutosaveIntervalSeconds = 5f;
+    private const double MaxOfflineSeconds = 7d * 24d * 60d * 60d;
+
     public static GameSaveManager Instance
     {
         get
@@ -31,6 +35,8 @@ public class GameSaveManager : MonoBehaviour
     public bool loadOnSceneLoad = true;
 
     private bool _loadScheduled = false;
+    private bool _isBatchSaving = false;
+    private float _autosaveTimer;
     private int _pendingSceneHandle = int.MinValue;
     private int _loadedSceneHandle = int.MinValue;
 
@@ -66,6 +72,28 @@ public class GameSaveManager : MonoBehaviour
     {
         _loadedSceneHandle = int.MinValue;
         if (loadOnSceneLoad) RequestLoad();
+    }
+
+    private void Update()
+    {
+        if (!IsGardenSceneActive() || IsLoading) return;
+
+        _autosaveTimer += Time.unscaledDeltaTime;
+        if (_autosaveTimer >= AutosaveIntervalSeconds)
+        {
+            _autosaveTimer = 0f;
+            SaveAllGardenState();
+        }
+    }
+
+    private void OnApplicationPause(bool paused)
+    {
+        if (paused) SaveAllGardenState();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveAllGardenState();
     }
 
     /// <summary>
@@ -107,13 +135,58 @@ public class GameSaveManager : MonoBehaviour
             if (YG2.saves == null) return null;
             if (YG2.saves.gardenData == null)
             {
-                YG2.saves.gardenData = new GardenSaveData
-                {
-                    currency = YG2.saves.Coins
-                };
+                YG2.saves.gardenData = new GardenSaveData();
             }
+
+            if (YG2.saves.gardenData.pots == null)
+                YG2.saves.gardenData.pots = new List<PotSaveData>();
+            if (YG2.saves.gardenData.flowers == null)
+                YG2.saves.gardenData.flowers = new List<FlowerSaveData>();
             return YG2.saves.gardenData;
         }
+    }
+
+    private static bool IsGardenSceneActive()
+    {
+        return SceneManager.GetActiveScene().name == GardenSceneName;
+    }
+
+    private void CommitProgress()
+    {
+        if (_isBatchSaving || YG2.saves == null) return;
+
+        var garden = GardenData;
+        if (garden != null && IsGardenSceneActive())
+            garden.lastSaveUtcTicks = System.DateTime.UtcNow.Ticks;
+
+        YG2.SaveProgress();
+    }
+
+    /// <summary>Сохраняет актуальные таймеры и весь Garden одним коммитом.</summary>
+    public void SaveAllGardenState()
+    {
+        if (IsLoading || !IsGardenSceneActive() || YG2.saves == null) return;
+
+        _isBatchSaving = true;
+        try
+        {
+            foreach (var pot in FindObjectsOfType<Pot>())
+                SavePot(pot);
+
+            SaveInventory();
+        }
+        finally
+        {
+            _isBatchSaving = false;
+        }
+
+        CommitProgress();
+    }
+
+    /// <summary>Единая точка коммита для валюты и других Garden-систем.</summary>
+    public void CommitExternalChange()
+    {
+        CommitProgress();
     }
 
     /// <summary>Сохраняет состояние зоны (какой спрайт горшка в ней стоит).</summary>
@@ -127,7 +200,7 @@ public class GameSaveManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(potSpriteName))
         {
-            YG2.SaveProgress();
+            CommitProgress();
             return;
         }
 
@@ -136,7 +209,7 @@ public class GameSaveManager : MonoBehaviour
             zoneId = zoneId,
             potSpriteName = potSpriteName
         });
-        YG2.SaveProgress();
+        CommitProgress();
     }
 
     /// <summary>Освобождает зону: удаляет её запись из сохранения.</summary>
@@ -147,7 +220,7 @@ public class GameSaveManager : MonoBehaviour
         if (YG2.saves == null || YG2.saves.occupiedZones == null) return;
 
         YG2.saves.occupiedZones.RemoveAll(z => z.zoneId == zoneId);
-        YG2.SaveProgress();
+        CommitProgress();
     }
 
     /// <summary>Сохраняет состояние горшка (собирает значения из Pot).</summary>
@@ -184,8 +257,7 @@ public class GameSaveManager : MonoBehaviour
 
         garden.pots.RemoveAll(p => p.potId == data.potId);
         garden.pots.Add(data);
-        garden.currency = YG2.saves.Coins;
-        YG2.SaveProgress();
+        CommitProgress();
     }
 
     /// <summary>Удаляет горшок из сохранения.</summary>
@@ -196,7 +268,7 @@ public class GameSaveManager : MonoBehaviour
         if (garden == null) return;
 
         garden.pots.RemoveAll(p => p.potId == potId);
-        YG2.SaveProgress();
+        CommitProgress();
     }
 
     /// <summary>Сохраняет состояние цветка (собирает значения из Flower).</summary>
@@ -209,7 +281,6 @@ public class GameSaveManager : MonoBehaviour
             flowerId = flower.FlowerId,
             prefabName = flower.PrefabName,
             spriteName = flower.SpriteName,
-            position = flower.transform.position,
             currentStageIndex = flower.CurrentStageIndex,
             timeSinceLastWatering = flower.TimeSinceLastWatering,
             timeSinceLastSunGeneration = flower.TimeSinceLastSunGeneration,
@@ -232,8 +303,7 @@ public class GameSaveManager : MonoBehaviour
 
         garden.flowers.RemoveAll(f => f.flowerId == data.flowerId);
         garden.flowers.Add(data);
-        garden.currency = YG2.saves.Coins;
-        YG2.SaveProgress();
+        CommitProgress();
     }
 
     /// <summary>Удаляет цветок из сохранения.</summary>
@@ -244,7 +314,7 @@ public class GameSaveManager : MonoBehaviour
         if (garden == null) return;
 
         garden.flowers.RemoveAll(f => f.flowerId == flowerId);
-        YG2.SaveProgress();
+        CommitProgress();
     }
 
     /// <summary>Удаляет горшок и все связанные с ним данные из сохранения.</summary>
@@ -274,11 +344,11 @@ public class GameSaveManager : MonoBehaviour
             if (pair.Key == null || pair.Value <= 0) continue;
             YG2.saves.inventory.Add(new InventorySlotData
             {
-                seedId = pair.Key.name,
+                seedId = ((UnityEngine.Object)pair.Key).name,
                 quantity = pair.Value
             });
         }
-        YG2.SaveProgress();
+        CommitProgress();
     }
 
     /// <summary>Восстанавливает содержимое инвентаря из сохранения.</summary>
@@ -310,7 +380,9 @@ public class GameSaveManager : MonoBehaviour
         {
             foreach (var seed in Shop.Instance.availableSeedsForSale)
             {
-                if (seed != null && seed.name == seedId) return seed;
+                if (seed == null) continue;
+                if (((UnityEngine.Object)seed).name == seedId || seed.name == seedId)
+                    return seed;
             }
         }
         return null;
@@ -327,11 +399,12 @@ public class GameSaveManager : MonoBehaviour
             return;
         }
 
+        float offlineSeconds = GetOfflineElapsedSeconds();
         IsLoading = true;
         try
         {
             LoadZonesFromSave();
-            LoadFlowersFromSave();
+            LoadFlowersFromSave(offlineSeconds);
             LoadInventoryFromSave();
             Debug.Log("[GameSaveManager] Состояние сада загружено.");
         }
@@ -339,6 +412,21 @@ public class GameSaveManager : MonoBehaviour
         {
             IsLoading = false;
         }
+
+        // Фиксируем применённый офлайн-прогресс и миграции старых данных.
+        SaveAllGardenState();
+    }
+
+    private float GetOfflineElapsedSeconds()
+    {
+        var garden = GardenData;
+        if (garden == null || garden.lastSaveUtcTicks <= 0) return 0f;
+
+        long nowTicks = System.DateTime.UtcNow.Ticks;
+        if (garden.lastSaveUtcTicks > nowTicks) return 0f;
+
+        double seconds = new System.TimeSpan(nowTicks - garden.lastSaveUtcTicks).TotalSeconds;
+        return (float)System.Math.Min(seconds, MaxOfflineSeconds);
     }
 
     private void LoadZonesFromSave()
@@ -393,7 +481,7 @@ public class GameSaveManager : MonoBehaviour
         return null;
     }
 
-    private void LoadFlowersFromSave()
+    private void LoadFlowersFromSave(float offlineSeconds)
     {
         var garden = YG2.saves?.gardenData;
         if (garden == null || garden.pots == null || garden.flowers == null) return;
@@ -409,7 +497,7 @@ public class GameSaveManager : MonoBehaviour
             var pot = FindPotInZone(potData.zoneId);
             if (pot == null || pot.CurrentFlower != null) continue;
 
-            RestoreFlowerIntoPot(pot, flowerData);
+            RestoreFlowerIntoPot(pot, flowerData, offlineSeconds);
         }
     }
 
@@ -428,7 +516,7 @@ public class GameSaveManager : MonoBehaviour
         return zone != null ? zone.ZoneId : string.Empty;
     }
 
-    private void RestoreFlowerIntoPot(Pot pot, FlowerSaveData data)
+    private void RestoreFlowerIntoPot(Pot pot, FlowerSaveData data, float offlineSeconds)
     {
         var prefab = ResolveFlowerPrefab(data.prefabName);
         if (prefab == null)
@@ -471,6 +559,7 @@ public class GameSaveManager : MonoBehaviour
         }
 
         flower.LoadFromData(data);
+        flower.ApplyOfflineProgress(offlineSeconds);
     }
 
     private GameObject ResolveFlowerPrefab(string name)

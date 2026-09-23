@@ -625,7 +625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8280565989256573619, guid: dd827e63f125b2040b0663dfb4684af1, type: 3}
       propertyPath: m_Name
-      value: SpriteReplacePanelManager(1)
+      value: SpriteReplacePanel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

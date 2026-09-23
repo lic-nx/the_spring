@@ -117,14 +117,20 @@ public class SeedDragManager : MonoBehaviour
         Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
         worldPos.z = 0f;
         
-        // Проверяем, попали ли в горшок
-        Collider2D hitCollider = Physics2D.OverlapPoint(worldPos);
-        RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
-        bool planted = false;
-        
-        if (hit.collider != null && hit.collider.CompareTag("Pot"))
+        // OverlapPointAll надёжнее нулевого Raycast: в точке могут одновременно
+        // находиться коллайдеры зоны, цветка и самого горшка.
+        Pot targetPot = null;
+        Collider2D[] hitColliders = Physics2D.OverlapPointAll(worldPos);
+        foreach (Collider2D hitCollider in hitColliders)
         {
-            planted = TryPlantInPot(hit.collider.transform);
+            targetPot = hitCollider.GetComponentInParent<Pot>();
+            if (targetPot != null)
+                break;
+        }
+
+        if (targetPot != null)
+        {
+            TryPlantInPot(targetPot);
         }
         else
         {
@@ -141,27 +147,27 @@ public class SeedDragManager : MonoBehaviour
     /// <summary>
     /// Попытка посадить цветок в горшок.
     /// </summary>
-    private bool TryPlantInPot(Transform potTransform)
+    private bool TryPlantInPot(Pot pot)
     {
         if (_currentSeed.flowerPrefab == null)
         {
             Debug.LogError("[SeedDragManager] В ScriptableObject семени не назначен Flower Prefab!");
             return false;
         }
-        
-        Pot pot = potTransform.GetComponent<Pot>();
-        if (pot == null)
-        {
-            Debug.LogError($"[SeedDragManager] На объекте '{potTransform.name}' отсутствует компонент Pot!");
-            return false;
-        }
-        
+
         if (pot.CurrentFlower != null)
         {
             Debug.Log("[SeedDragManager] Горшок уже занят.");
             return false;
         }
         
+        GrowthConditions selectedCondition = SelectRandomCondition();
+        if (selectedCondition == null)
+        {
+            Debug.LogError($"[SeedDragManager] У семян '{_currentSeed.name}' нет корректных GrowthConditions.");
+            return false;
+        }
+
         // Создаём цветок
         GameObject flowerObj = Instantiate(_currentSeed.flowerPrefab, Vector3.zero, Quaternion.identity);
         Flower flowerComp = flowerObj.GetComponent<Flower>();
@@ -172,8 +178,6 @@ public class SeedDragManager : MonoBehaviour
             return false;
         }
         
-        // Выбираем случайное условие роста
-        GrowthConditions selectedCondition = SelectRandomCondition();
         flowerComp.Initialize(selectedCondition);
         flowerComp.PrefabName = _currentSeed.flowerPrefab.name;
         
@@ -198,29 +202,36 @@ public class SeedDragManager : MonoBehaviour
     /// </summary>
     private GrowthConditions SelectRandomCondition()
     {
-        if (_currentSeed.growthConditionsList?.Count > 0 && 
-            _currentSeed.weights?.Count == _currentSeed.growthConditionsList.Count)
+        if (_currentSeed == null || _currentSeed.growthConditionsList == null ||
+            _currentSeed.growthConditionsList.Count == 0)
+            return null;
+
+        if (_currentSeed.weights != null &&
+            _currentSeed.weights.Count == _currentSeed.growthConditionsList.Count)
         {
             int totalWeight = 0;
-            foreach (int weight in _currentSeed.weights)
+            for (int i = 0; i < _currentSeed.weights.Count; i++)
             {
-                totalWeight += weight;
+                if (_currentSeed.growthConditionsList[i] != null)
+                    totalWeight += Mathf.Max(0, _currentSeed.weights[i]);
             }
-            
-            int randomValue = Random.Range(0, totalWeight);
-            int currentWeight = 0;
-            
-            for (int i = 0; i < _currentSeed.growthConditionsList.Count; i++)
+
+            if (totalWeight > 0)
             {
-                currentWeight += _currentSeed.weights[i];
-                if (randomValue < currentWeight)
+                int randomValue = Random.Range(0, totalWeight);
+                int currentWeight = 0;
+
+                for (int i = 0; i < _currentSeed.growthConditionsList.Count; i++)
                 {
-                    return _currentSeed.growthConditionsList[i];
+                    if (_currentSeed.growthConditionsList[i] == null) continue;
+                    currentWeight += Mathf.Max(0, _currentSeed.weights[i]);
+                    if (randomValue < currentWeight)
+                        return _currentSeed.growthConditionsList[i];
                 }
             }
         }
-        
-        // Fallback: возвращаем первое условие
-        return _currentSeed.growthConditionsList[0];
+
+        // Fallback для старых ассетов без весов: первое непустое условие.
+        return _currentSeed.growthConditionsList.Find(condition => condition != null);
     }
 }

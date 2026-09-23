@@ -114,36 +114,45 @@ namespace YG.Insides
         }
 
 #if UNITY_EDITOR
-        private static string PATH_SAVES_EDITOR
+        private static string LEGACY_PATH_SAVES_EDITOR
         {
             get { return Path.Combine(InfoYG.PATCH_PC_EDITOR, "SavesEditorYG2.json"); }
+        }
+
+        private static string PATH_SAVES_EDITOR
+        {
+            get
+            {
+                return Path.Combine(
+                    Path.GetDirectoryName(Application.dataPath),
+                    "Library",
+                    "PluginYourGames",
+                    "SavesEditorYG2.json");
+            }
         }
 
         public static void SaveEditor()
         {
             Message("Save Progress (in Editor)");
 
-            bool fileExits = false;
-
-            if (File.Exists(PATH_SAVES_EDITOR))
-                fileExits = true;
-
 #if NJSON_STORAGE_YG2
             string json = JsonConvert.SerializeObject(YG2.saves, Formatting.Indented);
 #else
             string json = JsonUtility.ToJson(YG2.saves, true);
 #endif
+            Directory.CreateDirectory(Path.GetDirectoryName(PATH_SAVES_EDITOR));
             File.WriteAllText(PATH_SAVES_EDITOR, json);
-
-            if (!fileExits && File.Exists(PATH_SAVES_EDITOR))
-                UnityEditor.AssetDatabase.Refresh();
         }
 
         public static void LoadEditor()
         {
-            if (File.Exists(PATH_SAVES_EDITOR))
+            string savePath = File.Exists(PATH_SAVES_EDITOR)
+                ? PATH_SAVES_EDITOR
+                : LEGACY_PATH_SAVES_EDITOR;
+
+            if (File.Exists(savePath))
             {
-                string json = File.ReadAllText(PATH_SAVES_EDITOR);
+                string json = File.ReadAllText(savePath);
 #if NJSON_STORAGE_YG2
                 YG2.saves = JsonConvert.DeserializeObject<SavesYG>(json);
 #else

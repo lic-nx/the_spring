@@ -59,7 +59,7 @@ public class CurrencyManager : MonoBehaviour
         }
 
         YG2.saves.Coins += amount;
-        YG2.SaveProgress();
+        GameSaveManager.Instance.CommitExternalChange();
         Debug.Log($"💰 [CurrencyManager] +{amount} солнышек. Итого: {YG2.saves.Coins}");
         OnCurrencyChanged?.Invoke(YG2.saves.Coins);
     }
@@ -90,7 +90,7 @@ public class CurrencyManager : MonoBehaviour
         }
 
         YG2.saves.Coins -= amount;
-        YG2.SaveProgress();
+        GameSaveManager.Instance.CommitExternalChange();
         Debug.Log($"💰 [CurrencyManager] -{amount} солнышек. Итого: {YG2.saves.Coins}");
         OnCurrencyChanged?.Invoke(YG2.saves.Coins);
         return true;

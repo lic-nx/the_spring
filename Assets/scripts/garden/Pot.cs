@@ -101,13 +101,16 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
             Debug.LogWarning("Cannot plant a null flower.");
             return false;
         }
-        flower.transform.SetParent(transform);
         if (flowerAttachment != null)
         {
+            // Сохраняем мировой масштаб цветка, но привязываем его к самой точке.
+            // Теперь изменение flower_place автоматически двигает уже посаженный цветок.
+            flower.transform.SetParent(flowerAttachment, true);
             flower.transform.position = flowerAttachment.position;
         }
         else
         {
+            flower.transform.SetParent(transform, true);
             flower.transform.localPosition = Vector3.zero;
         }
         currentFlower = flower;
@@ -249,6 +252,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         Collider2D[] hits = Physics2D.OverlapPointAll(worldPoint);
         
         bool placed = false;
+        iPotDropArea originalZone = currentZone;
         foreach (Collider2D hit in hits)
         {
             var dropArea = hit.GetComponent<iPotDropArea>();
@@ -257,15 +261,13 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
                 if (dropArea == currentZone)
                 {
                     Debug.Log("[Pot] Already in this zone!");
+                    currentZone.AlignPotToZone(this);
                     placed = true;
                     break;
                 }
-                
+
                 if (dropArea.OnPotDrop(gameObject))
                 {
-                    currentZone.FreeZone();
-                    SetCurrentZone(dropArea);
-                    AlignToZone(hit.transform);
                     placed = true;
                     Debug.Log($"[Pot] Successfully moved to new zone!");
                     SaveState();
@@ -278,9 +280,9 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         {
             Debug.Log("[Pot] Not placed in any zone. Returning to original position.");
             // Return to original position if not placed
-            if (currentZone != null)
+            if (originalZone != null)
             {
-                currentZone.AlignPotToZone(this);
+                originalZone.AlignPotToZone(this);
             }
         }
         
@@ -379,12 +381,6 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
 
             SaveState();
         }
-    }
-
-    public void StartMoving()
-    {
-        HideActionMenu();
-        Debug.Log($"[Pot] StartMoving called for {gameObject.name}");
     }
 
     public void HideActionMenu()

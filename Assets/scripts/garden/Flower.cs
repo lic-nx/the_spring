@@ -37,10 +37,19 @@ public class Flower : MonoBehaviour
 
     public void Initialize(GrowthConditions conditions)
     {
+        if (conditions == null)
+        {
+            Debug.LogError("[Flower] Нельзя инициализировать цветок без GrowthConditions.");
+            return;
+        }
+
         _conditions = conditions;
         _currentStageIndex = 0;
         _careEventCount = 0;
-        _isFullyGrown = false;
+        _isFullyGrown = _conditions.StageSprites == null || _conditions.StageSprites.Length <= 1;
+        _timeSinceLastWatering = 0f;
+        _timeSinceLastSunGeneration = 0f;
+        _hasGivenSun = false;
         ResetNeedsOnly();
 
         var sr = GetComponent<SpriteRenderer>();
@@ -113,10 +122,16 @@ public class Flower : MonoBehaviour
     {
         if (_isFullyGrown) return;
 
+        if (Conditions.StageSprites == null || Conditions.StageSprites.Length == 0)
+        {
+            _isFullyGrown = true;
+            return;
+        }
+
         int required = Conditions.GetRequiredEventsForStage(_currentStageIndex + 1);
         if (required > 0 && _careEventCount >= required)
         {
-            if (Conditions.StageSprites != null && _currentStageIndex + 1 < Conditions.StageSprites.Length)
+            if (_currentStageIndex + 1 < Conditions.StageSprites.Length)
             {
                 _currentStageIndex++;
                 var sr = GetComponent<SpriteRenderer>();
@@ -125,12 +140,18 @@ public class Flower : MonoBehaviour
                     sr.sprite = Conditions.StageSprites[_currentStageIndex];
                     UpdateColliderToCurrentSprite();
                 }
+
+                // Последний спрайт и есть взрослая стадия. Дополнительный цикл ухода не нужен.
+                _isFullyGrown = _currentStageIndex >= Conditions.StageSprites.Length - 1;
             }
             else
             {
                 _isFullyGrown = true;
-                Debug.Log("🌸 Цветок полностью вырос! Активирована генерация солнца.");
             }
+
+            if (_isFullyGrown)
+                Debug.Log("🌸 Цветок полностью вырос! Активирована генерация солнца.");
+
             _careEventCount = 0;
             _needWater = false;
             _needFertilize = false;
@@ -296,6 +317,13 @@ public class Flower : MonoBehaviour
         _careEventCount = data.careEventCount;
         _hasGivenSun = data.hasGivenSun;
 
+        if (_conditions != null && _conditions.StageSprites != null && _conditions.StageSprites.Length > 0 &&
+            _currentStageIndex >= _conditions.StageSprites.Length - 1)
+        {
+            // Миграция старых сохранений, где взрослая стадия наступала на один полив позже.
+            _isFullyGrown = true;
+        }
+
         var sr = GetComponent<SpriteRenderer>();
         if (sr != null && _conditions != null && _conditions.StageSprites != null && _conditions.StageSprites.Length > 0)
         {
@@ -303,8 +331,47 @@ public class Flower : MonoBehaviour
             UpdateColliderToCurrentSprite();
         }
 
-        transform.position = data.position;
         if (sunIconObj != null) sunIconObj.SetActive(_hasGivenSun);
+        UpdateNeedIcons();
+    }
+
+    /// <summary>
+    /// Продвигает только временные процессы за период отсутствия игрока.
+    /// Уход по-прежнему требует действия игрока, поэтому за офлайн-период может
+    /// появиться максимум одна нерешённая потребность или одна иконка солнца.
+    /// </summary>
+    public void ApplyOfflineProgress(float elapsedSeconds)
+    {
+        if (elapsedSeconds <= 0f || _conditions == null) return;
+        if (_needWater || _needFertilize || _hasGivenSun) return;
+
+        float wateringInterval = Mathf.Max(0f, Conditions.TimeBetweenWatering);
+        float timeToWater = Mathf.Max(0f, wateringInterval - _timeSinceLastWatering);
+
+        float timeToSun = float.PositiveInfinity;
+        if (_isFullyGrown)
+        {
+            float sunInterval = Mathf.Max(0f, Conditions.SunGenerationInterval);
+            timeToSun = Mathf.Max(0f, sunInterval - _timeSinceLastSunGeneration);
+        }
+
+        float timeToFirstEvent = Mathf.Min(timeToWater, timeToSun);
+        float activeTime = Mathf.Min(elapsedSeconds, timeToFirstEvent);
+        _timeSinceLastWatering += activeTime;
+        if (_isFullyGrown) _timeSinceLastSunGeneration += activeTime;
+
+        // При одновременном срабатывании потребность в воде имеет тот же приоритет,
+        // что и в Update().
+        if (elapsedSeconds >= timeToWater)
+        {
+            _needWater = true;
+        }
+        else if (_isFullyGrown && elapsedSeconds >= timeToSun)
+        {
+            _timeSinceLastSunGeneration = 0f;
+            SpawnSunIcon();
+        }
+
         UpdateNeedIcons();
     }
 }

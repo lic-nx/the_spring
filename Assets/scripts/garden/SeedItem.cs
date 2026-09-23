@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "SeedItem", menuName = "Garden/Seed Item")]
 public class SeedItem : ScriptableObject
 {
-    public string name = "Ромашка";
+    public new string name = "Ромашка";
     public GameObject flowerPrefab;
     public List<GrowthConditions> growthConditionsList = new List<GrowthConditions>();
     public List<int> weights = new List<int>();
@@ -15,6 +15,7 @@ public class SeedItem : ScriptableObject
     private void OnValidate()
     {
         SyncLists();
+        price = Mathf.Max(0, price);
     }
 
     // Логика синхронизации
@@ -33,6 +34,11 @@ public class SeedItem : ScriptableObject
         while (weights.Count > growthConditionsList.Count)
         {
             weights.RemoveAt(weights.Count - 1);
+        }
+
+        for (int i = 0; i < weights.Count; i++)
+        {
+            weights[i] = Mathf.Max(0, weights[i]);
         }
     }
 

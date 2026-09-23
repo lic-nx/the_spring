@@ -1,5 +1,5 @@
 {
-    "idSave": 1451,
+    "idSave": 1505,
     "UnlockedLevel": 1,
     "CompletedLevel": 0,
     "MusicEnabled": 1,
@@ -43,8 +43,8 @@
                 "spriteName": "Pot_Base_Green_T",
                 "zoneId": "PotZone (4)",
                 "position": {
-                    "x": -3.124701499938965,
-                    "y": -6.323794841766357,
+                    "x": -3.8744044303894045,
+                    "y": -3.8432650566101076,
                     "z": 0.7400000095367432
                 },
                 "isOccupied": true,
@@ -55,8 +55,8 @@
                 "spriteName": "Pot_Base_Blue_T",
                 "zoneId": "PotZone (5)",
                 "position": {
-                    "x": 0.135298490524292,
-                    "y": -6.163794040679932,
+                    "x": -4.754404544830322,
+                    "y": -11.233264923095704,
                     "z": 0.7400000095367432
                 },
                 "isOccupied": true,
@@ -67,8 +67,8 @@
                 "spriteName": "Pot_Base_Green_T",
                 "zoneId": "PotZone (6)",
                 "position": {
-                    "x": 3.0452980995178224,
-                    "y": -6.103794097900391,
+                    "x": 2.2055954933166506,
+                    "y": -3.923264980316162,
                     "z": 0.7400000095367432
                 },
                 "isOccupied": true,
@@ -79,8 +79,8 @@
                 "spriteName": "Pot_Base_Blue_T",
                 "zoneId": "PotZone (8)",
                 "position": {
-                    "x": 1.9052983522415162,
-                    "y": -7.703794479370117,
+                    "x": 3.6855955123901369,
+                    "y": -8.633265495300293,
                     "z": 0.7400000095367432
                 },
                 "isOccupied": true,
@@ -91,8 +91,8 @@
                 "spriteName": "Pot_Base_Green_T",
                 "zoneId": "PotZone (7)",
                 "position": {
-                    "x": -1.6347016096115113,
-                    "y": -7.813794136047363,
+                    "x": 0.7055953741073608,
+                    "y": -9.003265380859375,
                     "z": 0.7400000095367432
                 },
                 "isOccupied": false,
@@ -101,14 +101,37 @@
         ],
         "flowers": [
             {
+                "flowerId": "6e4e3390-6631-4758-83ff-2c798efb547c",
+                "prefabName": "Flower",
+                "spriteName": "flower_6",
+                "currentStageIndex": 1,
+                "timeSinceLastWatering": 5.641303062438965,
+                "timeSinceLastSunGeneration": 2.8042287826538088,
+                "needWater": false,
+                "needFertilize": false,
+                "isFullyGrown": true,
+                "careEventCount": 0,
+                "growthConditionsName": "test2",
+                "hasGivenSun": true
+            },
+            {
+                "flowerId": "044bdff6-14e9-45d1-a7da-60051a385ece",
+                "prefabName": "Flower",
+                "spriteName": "flower_6",
+                "currentStageIndex": 1,
+                "timeSinceLastWatering": 6.902132511138916,
+                "timeSinceLastSunGeneration": 2.8042287826538088,
+                "needWater": false,
+                "needFertilize": false,
+                "isFullyGrown": true,
+                "careEventCount": 0,
+                "growthConditionsName": "test2",
+                "hasGivenSun": true
+            },
+            {
                 "flowerId": "8f9fe92e-0ec4-4bf9-a1da-c59b9c264d45",
                 "prefabName": "Flower",
                 "spriteName": "FlowerGrow_T_1",
-                "position": {
-                    "x": 2.9702980518341066,
-                    "y": -5.628794193267822,
-                    "z": 0.320000022649765
-                },
                 "currentStageIndex": 1,
                 "timeSinceLastWatering": 5.000887870788574,
                 "timeSinceLastSunGeneration": 0.0,
@@ -123,11 +146,6 @@
                 "flowerId": "1c4eaa9b-aa54-4b71-9e57-be45a944b160",
                 "prefabName": "Flower",
                 "spriteName": "FlowerGrow_T_1",
-                "position": {
-                    "x": 1.8302983045578004,
-                    "y": -7.228794574737549,
-                    "z": 0.320000022649765
-                },
                 "currentStageIndex": 1,
                 "timeSinceLastWatering": 5.001795768737793,
                 "timeSinceLastSunGeneration": 0.0,
@@ -137,51 +155,13 @@
                 "careEventCount": 0,
                 "growthConditionsName": "GrowthConditions",
                 "hasGivenSun": false
-            },
-            {
-                "flowerId": "6e4e3390-6631-4758-83ff-2c798efb547c",
-                "prefabName": "Flower",
-                "spriteName": "flower_6",
-                "position": {
-                    "x": -3.1997015476226808,
-                    "y": -5.848794937133789,
-                    "z": 0.320000022649765
-                },
-                "currentStageIndex": 1,
-                "timeSinceLastWatering": 5.641303062438965,
-                "timeSinceLastSunGeneration": 0.0,
-                "needWater": false,
-                "needFertilize": false,
-                "isFullyGrown": true,
-                "careEventCount": 0,
-                "growthConditionsName": "test2",
-                "hasGivenSun": true
-            },
-            {
-                "flowerId": "044bdff6-14e9-45d1-a7da-60051a385ece",
-                "prefabName": "Flower",
-                "spriteName": "flower_6",
-                "position": {
-                    "x": 0.06029848754405975,
-                    "y": -5.688794136047363,
-                    "z": 0.320000022649765
-                },
-                "currentStageIndex": 1,
-                "timeSinceLastWatering": 6.902132511138916,
-                "timeSinceLastSunGeneration": 0.0,
-                "needWater": false,
-                "needFertilize": false,
-                "isFullyGrown": true,
-                "careEventCount": 0,
-                "growthConditionsName": "test2",
-                "hasGivenSun": true
             }
         ],
-        "currency": 160
+        "lastSaveUtcTicks": 639257192259208257
     },
     "inventory": [
         {
-            "seedId": "Ромашка",
+            "seedId": "SeedItem",
             "quantity": 9
         }
     ]

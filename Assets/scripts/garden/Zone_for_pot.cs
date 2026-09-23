@@ -175,7 +175,7 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
         if (potComponent != null)
         {
             var oldZone = potComponent.CurrentZone;
-            if (oldZone != null && oldZone != this)
+            if (oldZone != null && !ReferenceEquals(oldZone, this))
             {
                 oldZone.FreeZone();
             }
@@ -204,7 +204,7 @@ public class PotZoneArea : MonoBehaviour, iPotDropArea
         if (potComponent != null)
         {
             var oldZone = potComponent.CurrentZone;
-            if (oldZone != null && oldZone != this)
+            if (oldZone != null && !ReferenceEquals(oldZone, this))
             {
                 oldZone.FreeZone();
             }

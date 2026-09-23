@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using YG;
 
 public class Shop : MonoBehaviour
 {
@@ -152,7 +151,6 @@ public class Shop : MonoBehaviour
         InventoryManager.Instance.AddItem(seed, 1);
         Debug.Log($"✅ [Shop] Успешно куплено: {seed.name} за {seed.price} солнышек.");
         
-        YG2.SaveProgress();
     }
 
     /// <summary>

@@ -35,23 +35,16 @@ public class PotActionMenu : MonoBehaviour
             Debug.LogWarning("PotActionMenu: Replace sprite button is not assigned.");
         }
 
-        if (spriteReplacePanel != null)
+        if (spriteReplacePanel == null)
         {
-            spriteReplacePanel.SetActive(false);
-        }
-        
-
-
-        SpriteReplacePanel panelComponent = spriteReplacePanel.GetComponent<SpriteReplacePanel>();
-        if (panelComponent != null)
-        {
-            panelComponent.Initialize(targetPot, availableSprites, buttonSpacing);
-        }
-        else
-        {
-            Debug.LogError("PotActionMenu: SpriteReplacePanel component not found on spriteReplacePanel!");
+            Debug.LogError("PotActionMenu: Sprite replace panel is not assigned.");
             return;
         }
+
+        spriteReplacePanel.SetActive(false);
+
+        if (spriteReplacePanel.GetComponent<SpriteReplacePanel>() == null)
+            Debug.LogError("PotActionMenu: SpriteReplacePanel component not found on spriteReplacePanel!");
     }
 
     public void SetTargetPot(Pot pot)
@@ -82,7 +75,6 @@ public class PotActionMenu : MonoBehaviour
         if (targetPot != null)
         {
             targetPot.DeletePot();
-            ReturnToPool();
         }
         else
         {

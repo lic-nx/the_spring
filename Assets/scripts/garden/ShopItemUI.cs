@@ -22,6 +22,9 @@ public class ShopItemUI : MonoBehaviour
     {
         Debug.Log($"[ShopItemUI] Вызван Setup. Тип переданного объекта: {item?.GetType().Name ?? "null"}");
         
+        if (_currentItem is SeedItem && InventoryManager.Instance != null)
+            InventoryManager.Instance.OnItemQuantityChanged -= HandleInventoryChange;
+
         _currentItem = item;
         _onBuyAction = onBuyCallback;
 

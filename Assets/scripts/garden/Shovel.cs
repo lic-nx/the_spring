@@ -18,10 +18,7 @@ public class Shovel : WorldDraggable
     // Ссылка на горшок, который подсвечен прямо сейчас
     private Pot _currentlyHighlightedPot;
 
-    // Исходная позиция лопатки на сцене
-    private Vector3 _startPosition;
-
-    private void Awake()
+    protected override void Awake()
     {
         // ⚠️ ВАЖНО: вызываем Awake базового класса
         base.Awake();
@@ -33,8 +30,9 @@ public class Shovel : WorldDraggable
         }
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         // Сохраняем исходную позицию лопатки (её "дом")
         _startPosition = transform.position;
     }

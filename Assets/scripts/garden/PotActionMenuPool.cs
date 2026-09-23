@@ -62,7 +62,7 @@ public class PotActionMenuPool : MonoBehaviour
 
     public void ReturnMenu(PotActionMenu menu)
     {
-        if (menu == null || !allMenus.Contains(menu)) return;
+        if (menu == null || !allMenus.Contains(menu) || !menu.gameObject.activeSelf) return;
 
         menu.gameObject.SetActive(false);
         menu.ResetTargetPot();
