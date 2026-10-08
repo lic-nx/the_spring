@@ -133,6 +133,7 @@ public class player_move : MonoBehaviour
                     if (lastGrowthDirection != Vector3.zero)
                     {
                         float angle = Vector3.Angle(lastGrowthDirection, newDirection);
+                        Debug.Log("Угол между старым направлением и " + trigger.name + "=" + angle);
                         if (angle > max_angle)
                         {
                             continue;
