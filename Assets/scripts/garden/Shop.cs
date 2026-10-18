@@ -10,6 +10,7 @@ public class Shop : MonoBehaviour
     
     [Header("Список горшков (Спрайты)")]
     [SerializeField] private List<Sprite> potItems = new List<Sprite>();
+    public IReadOnlyList<Sprite> PotItems => potItems;
     [SerializeField] public GameObject potDragDropPrefab; // Сделал public для доступа из PotZoneArea
     
     [Header("UI ссылки")]
@@ -58,7 +59,7 @@ public class Shop : MonoBehaviour
                 _seedCardPool.Add(cardUI);
             }
             
-            _seedCardPool[seedIndex].Setup(seed, () => PurchaseSeed(seed));
+            _seedCardPool[seedIndex].Setup(seed, () => TryPurchaseSeed(seed));
             _seedCardPool[seedIndex].gameObject.SetActive(true);
             Debug.Log($"✅ [Shop] Карточка семени {seedIndex}: {seed.name}");
             seedIndex++;
@@ -122,35 +123,35 @@ public class Shop : MonoBehaviour
     /// <summary>
     /// Логика покупки семени.
     /// </summary>
-    private void PurchaseSeed(SeedItem seed)
+    public bool TryPurchaseSeed(SeedItem seed)
     {
         if (seed == null)
         {
             Debug.LogError("[Shop] Попытка купить null семя!");
-            return;
+            return false;
         }
         
         if (CurrencyManager.Instance == null)
         {
             Debug.LogError("[Shop] CurrencyManager.Instance равен null!");
-            return;
+            return false;
         }
         
         if (!CurrencyManager.Instance.CanAfford(seed.price))
         {
             Debug.LogWarning($"⚠️ [Shop] Недостаточно средств для покупки '{seed.name}'! Нужно: {seed.price}");
-            return;
+            return false;
         }
         
         if (!CurrencyManager.Instance.TrySpendCurrency(seed.price))
         {
             Debug.LogError($"[Shop] Не удалось списать {seed.price} солнышек!");
-            return;
+            return false;
         }
         
         InventoryManager.Instance.AddItem(seed, 1);
         Debug.Log($"✅ [Shop] Успешно куплено: {seed.name} за {seed.price} солнышек.");
-        
+        return true;
     }
 
     /// <summary>
@@ -168,12 +169,6 @@ public class Shop : MonoBehaviour
         }
         Sprite item = potItems[index];
         if (item == null) return;
-        
-        // Закрываем магазин, чтобы его Canvas не блокировал клики
-        if (this.gameObject.activeSelf)
-        {
-            this.gameObject.SetActive(false);
-        }
         
         // Передаём управление PotDragManager — он создаст UI-призрак
         if (PotDragManager.Instance != null)

@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 using YG;
 
-public class Flower : MonoBehaviour
+public class Flower : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private GrowthConditions _conditions;
     [SerializeField] private GameObject wateringIconObj;
@@ -25,6 +27,8 @@ public class Flower : MonoBehaviour
     private int _currentStageIndex;
     private bool _hasGivenSun;
     private string _prefabName;
+    private GameObject _maturityHighlight;
+    private GameObject _flowerNamePlate;
 
     private void Awake()
     {
@@ -33,6 +37,9 @@ public class Flower : MonoBehaviour
             _conditions = Resources.Load<GrowthConditions>("DefaultGrowthConditions");
             if (_conditions == null) _conditions = ScriptableObject.CreateInstance<GrowthConditions>();
         }
+
+        EnsureMaturityPresentation();
+        ApplySunSprite();
     }
 
     public void Initialize(GrowthConditions conditions)
@@ -59,6 +66,7 @@ public class Flower : MonoBehaviour
             UpdateColliderToCurrentSprite();
         }
         UpdateNeedIcons();
+        UpdateMaturityPresentation();
     }
 
     private void Update()
@@ -150,7 +158,10 @@ public class Flower : MonoBehaviour
             }
 
             if (_isFullyGrown)
+            {
                 Debug.Log("🌸 Цветок полностью вырос! Активирована генерация солнца.");
+                UpdateMaturityPresentation();
+            }
 
             _careEventCount = 0;
             _needWater = false;
@@ -206,6 +217,112 @@ public class Flower : MonoBehaviour
         }
         _hasGivenSun = true;
         SaveState();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button != PointerEventData.InputButton.Left || !_isFullyGrown) return;
+
+        // Acknowledging a grown flower dismisses only the rotating highlight.
+        if (_maturityHighlight != null)
+            _maturityHighlight.SetActive(false);
+    }
+
+    private void ApplySunSprite()
+    {
+        if (sunIconObj == null) return;
+
+        Sprite sunSprite = Resources.Load<Sprite>("Greenhouse/Texures/Sun_Coin");
+        SpriteRenderer spriteRenderer = sunIconObj.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null) spriteRenderer.sprite = sunSprite;
+
+        Image image = sunIconObj.GetComponent<Image>();
+        if (image != null)
+        {
+            image.sprite = sunSprite;
+            image.preserveAspect = true;
+        }
+    }
+
+    private void EnsureMaturityPresentation()
+    {
+        SpriteRenderer flowerRenderer = GetComponent<SpriteRenderer>();
+        int sortingLayerId = flowerRenderer != null ? flowerRenderer.sortingLayerID : 0;
+        int sortingOrder = flowerRenderer != null ? flowerRenderer.sortingOrder : 0;
+
+        Transform existingHighlight = transform.Find("MaturityHighlight");
+        if (existingHighlight == null)
+        {
+            _maturityHighlight = new GameObject("MaturityHighlight", typeof(SpriteRenderer), typeof(RotateObject));
+            _maturityHighlight.transform.SetParent(transform, false);
+        }
+        else
+        {
+            _maturityHighlight = existingHighlight.gameObject;
+            if (_maturityHighlight.GetComponent<RotateObject>() == null)
+                _maturityHighlight.AddComponent<RotateObject>();
+        }
+
+        // The rose sprites use a soil-level pivot, so the bloom is near y=6.5.
+        _maturityHighlight.transform.localPosition = new Vector3(0f, 6.4f, 0f);
+        _maturityHighlight.transform.localScale = Vector3.one;
+        SpriteRenderer highlightRenderer = _maturityHighlight.GetComponent<SpriteRenderer>();
+        highlightRenderer.sprite = Resources.Load<Sprite>("Greenhouse/Texures/HighLight");
+        highlightRenderer.sortingLayerID = sortingLayerId;
+        // The greenhouse background covers negative sorting orders. The highlight
+        // can share the flower's base order while the pot is rendered above both.
+        highlightRenderer.sortingOrder = sortingOrder;
+
+        Transform existingPlate = transform.Find("FlowerNamePlate");
+        if (existingPlate == null)
+        {
+            _flowerNamePlate = new GameObject("FlowerNamePlate", typeof(SpriteRenderer));
+            _flowerNamePlate.transform.SetParent(transform, false);
+
+            GameObject textObject = new GameObject("Name", typeof(TextMeshPro));
+            textObject.transform.SetParent(_flowerNamePlate.transform, false);
+        }
+        else
+        {
+            _flowerNamePlate = existingPlate.gameObject;
+        }
+
+        _flowerNamePlate.transform.localPosition = new Vector3(0f, -1.65f, 0f);
+        _flowerNamePlate.transform.localScale = new Vector3(1.35f, 1.35f, 1f);
+        SpriteRenderer plateRenderer = _flowerNamePlate.GetComponent<SpriteRenderer>();
+        plateRenderer.sprite = Resources.Load<Sprite>("Greenhouse/Texures/HeadLine_Green");
+        plateRenderer.sortingLayerID = sortingLayerId;
+        plateRenderer.sortingOrder = sortingOrder + 2;
+
+        TextMeshPro nameText = _flowerNamePlate.GetComponentInChildren<TextMeshPro>(true);
+        if (nameText != null)
+        {
+            nameText.text = "РОЗА";
+            nameText.alignment = TextAlignmentOptions.Center;
+            nameText.fontStyle = FontStyles.Bold;
+            if (nameText.font == null && TMP_Settings.defaultFontAsset != null)
+                nameText.font = TMP_Settings.defaultFontAsset;
+            nameText.enableAutoSizing = true;
+            nameText.fontSizeMin = 2f;
+            nameText.fontSizeMax = 6f;
+            nameText.fontSize = 6f;
+            nameText.enableWordWrapping = false;
+            nameText.overflowMode = TextOverflowModes.Overflow;
+            nameText.color = Color.white;
+            nameText.rectTransform.sizeDelta = new Vector2(3.3f, 0.8f);
+            nameText.transform.localPosition = new Vector3(0f, 0.04f, 0f);
+            nameText.sortingLayerID = sortingLayerId;
+            nameText.sortingOrder = sortingOrder + 3;
+        }
+
+        _maturityHighlight.SetActive(false);
+        _flowerNamePlate.SetActive(false);
+    }
+
+    private void UpdateMaturityPresentation()
+    {
+        if (_maturityHighlight != null) _maturityHighlight.SetActive(_isFullyGrown);
+        if (_flowerNamePlate != null) _flowerNamePlate.SetActive(_isFullyGrown);
     }
 
     /// <summary>
@@ -333,6 +450,7 @@ public class Flower : MonoBehaviour
 
         if (sunIconObj != null) sunIconObj.SetActive(_hasGivenSun);
         UpdateNeedIcons();
+        UpdateMaturityPresentation();
     }
 
     /// <summary>

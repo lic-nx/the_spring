@@ -49,6 +49,10 @@ public class ShopItemUI : MonoBehaviour
         {
             iconImage.sprite = targetSprite;
             iconImage.enabled = (targetSprite != null);
+            if (item is SeedItem seedVisual)
+                GardenSeedVisuals.Apply(iconImage, quantityText, seedVisual.seedSprite);
+            else
+                GardenSeedVisuals.Clear(iconImage, quantityText);
             Debug.Log($"[ShopItemUI] IconImage обновлён. Включён: {iconImage.enabled}");
         }
         else

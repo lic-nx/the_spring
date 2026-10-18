@@ -4,16 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using YG;
 using System;
-using System.IO; 
-using UnityEngine.Rendering.PostProcessing;
-
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using TMPro;
-using YG;
 using System.Collections.Generic;
-using System.IO;
 
 public class LevelMenu : MonoBehaviour
 {
@@ -26,8 +17,7 @@ public class LevelMenu : MonoBehaviour
     public GameObject openLevel;
     private const string FALLBACK_SCENE_NAME = "sorry_not_founded"; // имя сцены если нет уровня
     private static bool isFallbackLoading = false;
-    private List<string> sceneList = new List<string>(); // список сцен из файла
-    private const string SCENE_LIST_PATH = "Assets/scripts/SceneList.txt"; // relative to project root
+    private List<string> sceneList = new List<string>();
 
     private void Awake()
     {
@@ -70,32 +60,10 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
-    // Load scene names from the external text file. Each line should contain the exact scene name.
     private void LoadSceneList()
     {
-        try
-        {
-            string fullPath = Path.Combine(Application.dataPath, "..", SCENE_LIST_PATH);
-            if (File.Exists(fullPath))
-            {
-                var lines = File.ReadAllLines(fullPath);
-                sceneList.Clear();
-                foreach (var line in lines)
-                {
-                    var trimmed = line.Trim();
-                    if (!string.IsNullOrEmpty(trimmed)) sceneList.Add(trimmed);
-                }
-                Debug.Log($"Loaded {sceneList.Count} scene names from {SCENE_LIST_PATH}");
-            }
-            else
-            {
-                Debug.LogWarning($"Scene list file not found at {fullPath}. Falling back to empty list.");
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error loading scene list: {e.Message}");
-        }
+        sceneList = LevelSceneCatalog.GetLevelScenes();
+        Debug.Log($"Loaded {sceneList.Count} level scenes from Build Settings.");
     }
 
     void ButtonsToArray()
@@ -126,13 +94,10 @@ public class LevelMenu : MonoBehaviour
         }
         string sceneName = sceneList[buttonIndex];
         Debug.LogWarning($" level index {buttonIndex}. scenename = {sceneName}");
-        int buildIndex = SceneUtility.GetBuildIndexByScenePath(sceneName);
-        if (buildIndex >= 0)
+        if (Application.CanStreamedLevelBeLoaded(sceneName))
         {
-            // Check for a tutorial with matching numeric suffix if it exists
-            string tutorialName = $"tutorial_{sceneName}"; // assumes numeric suffix matches button order
-            int tutorIndex = SceneUtility.GetBuildIndexByScenePath(tutorialName);
-            if (tutorIndex >= 0) SceneManager.LoadScene(tutorialName);
+            string tutorialName = LevelSceneCatalog.GetTutorialScene(sceneName);
+            if (!string.IsNullOrEmpty(tutorialName)) SceneManager.LoadScene(tutorialName);
             else SceneManager.LoadScene(sceneName);
         }
         else

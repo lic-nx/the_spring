@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "SeedItem", menuName = "Garden/Seed Item")]
 public class SeedItem : ScriptableObject
 {
-    public new string name = "Ромашка";
+    public new string name = "Роза";
     public GameObject flowerPrefab;
     public List<GrowthConditions> growthConditionsList = new List<GrowthConditions>();
     public List<int> weights = new List<int>();

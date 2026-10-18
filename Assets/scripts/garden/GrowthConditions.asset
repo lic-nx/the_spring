@@ -13,14 +13,12 @@ MonoBehaviour:
   m_Name: GrowthConditions
   m_EditorClassIdentifier: 
   stageSprites:
-  - {fileID: -240391912, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
-  - {fileID: 1522570158, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
-  - {fileID: 769851192, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
-  - {fileID: -1260946275, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
-  - {fileID: -720692341, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
-  - {fileID: 983406400, guid: 2b1bba043b018cd4abffe5a9e4b02456, type: 3}
+  - {fileID: 21300000, guid: 37ec01ea3ebc5554f89a3e5a18eb5393, type: 3}
+  - {fileID: 21300000, guid: 3924bd575bc7b74429010444cd91cdaf, type: 3}
+  - {fileID: 21300000, guid: 669b1c89c859ff64fb85973d8d47b01a, type: 3}
+  - {fileID: 21300000, guid: 3808661624307b84b999de916d1931a6, type: 3}
   TimeBetweenWatering: 5
-  TimeBetweenFertilizing: 10
-  TimeBetweenSunlight: 15
+  SunGenerationInterval: 5
+  SunValue: 10
   BaseEventCount: 1
   StageMultiplier: 1

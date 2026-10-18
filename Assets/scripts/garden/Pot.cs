@@ -51,6 +51,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
     private Collider2D _collider;
     private bool _isDragging = false;
     private Vector3 _dragOffset;
+    private int _baseSortingOrder;
     private int _originalSortingOrder;
     private bool _wasMenuActiveBeforeDrag = false;
 
@@ -65,6 +66,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         if (_mySpriteRenderer != null)
         {
             _originalColor = _mySpriteRenderer.color;
+            _baseSortingOrder = _mySpriteRenderer.sortingOrder;
             _originalSortingOrder = _mySpriteRenderer.sortingOrder;
         }
     }
@@ -103,16 +105,17 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         }
         if (flowerAttachment != null)
         {
-            // Сохраняем мировой масштаб цветка, но привязываем его к самой точке.
-            // Теперь изменение flower_place автоматически двигает уже посаженный цветок.
+            // Сохраняем исходный мировой масштаб цветка и всех его индикаторов.
             flower.transform.SetParent(flowerAttachment, true);
             flower.transform.position = flowerAttachment.position;
         }
         else
         {
             flower.transform.SetParent(transform, true);
-            flower.transform.localPosition = Vector3.zero;
+            flower.transform.position = transform.position;
         }
+
+        PlaceFlowerBehindPot(flower);
         currentFlower = flower;
         SaveState();
         if (GameSaveManager.Instance != null)
@@ -120,6 +123,24 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
             GameSaveManager.Instance.SaveFlower(flower);
         }
         return true;
+    }
+
+    private void PlaceFlowerBehindPot(Flower flower)
+    {
+        if (flower == null) return;
+
+        if (_mySpriteRenderer == null)
+            _mySpriteRenderer = GetComponent<SpriteRenderer>();
+
+        SpriteRenderer flowerRenderer = flower.GetComponent<SpriteRenderer>();
+        if (_mySpriteRenderer == null || flowerRenderer == null) return;
+
+        // Keep the flower on its original visible order (the greenhouse background
+        // hides sprites at negative orders) and raise only the pot above it.
+        flowerRenderer.sortingLayerID = _mySpriteRenderer.sortingLayerID;
+        flowerRenderer.sortingOrder = _baseSortingOrder;
+        _mySpriteRenderer.sortingOrder = _baseSortingOrder + 1;
+        _originalSortingOrder = _mySpriteRenderer.sortingOrder;
     }
 
     public void RemoveFlower()
@@ -133,6 +154,11 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
             }
             Destroy(currentFlower.gameObject);
             currentFlower = null;
+            if (_mySpriteRenderer != null)
+            {
+                _mySpriteRenderer.sortingOrder = _baseSortingOrder;
+                _originalSortingOrder = _baseSortingOrder;
+            }
             SaveState();
         }
     }

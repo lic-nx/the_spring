@@ -23,12 +23,9 @@ public class InventorySlotUI : MonoBehaviour,
         _currentQuantity = quantity;
         
         if (nameText != null) nameText.text = seed.name;
-        if (quantityText != null) quantityText.text = $"x{quantity}";
+        if (quantityText != null) quantityText.text = quantity.ToString();
         
-        if (iconImage != null && seed.seedSprite != null)
-        {
-            iconImage.sprite = seed.seedSprite;
-        }
+        GardenSeedVisuals.Apply(iconImage, quantityText, seed.seedSprite);
     }
     
     /// <summary>
@@ -39,7 +36,7 @@ public class InventorySlotUI : MonoBehaviour,
         _currentQuantity = newQuantity;
         if (quantityText != null)
         {
-            quantityText.text = $"x{newQuantity}";
+            quantityText.text = newQuantity.ToString();
         }
     }
     

@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System;
-using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -61,35 +58,12 @@ public class Mainmenu : Button_sound_controller
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OpenGarden);
     }
-    private const string SCENE_LIST_PATH = "Assets/scripts/SceneList.txt";
     private List<string> sceneList = new List<string>();
 
     private void LoadSceneList()
     {
-        try
-        {
-            string fullPath = Path.Combine(Application.dataPath, "..", SCENE_LIST_PATH);
-            if (File.Exists(fullPath))
-            {
-                var lines = File.ReadAllLines(fullPath);
-                sceneList.Clear();
-                foreach (var line in lines)
-                {
-                    var trimmed = line.Trim();
-                    if (!string.IsNullOrEmpty(trimmed)) sceneList.Add(trimmed);
-                }
-                Debug.Log($"Loaded {sceneList.Count} scenes for Mainmenu.");
-            }
-            else
-            {
-                Debug.LogWarning($"Scene list not found at {fullPath}");
-            }
-        }
-        
-        catch ( Exception e)
-        {
-            Debug.LogError($"Error loading scene list in Mainmenu: {e.Message}");
-        }
+        sceneList = LevelSceneCatalog.GetLevelScenes();
+        Debug.Log($"Loaded {sceneList.Count} level scenes from Build Settings for Mainmenu.");
     }
 
     public void PlayGame()
@@ -97,24 +71,22 @@ public class Mainmenu : Button_sound_controller
         // Ensure scene list is loaded
         if (sceneList == null || sceneList.Count == 0) LoadSceneList();
 
-        int lineIndex = YG2.saves.CompletedLevel + 1; // zero‑based index; next level is +1
+        int lineIndex = YG2.saves.CompletedLevel;
         if (lineIndex < 0 || lineIndex >= sceneList.Count)
         {
             Debug.LogWarning("Invalid level index from CompletedLevel; loading fallback.");
             return;
         }
         string targetScene = sceneList[lineIndex];
-        // Check for tutorial with same numeric suffix (assumes naming convention)
-        string tutorialName = $"tutorial_{targetScene}";
-        if (SceneUtility.GetBuildIndexByScenePath(tutorialName) < 0)
+        string tutorialName = LevelSceneCatalog.GetTutorialScene(targetScene);
+        if (string.IsNullOrEmpty(tutorialName))
         {
-            int sceneIdx = SceneUtility.GetBuildIndexByScenePath(targetScene);
-            if (sceneIdx >= 0) SceneManager.LoadScene(targetScene);
+            if (Application.CanStreamedLevelBeLoaded(targetScene)) SceneManager.LoadScene(targetScene);
             else Debug.LogWarning($"Scene '{targetScene}' not found in Build Settings.");
         }
         else
         {
-            Debug.LogWarning($"Tutorial scene '{tutorialName}' exists; not loading '{targetScene}'.");
+            SceneManager.LoadScene(tutorialName);
         }
     }
 

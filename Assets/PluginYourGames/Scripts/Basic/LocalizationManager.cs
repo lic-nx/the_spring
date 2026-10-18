@@ -46,7 +46,7 @@ public class LocalizationManager : MonoBehaviour
         {"loose", "Уровень {0} \nне пройден"},
         {"win", "Уровень {0} \nпройден!"},
         {"tutorial_win", "Туториал \nпройден!"},
-        {"tutorial_loos", "Туториал \nне пройден"},
+        {"tutorial_loose", "Туториал \nне пройден"},
         {"thanks", "Спасибо \nза прохождение \nвсех уровней!"},
         {"build", "Мы уже \nстроим новые"},
         {"t4_1", "Пройди сквозь куст, чтобы надеть защиту из листьев"},
@@ -66,7 +66,8 @@ public class LocalizationManager : MonoBehaviour
         {"t3_2", "Try to avoid it"},
         {"loose", "Level {0} \nfailed"},
         {"win", "Level {0} \ncompleted!"},
-        {"tutorial", "Tutorial \ncompleted!"},
+        {"tutorial_win", "Tutorial \ncompleted!"},
+        {"tutorial_loose", "Tutorial \nfailed"},
         {"thanks", "Thank you \nfor completing \nall the levels!"},
         {"build", "We’re already \nbuilding new ones"},
         {"t4_1", "Go through leaves to take it and protect yourself"},
@@ -133,7 +134,7 @@ public class LocalizationManager : MonoBehaviour
 
     public void SetLanguage(string lang, bool save = true)
     {
-        currentLang = lang;
+        currentLang = NormalizeLanguage(lang);
 
         if (save)
             PlayerPrefs.SetString("lang", currentLang);
@@ -143,12 +144,16 @@ public class LocalizationManager : MonoBehaviour
 
     public string GetText(string key)
     {
-        if (currentLang == "ru" && ru.ContainsKey(key))
-            return ru[key];
+        Dictionary<string, string> dictionary = currentLang == "ru" ? ru : en;
+        if (dictionary.TryGetValue(key, out string value))
+            return value;
 
-        if (currentLang == "en" && en.ContainsKey(key))
-            return en[key];
+        // If one translation is accidentally missing, prefer readable English
+        // over exposing an internal localization key to the player.
+        if (en.TryGetValue(key, out value))
+            return value;
 
+        Debug.LogWarning($"Missing localization key '{key}' for language '{currentLang}'.");
         return key;
     }
 
@@ -156,6 +161,15 @@ public class LocalizationManager : MonoBehaviour
     {
         string value = GetText(key);
         return string.Format(value, args);
+    }
+
+    private static string NormalizeLanguage(string lang)
+    {
+        if (string.IsNullOrWhiteSpace(lang))
+            return "en";
+
+        string normalized = lang.Trim().ToLowerInvariant().Replace('_', '-');
+        return normalized == "ru" || normalized.StartsWith("ru-") ? "ru" : "en";
     }
 
     void OnApplicationQuit()
