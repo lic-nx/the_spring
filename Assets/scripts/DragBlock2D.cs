@@ -67,5 +67,7 @@ public class DragBlock2D : MonoBehaviour
         );
 
         rb.MovePosition(newPos);
+        if ((newPos - rb.position).sqrMagnitude > 0.000001f)
+            player_move._instance?.OnWorldChanged();
     }
 }

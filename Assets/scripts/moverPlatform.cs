@@ -53,8 +53,9 @@ public class MoverPlatform : MonoBehaviour
                 if (soundRelease != null && YG2.saves.EffectMusicEnabled)
                     audioSource.PlayOneShot(soundRelease, 0.5f);
             }
+            if (isDragging)
+                player_move._instance?.OnWorldChanged();
             isDragging = false;
-            player_move._instance?.OnWorldChanged();
         }
 
         // Перемещение при удержании
@@ -69,11 +70,14 @@ public class MoverPlatform : MonoBehaviour
                 : mousePos;
 
             // Плавное движение к цели
+            Vector3 previousPosition = transform.position;
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 target,
                 speed * Time.deltaTime
             );
+            if ((transform.position - previousPosition).sqrMagnitude > 0.000001f)
+                player_move._instance?.OnWorldChanged();
         }
     }
 

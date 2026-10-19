@@ -1887,7 +1887,7 @@ MonoBehaviour:
   max_angle: 120
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 65
 --- !u!70 &3436183336081422763
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1920,8 +1920,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0013642609, y: 0.36239696}
-  m_Size: {x: 1.2, y: 1.8}
+  m_Offset: {x: -0.02, y: 0.67}
+  m_Size: {x: 0.7, y: 1.4}
   m_Direction: 0
 --- !u!50 &701778216758516100
 Rigidbody2D:

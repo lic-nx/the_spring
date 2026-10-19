@@ -33,6 +33,8 @@ public class LocalizationManager : MonoBehaviour
 
     private Dictionary<string, string> ru = new Dictionary<string, string>()
     {
+        {"restart_growth", "Начать рост заново"},
+        {"restart_growth_hint", "Позади цветка открылся новый путь"},
         {"play", "Играть"},
         {"settings", "Настройки" },
         {"level", "Уровень {0}" },
@@ -54,6 +56,8 @@ public class LocalizationManager : MonoBehaviour
 
     private Dictionary<string, string> en = new Dictionary<string, string>()
     {
+        {"restart_growth", "Restart growth"},
+        {"restart_growth_hint", "A new path opened behind the flower"},
         {"play", "Play"},
         {"settings", "Settings" },
         {"level", "Level {0}" },

@@ -96,6 +96,9 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         if (count >= max_count)
         {
             RandomSound();
+            // Exclude the solid shape immediately; Destroy is deferred until end of frame.
+            foreach (Collider2D blockCollider in GetComponentsInChildren<Collider2D>())
+                blockCollider.enabled = false;
             Destroy(gameObject);
             player_move._instance?.OnWorldChanged();
         }

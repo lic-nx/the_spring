@@ -24104,19 +24104,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Size.x
-      value: 1.2
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Size.y
-      value: 1.9
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Offset.x
-      value: -0.0030241013
+      value: -0.02
       objectReference: {fileID: 0}
     - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Offset.y
-      value: 0.6955011
+      value: 0.67
       objectReference: {fileID: 0}
     - target: {fileID: 3557946200316986868, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: onGameEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Target

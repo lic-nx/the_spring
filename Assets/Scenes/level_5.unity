@@ -7160,7 +7160,7 @@ PrefabInstance:
       objectReference: {fileID: 2044786342}
     - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: obstacleMask.m_Bits
-      value: 64
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 3041934112464998794, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
@@ -7176,19 +7176,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Size.x
-      value: 1.2
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Size.y
-      value: 1.9
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Offset.x
-      value: -0.010998607
+      value: -0.02
       objectReference: {fileID: 0}
     - target: {fileID: 3436183336081422763, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Offset.y
-      value: 0.70379734
+      value: 0.67
       objectReference: {fileID: 0}
     - target: {fileID: 3557946200316986868, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: onGameEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Target

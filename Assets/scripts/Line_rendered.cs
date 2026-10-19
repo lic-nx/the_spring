@@ -6,255 +6,127 @@ public class Line_rendered : MonoBehaviour
 {
     public EdgeCollider2D edgeCollider;
     public LineRenderer lineRenderer;
-
     [Header("Листья вдоль стебля")]
     public GameObject petalPrefab;
     public bool growLeavesAlongStem = true;
-    public float minLeafDistance = 1.0f;
-    public float leafOffsetFromStem = 0.0f;
+    public float minLeafDistance = 1f;
+    public float leafOffsetFromStem;
     public float leafGrowthDuration = 0.5f;
+    [HideInInspector] public int smoothness = 10;
 
-    [Tooltip("Чем выше — тем плавнее линия")]
-    public int smoothness = 10;
+    // These are the actual swept tip positions. Never refit old segments through a spline:
+    // doing so moves already-grown geometry and can cut across an obstacle's corner.
+    private readonly List<Vector2> points = new List<Vector2>();
+    private readonly List<GameObject> leaves = new List<GameObject>();
+    private float distanceSinceLeaf;
 
-    [SerializeField] private float minSegmentLength = 0.3f;
+    private void Awake() => CacheComponents();
 
-    private List<Vector2> controlPoints = new();
-    private List<Vector2> smoothPoints = new();
-    private List<Vector2> placedLeafPositions = new();
-
-    private bool dirtyFullRebuild = true;
-
-    private void Awake()
+    private void CacheComponents()
     {
-        if (!lineRenderer)
+        if (lineRenderer == null)
             lineRenderer = GetComponent<LineRenderer>();
-        if (!edgeCollider)
+        if (edgeCollider == null)
             edgeCollider = GetComponent<EdgeCollider2D>();
+        if (lineRenderer != null)
+            lineRenderer.useWorldSpace = true;
     }
 
-    /* =========================
-       ПУБЛИЧНЫЕ МЕТОДЫ РОСТА
-       ========================= */
-
-    // Обновляется каждый кадр — двигает только голову
-    public void AddPoint(Vector2 point)
-{
-        controlPoints.Add(point);
-    
-    if (controlPoints.Count >= 2)
+    public void ResetGrowth(Vector2 root, Vector2 head)
     {
-        FullRebuild();
-    }
-}
-    public void UpdateHead(Vector2 headPosition)
-    {
-        if (controlPoints.Count == 0)
+        CacheComponents();
+        StopAllCoroutines();
+        foreach (GameObject leaf in leaves)
         {
-            controlPoints.Add(headPosition);
-            dirtyFullRebuild = true;
-            FullRebuild();
+            if (leaf == null)
+                continue;
+            leaf.SetActive(false);
+            if (Application.isPlaying)
+                Destroy(leaf);
+            else
+                DestroyImmediate(leaf);
+        }
+        leaves.Clear();
+        distanceSinceLeaf = 0f;
+        points.Clear();
+        points.Add(root);
+        if ((head - root).sqrMagnitude > 0.000001f)
+            points.Add(head);
+        Apply();
+    }
+
+    public void AppendGrowthPoint(Vector2 point)
+    {
+        CacheComponents();
+        if (points.Count == 0)
+        {
+            points.Add(point);
+            Apply();
             return;
         }
-
-        controlPoints[^1] = headPosition;
-
-        if (dirtyFullRebuild || controlPoints.Count < 4)
-            FullRebuild();
-        else
-            FullRebuild(); //здесь надо заменить на апдейт только хвоста, но я не понимаю, почему он косячит с этим
-    }
-
-    // Фиксирует сегмент (добавляет новую точку ПЕРЕД головой)
-    public void TryCommitSegment(Vector2 headPosition)
-    {
-        if (controlPoints.Count < 2)
+        Vector2 previous = points[points.Count - 1];
+        float distance = Vector2.Distance(previous, point);
+        if (distance < 0.0001f)
             return;
-
-        Vector2 prev = controlPoints[^2];
-
-        if (Vector2.Distance(prev, headPosition) >= minSegmentLength)
+        points.Add(point);
+        Apply();
+        distanceSinceLeaf += distance;
+        if (growLeavesAlongStem && petalPrefab != null && distanceSinceLeaf >= Mathf.Max(0.1f, minLeafDistance))
         {
-            controlPoints.Insert(controlPoints.Count - 1, headPosition);
-            dirtyFullRebuild = true;
-            FullRebuild();
-            TryPlaceNewLeaves();
+            distanceSinceLeaf = 0f;
+            PlaceLeaf(point, (point - previous).normalized);
         }
     }
 
-    /* =========================
-       ПЕРЕСТРОЕНИЕ ЛИНИИ
-       ========================= */
+    // Keep old public entry points for scene scripts; committed geometry is append-only.
+    public void AddPoint(Vector2 point) => AppendGrowthPoint(point);
+    public void UpdateHead(Vector2 point) => AppendGrowthPoint(point);
+    public void TryCommitSegment(Vector2 point) => AppendGrowthPoint(point);
 
-    private void FullRebuild()
+    private void Apply()
     {
-        dirtyFullRebuild = false;
-        smoothPoints.Clear();
-
-        if (controlPoints.Count == 1)
+        if (lineRenderer != null)
         {
-            smoothPoints.Add(controlPoints[0]);
+            lineRenderer.positionCount = points.Count;
+            for (int i = 0; i < points.Count; i++)
+                lineRenderer.SetPosition(i, points[i]);
         }
-        else if (controlPoints.Count == 2)
+        if (edgeCollider != null)
         {
-            for (int i = 0; i <= smoothness; i++)
-            {
-                float t = i / (float)smoothness;
-                smoothPoints.Add(Vector2.Lerp(controlPoints[0], controlPoints[1], t));
-            }
-        }
-        else
-        {
-            List<Vector2> extended = new(controlPoints);
-            extended.Insert(0, controlPoints[0]);
-            extended.Add(controlPoints[^1]);
-
-            for (int i = 1; i < controlPoints.Count; i++)
-            {
-                Vector2 p0 = extended[i - 1];
-                Vector2 p1 = extended[i];
-                Vector2 p2 = extended[i + 1];
-                Vector2 p3 = extended[i + 2];
-
-                for (int j = 0; j < smoothness; j++)
-                {
-                    float t = j / (float)smoothness;
-                    smoothPoints.Add(CatmullRom(p0, p1, p2, p3, t));
-                }
-            }
-            smoothPoints.Add(controlPoints[^1]);
-        }
-
-        ApplyToRenderer();
-    }
-
-    // Обновляет ТОЛЬКО последний сегмент
-    private void UpdateTailOnly()
-    {
-        int cp = controlPoints.Count;
-
-        Vector2 p0 = controlPoints[cp - 4];
-        Vector2 p1 = controlPoints[cp - 3];
-        Vector2 p2 = controlPoints[cp - 2];
-        Vector2 p3 = controlPoints[cp - 1];
-
-        int removeCount = smoothness;
-        smoothPoints.RemoveRange(smoothPoints.Count - removeCount, removeCount);
-
-        for (int i = 0; i < smoothness; i++)
-        {
-            float t = i / (float)smoothness;
-            smoothPoints.Add(CatmullRom(p0, p1, p2, p3, t));
-        }
-
-        ApplyToRenderer();
-    }
-
-    private void ApplyToRenderer()
-    {
-        lineRenderer.positionCount = smoothPoints.Count;
-        lineRenderer.SetPositions(smoothPoints.ConvertAll(p => (Vector3)p).ToArray());
-
-        Vector2[] colliderPoints = new Vector2[smoothPoints.Count];
-        for (int i = 0; i < smoothPoints.Count; i++)
-            colliderPoints[i] = transform.InverseTransformPoint(smoothPoints[i]);
-
-        edgeCollider.points = colliderPoints;
-    }
-
-    /* =========================
-       ЛИСТЬЯ
-       ========================= */
-
-    private void TryPlaceNewLeaves()
-    {
-        if (!growLeavesAlongStem || !petalPrefab || smoothPoints.Count < 3)
-            return;
-
-        Vector2 last = smoothPoints[0];
-
-        for (int i = 1; i < smoothPoints.Count; i++)
-        {
-            Vector2 current = smoothPoints[i];
-            float dist = Vector2.Distance(last, current);
-
-            int steps = Mathf.Max(1, Mathf.CeilToInt(dist / (minLeafDistance * 0.6f)));
-
-            for (int s = 1; s <= steps; s++)
-            {
-                Vector2 candidate = Vector2.Lerp(last, current, s / (float)steps);
-
-                bool canPlace = true;
-                foreach (var placed in placedLeafPositions)
-                {
-                    if (Vector2.Distance(candidate, placed) < minLeafDistance)
-                    {
-                        canPlace = false;
-                        break;
-                    }
-                }
-
-                if (canPlace)
-                {
-                    PlaceLeafAt(candidate);
-                    placedLeafPositions.Add(candidate);
-                    return;
-                }
-            }
-            last = current;
+            edgeCollider.enabled = points.Count >= 2;
+            if (points.Count < 2)
+                return;
+            Vector2[] localPoints = new Vector2[points.Count];
+            for (int i = 0; i < points.Count; i++)
+                localPoints[i] = transform.InverseTransformPoint(points[i]);
+            edgeCollider.points = localPoints;
         }
     }
 
-    private void PlaceLeafAt(Vector2 pos)
+    private void PlaceLeaf(Vector2 position, Vector2 forward)
     {
-        Vector2 forward = GetTangentAtPoint(pos);
-        Vector2 side = new(-forward.y, forward.x);
-        if (Random.value > 0.5f) side = -side;
-
-        GameObject leaf = Instantiate(petalPrefab, pos + side * leafOffsetFromStem, Quaternion.identity, transform);
+        Vector2 side = new Vector2(-forward.y, forward.x);
+        if (Random.value > 0.5f)
+            side = -side;
+        GameObject leaf = Instantiate(petalPrefab, position + side * leafOffsetFromStem,
+            Quaternion.identity, transform);
+        leaves.Add(leaf);
         leaf.transform.localScale = Vector3.zero;
-
         float angle = Mathf.Clamp(Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg - 90f, -60f, 60f);
-        leaf.transform.rotation = Quaternion.Euler(0, 0, angle);
-
-        StartCoroutine(ScaleTo(leaf.transform, Vector3.one * 1.5f, leafGrowthDuration));
+        leaf.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        StartCoroutine(ScaleLeaf(leaf.transform));
     }
 
-    /* =========================
-       ВСПОМОГАТЕЛЬНОЕ
-       ========================= */
-
-    private Vector2 GetTangentAtPoint(Vector2 pos)
+    private IEnumerator ScaleLeaf(Transform leaf)
     {
-        for (int i = 0; i < smoothPoints.Count - 1; i++)
-            if (Vector2.Distance(pos, smoothPoints[i]) < 0.2f)
-                return (smoothPoints[i + 1] - smoothPoints[i]).normalized;
-
-        return Vector2.up;
-    }
-
-    private Vector2 CatmullRom(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, float t)
-    {
-        float t2 = t * t;
-        float t3 = t2 * t;
-        return 0.5f * (
-            (2 * p1) +
-            (-p0 + p2) * t +
-            (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
-            (-p0 + 3 * p1 - 3 * p2 + p3) * t3
-        );
-    }
-
-    private IEnumerator ScaleTo(Transform t, Vector3 target, float duration)
-    {
-        Vector3 start = t.localScale;
-        float time = 0f;
-        while (time < duration)
+        float elapsed = 0f;
+        while (leaf != null && elapsed < leafGrowthDuration)
         {
-            t.localScale = Vector3.Lerp(start, target, time / duration);
-            time += Time.deltaTime;
+            leaf.localScale = Vector3.one * (1.5f * elapsed / leafGrowthDuration);
+            elapsed += Time.deltaTime;
             yield return null;
         }
-        t.localScale = target;
+        if (leaf != null)
+            leaf.localScale = Vector3.one * 1.5f;
     }
 }
