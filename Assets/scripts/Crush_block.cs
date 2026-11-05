@@ -96,6 +96,7 @@ public class Crush_block : MonoBehaviour, IPointerClickHandler
         if (count >= max_count)
         {
             RandomSound();
+            player_move._instance?.OnObstacleRemoved(gameObject);
             Destroy(gameObject);
             player_move._instance?.OnWorldChanged();
         }

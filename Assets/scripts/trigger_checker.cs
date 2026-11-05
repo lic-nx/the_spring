@@ -6,6 +6,42 @@ public class Trigger_checker : MonoBehaviour
 {
     public bool OnTriggerEnter_ = false;
     public int CounterTrigger = 0;
+    public float TriggerValue = 0f; // 0, 0.5, or 1
+
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+    private bool hasOriginalColor;
+    private Color lastDebugColor;
+    private bool hasDebugColor;
+
+    public void SetDebugColor(Color color)
+    {
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+        if (spriteRenderer == null) return;
+
+        if (!hasOriginalColor)
+        {
+            originalColor = spriteRenderer.color;
+            hasOriginalColor = true;
+        }
+
+        if (hasDebugColor && lastDebugColor == color) return;
+
+        spriteRenderer.color = color;
+        lastDebugColor = color;
+        hasDebugColor = true;
+    }
+
+    public void ResetDebugColor()
+    {
+        if (spriteRenderer == null || !hasOriginalColor || !hasDebugColor) return;
+
+        spriteRenderer.color = originalColor;
+        hasDebugColor = false;
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -34,11 +70,8 @@ public class Trigger_checker : MonoBehaviour
 
     private IEnumerator HandleSunInteraction(Transform sunTransform)
     {
-        // ��������� ������� ������ � ��� ��� ����������
         yield return flower._instance.rotate_flower_to_sun(sunTransform.position);
 
-        // ����� ���� ��� ������ ���������� � ��������� ��������� ��������
-        //player_move._instance.stop();
         player_move._instance.is_sun();
     }
 
