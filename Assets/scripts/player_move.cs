@@ -32,38 +32,51 @@ public class player_move : MonoBehaviour
     private Vector3 lastGrowthDirection = Vector3.zero;
     private Vector3 flowerFacingDirection = Vector3.up;
     private bool isMoving = false;
-    [SerializeField] private LayerMask obstacleMask;
+
     [Header("Сегмент-пробник")]
+    [Tooltip("Длина проверки препятствий перед цветком")]
     public float probeLength = 1.0f;
     public float probeWidth = 0.2f;
-    public LayerMask probeObstacleMask;
 
     // Ссылка на текущий целевой триггер для проверки во время движения
     private Trigger_checker currentTargetTrigger = null;
 
     [Header("Отладка: подсветка триггеров")]
-    [Tooltip("Показывать состояние триггеров цветом (зелёный — цель, красный — занят, жёлтый — запрещённый угол, чёрный — перекрыт препятствием, белый — свободен)")]
+    [Tooltip("Показывать состояние триггеров цветом (зелёный — цель, красный — занят, жёлтый — запрещённый угол, серый — временный кулдаун, чёрный — перекрыт препятствием, белый — свободен)")]
     public bool showTriggerDebugColors = true;
     public Color targetTriggerColor = new Color(0.1f, 1f, 0.1f, 0.85f);
     public Color occupiedTriggerColor = new Color(1f, 0.15f, 0.15f, 0.85f);
     public Color angleBlockedTriggerColor = new Color(1f, 0.9f, 0.1f, 0.85f);
     public Color obstacleBlockedTriggerColor = new Color(0.05f, 0.05f, 0.05f, 0.9f);
+    public Color cooldownTriggerColor = new Color(0.55f, 0.55f, 0.55f, 0.85f);
     public Color freeTriggerColor = new Color(1f, 1f, 1f, 0.85f);
 
-    [Header("Собственный триггер и отступление")]
-    [Tooltip("Насколько близким к запрещенному направлению должен быть триггер, чтобы тоже считаться заблокированным")]
-    public float blockedDirectionAngle = 35f;
+    [Header("Ограничения триггеров")]
+    [Tooltip("Кулдаун на конкретный триггер после неудачной попытки дойти до него")]
+    public float triggerBlockCooldown = 0.35f;
+
+    [Tooltip("Кулдаун на занятые триггеры после столкновения/отступления")]
+    public float failureBlockCooldown = 1.5f;
+
+    [Tooltip("Сколько секунд не реагировать на объект, из-за которого пришлось отступить")]
+    public float blockerIgnoreCooldown = 2f;
+
+    [Tooltip("Максимальное время отступления, после которого цветок перестаёт ждать объект")]
+    public float retreatTimeout = 2f;
+
+    [Tooltip("Как часто пересчитывать путь, если цветок стоит без движения")]
+    public float retryInterval = 0.25f;
 
     private readonly HashSet<Collider2D> flowerTriggerBlockers = new HashSet<Collider2D>();
     private readonly HashSet<Collider2D> failureBlockers = new HashSet<Collider2D>();
-    private readonly HashSet<Trigger_checker> blockedTriggers = new HashSet<Trigger_checker>();
-    private readonly HashSet<Trigger_checker> occupiedAtFailedPosition = new HashSet<Trigger_checker>();
+    private readonly Dictionary<Trigger_checker, float> triggerBlockedUntil = new Dictionary<Trigger_checker, float>();
+    private readonly Dictionary<Collider2D, float> ignoredFlowerBlockerUntil = new Dictionary<Collider2D, float>();
     private readonly List<Vector3> pathHistory = new List<Vector3>();
-    private Vector3 blockedRetreatDirection = Vector3.zero;
-    private bool hasBlockedRetreatDirection = false;
     private bool retreatRequested = false;
     private bool isRetreating = false;
     private int retreatPathIndex = -1;
+    private float nextRetryTime;
+    private float nextNoPathLogTime;
 
     // Cached components
     private Rigidbody2D rb;
@@ -81,9 +94,20 @@ public class player_move : MonoBehaviour
         // Cache frequently used components
         rb = GetComponent<Rigidbody2D>();
         capsule = GetComponent<CapsuleCollider2D>();
-        if (probeObstacleMask == 0)
+
+        // Сам player_move висит на родительском объекте, а капсула цветка —
+        // на дочернем Flower. Без этого CanFitAt всегда возвращал true,
+        // и триггеры/движение не видели препятствий.
+        if (capsule == null)
         {
-            probeObstacleMask = obstacleMask;
+            foreach (CapsuleCollider2D candidate in GetComponentsInChildren<CapsuleCollider2D>(true))
+            {
+                if (candidate != null && candidate.CompareTag("Player"))
+                {
+                    capsule = candidate;
+                    break;
+                }
+            }
         }
     }
 
@@ -120,7 +144,7 @@ public class player_move : MonoBehaviour
             int removedFailures = failureBlockers.RemoveWhere(IsInvalidBlocker);
             if (removedFailures > 0 && failureBlockers.Count == 0)
             {
-                ClearMovementBlocks();
+                ClearMovementBlocks(true);
                 if (!isMoving && !isRetreating && enabled)
                 {
                     OnWorldChanged();
@@ -137,7 +161,134 @@ public class player_move : MonoBehaviour
             }
         }
 
+        PruneTriggerBlocks();
+
+        // Страховка от залипшего состояния: если цветок стоит и не движется,
+        // периодически заново проверяем мир. Иначе одна неудачная попытка
+        // могла оставить его неподвижным до конца уровня.
+        if (enabled && !isMoving && !isRetreating)
+        {
+            nextRetryTime -= Time.deltaTime;
+            if (nextRetryTime <= 0f)
+            {
+                nextRetryTime = Mathf.Max(0.05f, retryInterval);
+                OnWorldChanged();
+            }
+        }
+        else
+        {
+            nextRetryTime = Mathf.Max(0.05f, retryInterval);
+        }
+
         UpdateTriggerDebugColors();
+    }
+
+    private void PruneTriggerBlocks()
+    {
+        float now = Time.time;
+
+        if (triggerBlockedUntil.Count > 0)
+        {
+            List<Trigger_checker> expiredTriggers = null;
+
+            foreach (KeyValuePair<Trigger_checker, float> pair in triggerBlockedUntil)
+            {
+                if (pair.Key == null || now >= pair.Value)
+                {
+                    if (expiredTriggers == null)
+                    {
+                        expiredTriggers = new List<Trigger_checker>();
+                    }
+                    expiredTriggers.Add(pair.Key);
+                }
+            }
+
+            if (expiredTriggers != null)
+            {
+                foreach (Trigger_checker trigger in expiredTriggers)
+                {
+                    triggerBlockedUntil.Remove(trigger);
+                }
+            }
+        }
+
+        if (ignoredFlowerBlockerUntil.Count > 0)
+        {
+            List<Collider2D> expiredBlockers = null;
+
+            foreach (KeyValuePair<Collider2D, float> pair in ignoredFlowerBlockerUntil)
+            {
+                if (pair.Key == null || now >= pair.Value)
+                {
+                    if (expiredBlockers == null)
+                    {
+                        expiredBlockers = new List<Collider2D>();
+                    }
+                    expiredBlockers.Add(pair.Key);
+                }
+            }
+
+            if (expiredBlockers != null)
+            {
+                foreach (Collider2D blocker in expiredBlockers)
+                {
+                    ignoredFlowerBlockerUntil.Remove(blocker);
+                }
+            }
+        }
+    }
+
+    private bool IsFlowerBlockerIgnored(Collider2D blocker)
+    {
+        if (blocker == null) return true;
+        if (!ignoredFlowerBlockerUntil.TryGetValue(blocker, out float until)) return false;
+        if (Time.time < until) return true;
+
+        ignoredFlowerBlockerUntil.Remove(blocker);
+        return false;
+    }
+
+    private void IgnoreFlowerBlocker(Collider2D blocker, float duration)
+    {
+        if (blocker == null) return;
+
+        float until = Time.time + Mathf.Max(0.05f, duration);
+        if (ignoredFlowerBlockerUntil.TryGetValue(blocker, out float existing) && existing > until)
+        {
+            until = existing;
+        }
+
+        ignoredFlowerBlockerUntil[blocker] = until;
+    }
+
+    private bool IsTriggerTemporarilyBlocked(Trigger_checker trigger)
+    {
+        if (trigger == null) return true;
+        if (!triggerBlockedUntil.TryGetValue(trigger, out float until)) return false;
+        if (Time.time < until) return true;
+
+        triggerBlockedUntil.Remove(trigger);
+        return false;
+    }
+
+    private void BlockTriggerTemporarily(Trigger_checker trigger, float duration = -1f)
+    {
+        if (trigger == null) return;
+
+        if (duration < 0f)
+        {
+            duration = triggerBlockCooldown;
+        }
+
+        float until = Time.time + Mathf.Max(0.05f, duration);
+
+        // Не сокращаем уже установленный более длинный кулдаун.
+        if (triggerBlockedUntil.TryGetValue(trigger, out float existing) && existing > until)
+        {
+            until = existing;
+        }
+
+        triggerBlockedUntil[trigger] = until;
     }
 
     private void UpdateTriggerDebugColors()
@@ -159,13 +310,17 @@ public class player_move : MonoBehaviour
             {
                 color = targetTriggerColor;
             }
-            else if (trigger.OnTriggerEnter_)
+            else if (trigger.IsOccupied || trigger.OnTriggerEnter_)
             {
                 color = occupiedTriggerColor;
             }
-            else if (blockedTriggers.Contains(trigger) || !CanFitAt(trigger.transform.position))
+            else if (!CanFitAt(trigger.transform.position))
             {
                 color = obstacleBlockedTriggerColor;
+            }
+            else if (IsTriggerTemporarilyBlocked(trigger))
+            {
+                color = cooldownTriggerColor;
             }
             else if (IsTriggerAngleBlocked(trigger))
             {
@@ -185,29 +340,10 @@ public class player_move : MonoBehaviour
         Vector3 newDirection = (trigger.transform.position - transform.position).normalized;
         if (newDirection == Vector3.zero) return false;
 
-        if (hasBlockedRetreatDirection &&
-            Vector3.Angle(blockedRetreatDirection, newDirection) <= blockedDirectionAngle)
-        {
-            return true;
-        }
+        Vector3 segmentDir = GetReferenceGrowthDirection();
+        if (segmentDir == Vector3.zero) return false;
 
-        Vector3 segmentDir = flowerFacingDirection;
-        if (segmentDir == Vector3.zero && lastGrowthDirection != Vector3.zero)
-        {
-            segmentDir = lastGrowthDirection;
-        }
-
-        if (segmentDir != Vector3.zero)
-        {
-            return Vector3.Angle(segmentDir, newDirection) > max_angle;
-        }
-
-        if (lastGrowthDirection != Vector3.zero)
-        {
-            return Vector3.Angle(lastGrowthDirection, newDirection) > max_angle;
-        }
-
-        return false;
+        return Vector3.Angle(segmentDir, newDirection) > max_angle;
     }
 
     private static bool IsInvalidBlocker(Collider2D blocker)
@@ -227,27 +363,142 @@ public class player_move : MonoBehaviour
     bool CanFitAt(Vector3 position)
     {
         // Use cached capsule collider when available
-        CapsuleCollider2D col = capsule ?? GetComponent<CapsuleCollider2D>();
+        CapsuleCollider2D col = capsule;
         if (col == null) return true;
 
-        Vector2 size = col.size * 0.9f;
-        Collider2D[] hits = Physics2D.OverlapBoxAll(position, size, 0f, obstacleMask);
-        foreach (var hit in hits)
+        Vector3 delta = position - transform.position;
+        float distance = delta.magnitude;
+
+        Vector3 direction = distance > 0.001f
+            ? delta / distance
+            : GetReferenceGrowthDirection();
+
+        // Проверяем именно тело цветка (капсулу с учётом её offset), а не
+        // абстрактный прямоугольник в точке триггера. Иначе голова цветка
+        // могла оказаться внутри блока, а проверка этого не видела.
+        if (HasObstacleAtFlowerBody(position, direction))
         {
-            if (hit != null && hit.gameObject != gameObject && !hit.isTrigger)
-                return false;
+            return false;
         }
 
-        // Also check if too close to obstacles in the direction we're moving
-        Vector3 dir = (position - transform.position).normalized;
-        if (dir != Vector3.zero)
+        // Проверяем весь путь от текущей позиции до триггера, чтобы цветок
+        // не проходил сквозь блок, который находится между точками.
+        if (distance > 0.001f)
         {
-            RaycastHit2D hit2 = Physics2D.CircleCast(transform.position, size.magnitude * 0.3f, dir, Vector3.Distance(transform.position, position) * 0.8f, obstacleMask);
-            if (hit2.collider != null && hit2.collider.gameObject != gameObject && !hit2.collider.isTrigger)
+            float probeRadius = Mathf.Max(0.05f, col.size.x * 0.45f);
+            if (HasObstacleAlong(transform.position, direction, distance, probeRadius))
             {
                 return false;
             }
         }
+        return true;
+    }
+
+    private Vector3 GetReferenceGrowthDirection()
+    {
+        if (flowerFacingDirection.sqrMagnitude > 0.0001f)
+        {
+            return flowerFacingDirection.normalized;
+        }
+
+        if (lastGrowthDirection.sqrMagnitude > 0.0001f)
+        {
+            return lastGrowthDirection.normalized;
+        }
+
+        return Vector3.zero;
+    }
+
+    private bool HasObstacleAtFlowerBody(Vector3 basePosition, Vector3 direction)
+    {
+        if (capsule == null) return false;
+
+        if (direction.sqrMagnitude < 0.0001f)
+        {
+            direction = GetReferenceGrowthDirection();
+        }
+        if (direction.sqrMagnitude < 0.0001f)
+        {
+            direction = Vector3.up;
+        }
+        direction.Normalize();
+
+        Vector2 size = capsule.size * 0.9f;
+        float angle = capsule.direction == CapsuleDirection2D.Vertical
+            ? Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f
+            : Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        // Смещаем капсулу так же, как это делает сам CapsuleCollider2D,
+        // повёрнутый по направлению роста.
+        Vector3 worldOffset = Quaternion.Euler(0f, 0f, angle) * capsule.offset;
+        Vector2 center = (Vector2)basePosition + new Vector2(worldOffset.x, worldOffset.y);
+
+        Collider2D[] hits = Physics2D.OverlapCapsuleAll(center, size, capsule.direction, angle, Physics2D.AllLayers);
+        return HasObstacle(hits);
+    }
+
+    private bool HasObstacle(Collider2D[] hits)
+    {
+        if (hits == null) return false;
+
+        foreach (Collider2D hit in hits)
+        {
+            if (IsObstacleCollider(hit))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool HasObstacleAlong(Vector2 origin, Vector2 direction, float distance, float radius)
+    {
+        if (distance <= 0.001f || direction.sqrMagnitude < 0.0001f) return false;
+
+        RaycastHit2D[] hits = radius > 0.001f
+            ? Physics2D.CircleCastAll(origin, radius, direction, distance, Physics2D.AllLayers)
+            : Physics2D.RaycastAll(origin, direction, distance, Physics2D.AllLayers);
+
+        if (hits == null) return false;
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (IsObstacleCollider(hit.collider))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsObstacleCollider(Collider2D hit)
+    {
+        if (hit == null || hit.isTrigger) return false;
+        if (hit.gameObject == gameObject) return false;
+
+        // Важно: НЕ использовать transform.root. В уровнях игрок и блоки лежат
+        // под общим родителем GameSpace, поэтому IsChildOf(transform.root)
+        // отфильтровывал вообще все препятствия.
+        if (hit.transform.IsChildOf(transform)) return false;
+
+        if (hit.CompareTag("Player") ||
+            hit.CompareTag("stem") ||
+            hit.CompareTag("sun") ||
+            hit.CompareTag("enemy") ||
+            hit.CompareTag("trigger") ||
+            hit.CompareTag("flower"))
+        {
+            return false;
+        }
+
+        if (hit.GetComponentInParent<Trigger_checker>() != null) return false;
+        if (hit.GetComponentInParent<flower>() != null) return false;
+        if (hit.GetComponentInParent<player_move>() != null) return false;
+        if (hit.GetComponentInParent<LeafPowerup>() != null) return false;
+        if (hit.GetComponentInParent<enemy>() != null) return false;
+
         return true;
     }
 
@@ -269,15 +520,21 @@ public class player_move : MonoBehaviour
             currentTargetTrigger = trigger;
             StartCoroutine(MoveTo(target, trigger));
         }
-        else
+        else if (Time.time >= nextNoPathLogTime)
         {
             Debug.Log("Цветок не может начать движение: нет доступных путей.");
+            nextNoPathLogTime = Time.time + 1f;
         }
     }
 
     public void OnFlowerTriggerEnter(Collider2D other)
     {
         if (!enabled || other == null || ShouldIgnoreFlowerTrigger(other)) return;
+
+        // Не реагируем повторно на объект, от которого только что отступили.
+        // Иначе цветок дёргается на границе триггера: шаг вперёд — вход,
+        // шаг назад — выход, и так бесконечно.
+        if (IsFlowerBlockerIgnored(other)) return;
 
         bool wasEmpty = flowerTriggerBlockers.Count == 0;
         flowerTriggerBlockers.Add(other);
@@ -317,10 +574,11 @@ public class player_move : MonoBehaviour
             if (obstacleCollider == null) continue;
             failureBlockers.Remove(obstacleCollider);
             flowerTriggerBlockers.Remove(obstacleCollider);
+            ignoredFlowerBlockerUntil.Remove(obstacleCollider);
         }
 
         // Мир изменился: блок разрушен или перемещён — снимаем блокировки с триггеров.
-        ClearMovementBlocks();
+        ClearMovementBlocks(true);
 
         if (!isMoving && !isRetreating && enabled)
         {
@@ -357,7 +615,7 @@ public class player_move : MonoBehaviour
             ? pathHistory[retreatPathIndex]
             : transform.position + backwardDir * 0.03f;
 
-        CaptureFailureState(retreatTarget);
+        CaptureFailureState();
 
         isRetreating = true;
         StartCoroutine(RetreatUntilTriggerClear());
@@ -387,60 +645,54 @@ public class player_move : MonoBehaviour
         return -forward.normalized;
     }
 
-    private void CaptureFailureState(Vector3 retreatTarget)
+    private void CaptureFailureState()
     {
-        occupiedAtFailedPosition.Clear();
         flowerTriggerBlockers.RemoveWhere(IsInvalidBlocker);
         failureBlockers.UnionWith(flowerTriggerBlockers);
 
+        // Запоминаем, от кого отступаем: пока кулдаун не истёк, повторный
+        // вход этого объекта в триггер цветка не запускает новое отступление.
+        foreach (Collider2D blocker in flowerTriggerBlockers)
+        {
+            IgnoreFlowerBlocker(blocker, blockerIgnoreCooldown);
+        }
+
+        // После столкновения временно исключаем все занятые триггеры, а не
+        // только цель: иначе цветок сразу же снова лезет в тот же камень.
         if (Triggers != null)
         {
             foreach (Trigger_checker trigger in Triggers)
             {
-                if (trigger != null && trigger.OnTriggerEnter_)
+                if (trigger != null && (trigger.IsOccupied || trigger.OnTriggerEnter_))
                 {
-                    occupiedAtFailedPosition.Add(trigger);
+                    BlockTriggerTemporarily(trigger, failureBlockCooldown);
                 }
             }
         }
 
-        blockedTriggers.UnionWith(occupiedAtFailedPosition);
-
-        if (currentTargetTrigger != null)
-        {
-            blockedTriggers.Add(currentTargetTrigger);
-        }
-
-        Vector3 direction = currentGrowDirection != Vector3.zero
-            ? currentGrowDirection
-            : (lastGrowthDirection != Vector3.zero ? lastGrowthDirection : flowerFacingDirection);
-
-        if (direction != Vector3.zero)
-        {
-            blockedRetreatDirection = direction.normalized;
-            hasBlockedRetreatDirection = true;
-        }
-        else if (Vector3.Distance(transform.position, retreatTarget) > 0.01f)
-        {
-            blockedRetreatDirection = (transform.position - retreatTarget).normalized;
-            hasBlockedRetreatDirection = true;
-        }
+        BlockTriggerTemporarily(currentTargetTrigger, failureBlockCooldown);
     }
 
     private IEnumerator RetreatUntilTriggerClear()
     {
         float actualSpeed = Mathf.Max(moveSpeed * speedMultiplier, 0.01f);
 
+        float maxRetreatTime = Mathf.Max(0.1f, retreatTimeout);
+        float retreatTime = 0f;
+
         Debug.Log("Цветок отступает от объекта в собственном триггере.");
 
         // Двигаемся назад по сохранённому пути, пока все объекты не покинут триггер.
-        while (enabled && HasFlowerTriggerBlocker())
+        // Ограничены по времени, чтобы не ждать статичный камень бесконечно.
+        while (enabled && HasFlowerTriggerBlocker() && retreatTime < maxRetreatTime)
         {
+            retreatTime += Time.deltaTime;
+
             if (retreatPathIndex < 0)
             {
-                // Путь закончился — ждём, пока объект сам освободит триггер.
-                yield return null;
-                continue;
+                // Путь закончился — не ждём, пока объект сам освободит триггер.
+                Debug.LogWarning("Путь отступления закончился, а триггер всё ещё занят.");
+                break;
             }
 
             Vector3 target = pathHistory[retreatPathIndex];
@@ -465,12 +717,13 @@ public class player_move : MonoBehaviour
 
         if (HasFlowerTriggerBlocker())
         {
-            if (!BeginRetreat())
-            {
-                Debug.Log("Цветок ждет, пока объект покинет его триггер.");
-            }
+            // Не блокируем цветок навсегда: забываем оставшееся перекрытие,
+            // пока объект не выйдет из триггера и не войдёт снова.
+            Debug.LogWarning("Цветок не смог отступить за отведённое время — перекрытие временно игнорируется.");
+            flowerTriggerBlockers.Clear();
         }
-        else if (enabled)
+
+        if (enabled)
         {
             OnWorldChanged();
         }
@@ -509,13 +762,16 @@ public class player_move : MonoBehaviour
         }
     }
 
-    private void ClearMovementBlocks()
+    private void ClearMovementBlocks(bool clearTriggerCooldowns = false)
     {
         failureBlockers.Clear();
-        blockedTriggers.Clear();
-        occupiedAtFailedPosition.Clear();
-        hasBlockedRetreatDirection = false;
-        blockedRetreatDirection = Vector3.zero;
+
+        if (clearTriggerCooldowns)
+        {
+            triggerBlockedUntil.Clear();
+            ignoredFlowerBlockerUntil.Clear();
+        }
+
         if (!isRetreating)
             retreatPathIndex = -1;
     }
@@ -530,7 +786,7 @@ public class player_move : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             if (Triggers[i] == null) continue;
-            if (Triggers[i].OnTriggerEnter_ || blockedTriggers.Contains(Triggers[i]))
+            if (Triggers[i].IsOccupied || Triggers[i].OnTriggerEnter_ || IsTriggerTemporarilyBlocked(Triggers[i]))
             {
                 Triggers[i].TriggerValue = 1f;
             }
@@ -544,7 +800,7 @@ public class player_move : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             if (Triggers[i] == null) continue;
-            if (Triggers[i].OnTriggerEnter_ || blockedTriggers.Contains(Triggers[i])) continue;
+            if (Triggers[i].IsOccupied || Triggers[i].OnTriggerEnter_ || IsTriggerTemporarilyBlocked(Triggers[i])) continue;
 
             // check neighbors (spatial neighbors by angle)
             int left = (i - 1 + count) % count;
@@ -573,20 +829,19 @@ public class player_move : MonoBehaviour
             return false;
         }
 
-        // Убираем только уничтоженные триггеры. Освободившиеся триггеры
-        // остаются заблокированными до тех пор, пока цветок не найдёт новый
-        // свободный триггер и не переместится на него (ClearMovementBlocks).
-        blockedTriggers.RemoveWhere(blockedTrigger => blockedTrigger == null);
+        // Блокировки триггеров теперь временные: просроченные записи удаляются,
+        // чтобы освободившийся триггер снова стал доступным.
+        PruneTriggerBlocks();
         ComputeTriggerValues();
 
-        // Priority: 0.5 takes priority for movement; prefer 0.5 over 0; never pick 1
-        // If all other triggers are =1 or 0.5, move in that direction (so can move to 0.5)
-        // First pass: look for triggers with value 0.5
+        // Порядок приоритета: сначала полностью свободные (0), затем точки,
+        // соседние с занятыми (0.5). Занятые (1) не выбираются никогда.
         Trigger_checker bestTrigger = null;
         float bestScore = float.PositiveInfinity;
         int bestIndex = -1;
 
-        // Try priority order: first check 0.5, then 0
+        Vector3 referenceDirection = GetReferenceGrowthDirection();
+
         float[] priorities = new float[] { 0f, 0.5f };
         foreach (float desiredValue in priorities)
         {
@@ -597,47 +852,35 @@ public class player_move : MonoBehaviour
             {
                 Trigger_checker trigger = Triggers[i];
                 if (trigger == null) continue;
-                if (trigger.OnTriggerEnter_) continue;
-                if (blockedTriggers.Contains(trigger)) continue;
+                if (trigger.IsOccupied || trigger.OnTriggerEnter_) continue;
+                if (IsTriggerTemporarilyBlocked(trigger)) continue;
                 if (Mathf.Abs(trigger.TriggerValue - desiredValue) > 0.001f) continue;
 
                 Vector3 candidate = trigger.transform.position;
+
+                // Триггер, в котором цветок уже стоит, не должен выбираться
+                // снова: иначе получаем движение «вперёд-назад» на месте.
+                if (Vector3.Distance(candidate, transform.position) < 0.1f) continue;
+
                 if (!CanFitAt(candidate)) continue;
 
                 Vector3 newDirection = (candidate - transform.position).normalized;
+                if (newDirection == Vector3.zero) continue;
 
-                if (hasBlockedRetreatDirection &&
-                    Vector3.Angle(blockedRetreatDirection, newDirection) <= blockedDirectionAngle)
+                float angle = referenceDirection != Vector3.zero
+                    ? Vector3.Angle(referenceDirection, newDirection)
+                    : 0f;
+
+                if (angle > max_angle)
                 {
                     continue;
                 }
 
-                Vector3 segmentDir = flowerFacingDirection;
-                if (segmentDir == Vector3.zero && lastGrowthDirection != Vector3.zero)
-                {
-                    segmentDir = lastGrowthDirection;
-                }
-                if (segmentDir != Vector3.zero)
-                {
-                    float angle = Vector3.Angle(segmentDir, newDirection);
-                    Debug.Log("Угол между сегментом и " + trigger.name + "=" + angle);
-                    if (angle > max_angle)
-                    {
-                        continue;
-                    }
-                }
-                else if (lastGrowthDirection != Vector3.zero)
-                {
-                    float angle = Vector3.Angle(lastGrowthDirection, newDirection);
-                    Debug.Log("Угол между старым направлением и " + trigger.name + "=" + angle);
-                    if (angle > max_angle)
-                    {
-                        continue;
-                    }
-                }
-
-                // Prefer earlier in array if all else equal? Keep original behavior as fallback
-                float score = i; // prefer first in array for same priority
+                // Выбираем триггер, который продолжает текущее направление
+                // роста. Раньше побеждал первый по порядку в массиве, из-за
+                // чего цветок уходил в случайную сторону, а «передние»
+                // триггеры потом становились жёлтыми (мнимый угол).
+                float score = angle + i * 0.0001f;
                 if (score < bestScore)
                 {
                     bestScore = score;
@@ -682,39 +925,54 @@ public class player_move : MonoBehaviour
                 break;
             }
 
-            if (targetTrigger != null && targetTrigger.OnTriggerEnter_)
+            if (targetTrigger != null && (targetTrigger.IsOccupied || targetTrigger.OnTriggerEnter_))
             {
                 Debug.LogWarning($"Триггер {targetTrigger.gameObject.name} занят другим объектом! Движение прервано на позиции {transform.position:F2}");
                 break;
             }
 
-            // Check segment/probe in flower's facing direction - if hits stone/obstacle, stop in that direction
-            if (flowerFacingDirection == Vector3.zero)
+            // Проверяем реальное направление движения, а не только поворот цветка:
+            // при повороте facing может ещё смотреть в старую сторону.
+            Vector3 probeDirection = target - transform.position;
+            if (probeDirection.sqrMagnitude > 0.000001f)
             {
-                flowerFacingDirection = currentGrowDirection;
+                probeDirection.Normalize();
             }
-            if (flowerFacingDirection != Vector3.zero)
+            else
+            {
+                probeDirection = flowerFacingDirection != Vector3.zero
+                    ? flowerFacingDirection
+                    : currentGrowDirection;
+            }
+
+            if (probeDirection != Vector3.zero)
             {
                 Vector2 probeOrigin = transform.position;
-                // Cast in a small cone/box to better detect obstacles
-                RaycastHit2D hit = Physics2D.Raycast(probeOrigin, flowerFacingDirection, probeLength, probeObstacleMask);
-                if (hit.collider != null && hit.collider.gameObject != gameObject && !hit.collider.isTrigger)
+                float probeRadius = capsule != null
+                    ? Mathf.Max(0.05f, capsule.size.x * 0.45f)
+                    : 0.15f;
+
+                if (HasObstacleAlong(probeOrigin, probeDirection, probeLength, probeRadius))
                 {
                     // Check if it's too close - stop to avoid going into stones
                     Debug.LogWarning("Сегмент столкнулся с препятствием, движение приостановлено");
                     break;
                 }
-                // Also sphere cast as backup
-                RaycastHit2D hit2 = Physics2D.CircleCast(probeOrigin, 0.15f, flowerFacingDirection, probeLength * 0.5f, probeObstacleMask);
-                if (hit2.collider != null && hit2.collider.gameObject != gameObject && !hit2.collider.isTrigger)
-                {
-                    Debug.LogWarning("Сегмент столкнулся с препятствием (круг), движение приостановлено");
-                    break;
-                }
             }
 
             float t = elapsed / duration;
-            transform.position = Vector3.Lerp(start, target, t);
+            Vector3 nextPosition = Vector3.Lerp(start, target, t);
+
+            // Финальная проверка шага: даже если тонкий луч не задел блок,
+            // само тело цветка не должно в него войти.
+            if (probeDirection != Vector3.zero &&
+                HasObstacleAtFlowerBody(nextPosition, probeDirection))
+            {
+                Debug.LogWarning("Тело цветка упёрлось в препятствие, движение приостановлено");
+                break;
+            }
+
+            transform.position = nextPosition;
             if (currentGrowDirection != Vector3.zero)
             {
                 flowerFacingDirection = currentGrowDirection.normalized;
@@ -762,7 +1020,8 @@ public class player_move : MonoBehaviour
         // 2. Триггер всё ещё свободен
         // 3. Объект включён
         bool reachedTarget = targetTrigger != null && Vector3.Distance(transform.position, target) < 0.1f;
-        bool triggerStillFree = targetTrigger == null || !targetTrigger.OnTriggerEnter_;
+        bool triggerStillFree = targetTrigger == null ||
+                                (!targetTrigger.IsOccupied && !targetTrigger.OnTriggerEnter_);
 
         if (enabled && reachedTarget && triggerStillFree && targetTrigger != null)
         {
@@ -777,6 +1036,10 @@ public class player_move : MonoBehaviour
                 Debug.Log("Триггер занят — ищем альтернативный путь...");
             else if (!reachedTarget)
                 Debug.Log("Движение прервано — ищем новый путь...");
+
+            // Не возвращаемся сразу к той же цели: именно это вызывало
+            // бесконечное «вперёд-назад» на одном месте.
+            BlockTriggerTemporarily(targetTrigger, failureBlockCooldown);
 
             // Пытаемся найти другой свободный триггер
             OnWorldChanged();

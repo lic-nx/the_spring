@@ -2266,13 +2266,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8087723318512950426}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.42301574, w: 0.9061223}
-  m_LocalPosition: {x: 0.7688, y: 1.9347, z: -0.0000033564866}
-  m_LocalScale: {x: 0.48322195, y: 0.74696755, z: 1}
+  m_LocalRotation: {x: 0.04068211, y: -0.017404996, z: -0.3600445, w: 0.9318852}
+  m_LocalPosition: {x: 0.79, y: 2.03, z: -0}
+  m_LocalScale: {x: 0.48322195, y: 0.62824994, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2888004987606302130}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -50.05}
+  m_LocalEulerAnglesHint: {x: 3.629, y: -3.546, z: -42.362}
 --- !u!212 &5669066713799243808
 SpriteRenderer:
   serializedVersion: 3
@@ -2945,21 +2945,20 @@ MonoBehaviour:
   speedMultiplier: 1
   duration_of_move: 0.4
   max_angle: 120
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 0
   probeLength: 1
   probeWidth: 0.2
-  probeObstacleMask:
-    serializedVersion: 2
-    m_Bits: 0
   showTriggerDebugColors: 1
   targetTriggerColor: {r: 0.1, g: 1, b: 0.1, a: 0.85}
   occupiedTriggerColor: {r: 1, g: 0.15, b: 0.15, a: 0.85}
   angleBlockedTriggerColor: {r: 1, g: 0.9, b: 0.1, a: 0.85}
   obstacleBlockedTriggerColor: {r: 0.05, g: 0.05, b: 0.05, a: 0.9}
+  cooldownTriggerColor: {r: 0.55, g: 0.55, b: 0.55, a: 0.85}
   freeTriggerColor: {r: 1, g: 1, b: 1, a: 0.85}
-  blockedDirectionAngle: 35
+  triggerBlockCooldown: 0.35
+  failureBlockCooldown: 1.5
+  blockerIgnoreCooldown: 2
+  retreatTimeout: 2
+  retryInterval: 0.25
 --- !u!1 &8912014059190128030
 GameObject:
   m_ObjectHideFlags: 0
@@ -3225,13 +3224,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9137241818033713265}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.30815157, w: 0.9513373}
-  m_LocalPosition: {x: 0.4989, y: 2.2275, z: -0.0000033564866}
+  m_LocalRotation: {x: -0, y: -0, z: -0.20248, w: 0.97928643}
+  m_LocalPosition: {x: 0.45, y: 2.2399998, z: -0.0000036507845}
   m_LocalScale: {x: 0.44881076, y: 0.67813784, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2888004987606302130}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -35.896}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -23.364}
 --- !u!212 &7260293181789005631
 SpriteRenderer:
   serializedVersion: 3

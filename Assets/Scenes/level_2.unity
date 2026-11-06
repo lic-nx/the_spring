@@ -24041,11 +24041,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 63128241024046240, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.1600003
+      value: -2.93
       objectReference: {fileID: 0}
     - target: {fileID: 63128241024046240, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.139999
+      value: -9.88
       objectReference: {fileID: 0}
     - target: {fileID: 63128241024046240, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -24109,19 +24109,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1607643258461158042, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Size.x
-      value: 0.6729123
+      value: 0.53029305
       objectReference: {fileID: 0}
     - target: {fileID: 1607643258461158042, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Size.y
-      value: 1.638501
+      value: 1.2106435
       objectReference: {fileID: 0}
     - target: {fileID: 1607643258461158042, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Offset.x
-      value: -0.021652088
+      value: -0.0038249125
       objectReference: {fileID: 0}
     - target: {fileID: 1607643258461158042, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Offset.y
-      value: 0.9157443
+      value: 0.7018156
       objectReference: {fileID: 0}
     - target: {fileID: 1973185970551712191, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
@@ -24154,6 +24154,10 @@ PrefabInstance:
     - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: max_angle
       value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
+      propertyPath: showTriggerDebugColors
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3041934112464998794, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a
