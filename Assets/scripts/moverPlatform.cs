@@ -8,7 +8,6 @@ public class MoverPlatform : MonoBehaviour
     public bool mode = false; // false = свободное перемещение, true = только по отрезку
 
     private bool isDragging = false;
-    private bool isEnter = false;
 
     [SerializeField] private AudioClip soundTake;
     [SerializeField] private AudioClip soundRelease;
@@ -31,13 +30,11 @@ public class MoverPlatform : MonoBehaviour
         audioSource.playOnAwake = false;
     }
 
-    void OnMouseEnter() => isEnter = true;
-    void OnMouseExit() => isEnter = false;
 
     void Update()
     {
         // Начало перетаскивания
-        if (Input.GetMouseButtonDown(0) && isEnter)
+        if (InputHelper.GetPointerDown() && InputHelper.IsPointerOverObject(gameObject))
         {
             isDragging = true;
 
@@ -45,7 +42,7 @@ public class MoverPlatform : MonoBehaviour
                 audioSource.PlayOneShot(soundTake, 0.5f);
         }
         // Завершение перетаскивания
-        else if (Input.GetMouseButtonUp(0))
+        else if (isDragging && (InputHelper.GetPointerUp() || !InputHelper.GetPointerHeld()))
         {
             if (isDragging)
             {
@@ -60,7 +57,7 @@ public class MoverPlatform : MonoBehaviour
         // Перемещение при удержании
         if (isDragging)
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(InputHelper.GetScreenPosition());
             mousePos.z = 0;
 
             // Определяем целевую позицию
@@ -75,6 +72,11 @@ public class MoverPlatform : MonoBehaviour
                 speed * Time.deltaTime
             );
         }
+    }
+
+    private void OnDisable()
+    {
+        isDragging = false;
     }
 
     // Проекция точки на отрезок AB

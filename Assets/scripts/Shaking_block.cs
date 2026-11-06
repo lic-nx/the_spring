@@ -8,7 +8,13 @@ public class ShakeOnClick : MonoBehaviour
 
     private Vector3 originalPos;
 
-    void OnMouseDown()
+    void Update()
+    {
+        if (InputHelper.GetPointerDown() && InputHelper.IsPointerOverObject(gameObject))
+            ShakeIfRunning();
+    }
+
+    private void ShakeIfRunning()
     {
         // Проверяем, что игра не на паузе (время идёт)
         if (Time.timeScale == 0f)

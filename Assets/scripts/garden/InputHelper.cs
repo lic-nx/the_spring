@@ -1,68 +1,53 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-/// <summary>
-/// Универсальный помощник ввода. Работает и с мышью (ПК/WebGL), и с тачем (мобилки).
-/// Все скрипты должны использовать ЭТОТ класс вместо Input.mousePosition / Input.GetMouseButtonDown.
-/// </summary>
+/// <summary>Общий ввод мыши, пера и основного касания через Input System.</summary>
 public static class InputHelper
 {
-    /// <summary>
-    /// Возвращает позицию первого пальца/мыши в экранных координатах (Screen Space).
-    /// </summary>
-    public static Vector3 GetScreenPosition()
+    private static Pointer ActivePointer
     {
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-        return Input.mousePosition;
-#else
-        if (Input.touchCount > 0)
-            return Input.GetTouch(0).position;
-        return Input.mousePosition;
-#endif
+        get
+        {
+            var touch = Touchscreen.current;
+            if (touch != null && (touch.primaryTouch.press.isPressed ||
+                                  touch.primaryTouch.press.wasPressedThisFrame ||
+                                  touch.primaryTouch.press.wasReleasedThisFrame))
+                return touch;
+            return Pointer.current;
+        }
     }
 
-    /// <summary>
-    /// Возвращает позицию в мировых координатах (для 2D игр).
-    /// </summary>
+    public static Vector3 GetScreenPosition()
+    {
+        var pointer = ActivePointer;
+        return pointer != null ? (Vector3)pointer.position.ReadValue() : Vector3.zero;
+    }
+
     public static Vector3 GetWorldPosition(Camera cam, float z = 0f)
     {
         Vector3 screenPos = GetScreenPosition();
-        screenPos.z = -cam.transform.position.z + z; // Для 2D камеры
+        screenPos.z = -cam.transform.position.z + z;
         return cam.ScreenToWorldPoint(screenPos);
     }
 
-    /// <summary>
-    /// Было ли нажатие в этом кадре? (ЛКМ или первый тач)
-    /// </summary>
-    public static bool GetPointerDown()
-    {
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-        return Input.GetMouseButtonDown(0);
-#else
-        return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
-#endif
-    }
+    public static bool GetPointerDown() => ActivePointer?.press.wasPressedThisFrame ?? false;
+    public static bool GetPointerUp() => ActivePointer?.press.wasReleasedThisFrame ?? false;
+    public static bool GetPointerHeld() => ActivePointer?.press.isPressed ?? false;
 
-    /// <summary>
-    /// Было ли отпускание в этом кадре?
-    /// </summary>
-    public static bool GetPointerUp()
+    public static bool IsPointerOverObject(GameObject target, Camera camera = null)
     {
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-        return Input.GetMouseButtonUp(0);
-#else
-        return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended;
-#endif
+        if (ActivePointer == null || target == null) return false;
+        if (camera == null) camera = Camera.main;
+        if (camera == null) return false;
+        Vector3 screenPosition = GetScreenPosition();
+        if (!camera.pixelRect.Contains(screenPosition)) return false;
+        Ray ray = camera.ScreenPointToRay(screenPosition);
+        int mask = camera.cullingMask & Physics.DefaultRaycastLayers;
+        float distance = camera.farClipPlane - camera.nearClipPlane;
+        RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray, distance, mask);
+        bool hit3D = Physics.Raycast(ray, out RaycastHit hit, distance, mask);
+        if (hit2D.collider != null && (!hit3D || hit2D.distance <= hit.distance))
+            return hit2D.collider.gameObject == target;
+        return hit3D && hit.collider.gameObject == target;
     }
-
-    /// <summary>
-    /// Удерживается ли нажатие?
-    /// </summary>
-    public static bool GetPointerHeld()
-    {
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-        return Input.GetMouseButton(0);
-#else
-        return Input.touchCount > 0;
-#endif
-    }
-} 
+}
