@@ -1698,7 +1698,8 @@ public class ForestLevelGeneratorWindow : EditorWindow
             return;
         }
 
-        var rng = new System.Random(seed ^ Selection.activeInstanceID);
+       // Получаем EntityId, конвертируем в ulong, затем приводим к int
+        var rng = new System.Random(seed ^ Selection.activeEntityId.GetHashCode());
         foreach (SpriteShapeController controller in controllers)
             RegenerateController(controller, rng);
         EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());

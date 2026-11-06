@@ -63,6 +63,7 @@ public class player_move : MonoBehaviour
     private bool hasBlockedRetreatDirection = false;
     private bool retreatRequested = false;
     private bool isRetreating = false;
+    private int retreatPathIndex = -1;
 
     // Cached components
     private Rigidbody2D rb;
@@ -310,23 +311,20 @@ public class player_move : MonoBehaviour
     {
         if (obstacle == null) return;
 
-        bool removed = false;
         Collider2D[] obstacleColliders = obstacle.GetComponentsInChildren<Collider2D>();
         foreach (Collider2D obstacleCollider in obstacleColliders)
         {
-            if (obstacleCollider != null && failureBlockers.Remove(obstacleCollider))
-            {
-                removed = true;
-            }
+            if (obstacleCollider == null) continue;
+            failureBlockers.Remove(obstacleCollider);
+            flowerTriggerBlockers.Remove(obstacleCollider);
         }
 
-        if (removed && failureBlockers.Count == 0)
+        // Мир изменился: блок разрушен или перемещён — снимаем блокировки с триггеров.
+        ClearMovementBlocks();
+
+        if (!isMoving && !isRetreating && enabled)
         {
-            ClearMovementBlocks();
-            if (!isMoving && !isRetreating && enabled)
-            {
-                OnWorldChanged();
-            }
+            OnWorldChanged();
         }
     }
 
@@ -351,15 +349,31 @@ public class player_move : MonoBehaviour
     {
         if (!enabled || isRetreating) return false;
 
-        // Отступаем назад вдоль роста стебля, а не к предыдущей точке пути.
+        // Отступаем назад по уже пройденному пути, а не просто вдоль стебля.
+        PrepareRetreatPath();
+
         Vector3 backwardDir = GetRetreatDirection();
-        Vector3 retreatTarget = transform.position + backwardDir * 0.03f;
+        Vector3 retreatTarget = retreatPathIndex >= 0
+            ? pathHistory[retreatPathIndex]
+            : transform.position + backwardDir * 0.03f;
 
         CaptureFailureState(retreatTarget);
 
         isRetreating = true;
-        StartCoroutine(RetreatUntilTriggerClear(backwardDir));
+        StartCoroutine(RetreatUntilTriggerClear());
         return true;
+    }
+
+    private void PrepareRetreatPath()
+    {
+        retreatPathIndex = pathHistory.Count - 1;
+
+        // Если цветок уже стоит в последней сохранённой точке, идём к предыдущей.
+        while (retreatPathIndex >= 0 &&
+               Vector3.Distance(transform.position, pathHistory[retreatPathIndex]) < 0.05f)
+        {
+            retreatPathIndex--;
+        }
     }
 
     private Vector3 GetRetreatDirection()
@@ -413,20 +427,41 @@ public class player_move : MonoBehaviour
         }
     }
 
-    private IEnumerator RetreatUntilTriggerClear(Vector3 backwardDir)
+    private IEnumerator RetreatUntilTriggerClear()
     {
         float actualSpeed = Mathf.Max(moveSpeed * speedMultiplier, 0.01f);
 
         Debug.Log("Цветок отступает от объекта в собственном триггере.");
 
-        // Отступаем ровно до тех пор, пока все объекты не покинут триггер.
+        // Двигаемся назад по сохранённому пути, пока все объекты не покинут триггер.
         while (enabled && HasFlowerTriggerBlocker())
         {
-            transform.position += backwardDir * actualSpeed * Time.deltaTime;
+            if (retreatPathIndex < 0)
+            {
+                // Путь закончился — ждём, пока объект сам освободит триггер.
+                yield return null;
+                continue;
+            }
+
+            Vector3 target = pathHistory[retreatPathIndex];
+            Vector3 toTarget = target - transform.position;
+            float step = actualSpeed * Time.deltaTime;
+
+            if (toTarget.sqrMagnitude <= step * step)
+            {
+                transform.position = target;
+                retreatPathIndex--;
+            }
+            else
+            {
+                transform.position += toTarget.normalized * step;
+            }
+
             yield return null;
         }
 
         isRetreating = false;
+        TrimPathHistoryAfterRetreat();
 
         if (HasFlowerTriggerBlocker())
         {
@@ -439,6 +474,30 @@ public class player_move : MonoBehaviour
         {
             OnWorldChanged();
         }
+    }
+
+    private void TrimPathHistoryAfterRetreat()
+    {
+        int keepCount = retreatPathIndex + 1;
+        if (keepCount < 0)
+            keepCount = 0;
+
+        if (keepCount < pathHistory.Count)
+        {
+            pathHistory.RemoveRange(keepCount, pathHistory.Count - keepCount);
+        }
+
+        if (pathHistory.Count > 0 &&
+            Vector3.Distance(pathHistory[pathHistory.Count - 1], transform.position) < 0.01f)
+        {
+            pathHistory[pathHistory.Count - 1] = transform.position;
+        }
+        else
+        {
+            pathHistory.Add(transform.position);
+        }
+
+        retreatPathIndex = -1;
     }
 
     private void RecordReachedPoint(Vector3 point)
@@ -457,6 +516,8 @@ public class player_move : MonoBehaviour
         occupiedAtFailedPosition.Clear();
         hasBlockedRetreatDirection = false;
         blockedRetreatDirection = Vector3.zero;
+        if (!isRetreating)
+            retreatPathIndex = -1;
     }
 
     private void ComputeTriggerValues()
@@ -512,7 +573,10 @@ public class player_move : MonoBehaviour
             return false;
         }
 
-        blockedTriggers.RemoveWhere(blockedTrigger => blockedTrigger == null || !blockedTrigger.OnTriggerEnter_);
+        // Убираем только уничтоженные триггеры. Освободившиеся триггеры
+        // остаются заблокированными до тех пор, пока цветок не найдёт новый
+        // свободный триггер и не переместится на него (ClearMovementBlocks).
+        blockedTriggers.RemoveWhere(blockedTrigger => blockedTrigger == null);
         ComputeTriggerValues();
 
         // Priority: 0.5 takes priority for movement; prefer 0.5 over 0; never pick 1
