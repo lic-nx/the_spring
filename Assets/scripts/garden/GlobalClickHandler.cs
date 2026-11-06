@@ -12,9 +12,8 @@ public class GlobalClickHandler : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (InputHelper.GetPointerDown())
         {
-            bool isOverUI = EventSystem.current.IsPointerOverGameObject();
             bool isOverPotMenu = IsPointerOverPotActionMenu();
             bool isOverPot = IsPointerOverPot();
 
@@ -31,7 +30,7 @@ public class GlobalClickHandler : MonoBehaviour
         if (PotActionMenuPool.Instance == null)
             return false;
 
-        return PotActionMenuPool.Instance.IsPointerOverAnyMenu(Input.mousePosition);
+        return PotActionMenuPool.Instance.IsPointerOverAnyMenu(InputHelper.GetScreenPosition());
     }
 
     private bool IsPointerOverPot()
@@ -39,7 +38,7 @@ public class GlobalClickHandler : MonoBehaviour
         if (_mainCamera == null)
             _mainCamera = Camera.main;
 
-        Vector2 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mousePos = _mainCamera.ScreenToWorldPoint(InputHelper.GetScreenPosition());
         RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
         if (hit.collider != null)

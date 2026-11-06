@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 
 namespace YG.Example.DemoScene
@@ -68,7 +69,7 @@ namespace YG.Example.DemoScene
             {
                 eventSystemObj = new GameObject { name = "EventSystemBase" };
                 eventSystemObj.AddComponent<EventSystem>();
-                eventSystemObj.AddComponent<StandaloneInputModule>();
+                eventSystemObj.AddComponent<InputSystemUIInputModule>();
                 DontDestroyOnLoad(eventSystemObj);
             }
         }

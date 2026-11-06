@@ -32,7 +32,16 @@ namespace YG.EditorScr
                 if (PluginPrefs.GetInt(InfoYG.FIRST_STARTUP_KEY) != 0 &&
                     SessionState.GetBool(LOAD_COMPLETE_KEY, false) == false)
                 {
-                    LoadServerInfo();
+                    // Startup uses bundled/cached metadata; the plugin window can refresh it manually.
+                    if (HasServerInfoForNotifications())
+                    {
+                        SessionState.SetBool(LOAD_COMPLETE_KEY, true);
+                        ServerInfo.DoActionLoadServerInfo();
+                    }
+                    else
+                    {
+                        LoadServerInfo();
+                    }
                 }
             };
         }
@@ -53,11 +62,12 @@ namespace YG.EditorScr
                 if (loadCount < 4)
                 {
                     string fileContent = null;
+                    string requestError = null;
                     bool useTestUrl = !string.IsNullOrWhiteSpace(TEST_URL);
 
                     if (useTestUrl)
                     {
-                        fileContent = await ReadFileFromURL(TEST_URL);
+                        (fileContent, requestError) = await ReadFileFromURL(TEST_URL);
                     }
                     else
                     {
@@ -65,7 +75,7 @@ namespace YG.EditorScr
 
                         for (int redirectStep = 0; redirectStep <= MAX_REDIRECTS; redirectStep++)
                         {
-                            fileContent = await ReadFileFromURL(currentUrl);
+                            (fileContent, requestError) = await ReadFileFromURL(currentUrl);
 
                             if (string.IsNullOrEmpty(fileContent))
                             {
@@ -124,11 +134,26 @@ namespace YG.EditorScr
                     }
                     else
                     {
+                        // Update metadata is optional: keep editor tools usable while offline.
+                        ServerInfo.Read();
+                        hasServerInfoForNotifications = HasServerInfoForNotifications();
+                        string failureReason = string.IsNullOrEmpty(requestError) ? string.Empty : $" ({requestError})";
+                        if (hasServerInfoForNotifications)
+                        {
 #if RU_YG2
-                        Debug.LogError($"Информация для {InfoYG.NAME_PLUGIN} не была загружена из-за отсутствия Интернета или неверного URL-адреса.");
+                            Debug.LogWarning($"{InfoYG.NAME_PLUGIN}: сервер обновлений недоступен. Используется локальная копия данных; свежесть списка обновлений не проверена.{failureReason}");
 #else
-                        Debug.LogError($"The information for the {InfoYG.NAME_PLUGIN} was not uploaded due to a lack of Internet or an incorrect URL.");
+                            Debug.LogWarning($"{InfoYG.NAME_PLUGIN}: update server unavailable. Using cached metadata; updates could not be checked.{failureReason}");
 #endif
+                        }
+                        else
+                        {
+#if RU_YG2
+                            Debug.LogError($"{InfoYG.NAME_PLUGIN}: сервер обновлений недоступен и локальная копия данных отсутствует.{failureReason}");
+#else
+                            Debug.LogError($"{InfoYG.NAME_PLUGIN}: update server unavailable and no cached metadata exists.{failureReason}");
+#endif
+                        }
                     }
                 }
             }
@@ -153,25 +178,26 @@ namespace YG.EditorScr
             return info != null && info.modules != null && info.modules.Length > 0;
         }
 
-        private static async Task<string> ReadFileFromURL(string url)
+        private static async Task<(string content, string error)> ReadFileFromURL(string url)
         {
             using (HttpClient client = new HttpClient())
             {
+                client.Timeout = TimeSpan.FromSeconds(15);
                 try
                 {
-                    HttpResponseMessage response = await client.GetAsync(url);
-                    response.EnsureSuccessStatusCode();
-                    return await response.Content.ReadAsStringAsync();
+                    using (HttpResponseMessage response = await client.GetAsync(url))
+                    {
+                        response.EnsureSuccessStatusCode();
+                        return (await response.Content.ReadAsStringAsync(), null);
+                    }
                 }
                 catch (HttpRequestException ex)
                 {
-                    Debug.LogError($"Server info request failed: {ex.Message}");
-                    return null;
+                    return (null, ex.GetBaseException().Message);
                 }
-                catch (Exception ex)
+                catch (TaskCanceledException)
                 {
-                    Debug.LogError($"Server info request error: {ex.Message}");
-                    return null;
+                    return (null, "Request timed out after 15 seconds.");
                 }
             }
         }

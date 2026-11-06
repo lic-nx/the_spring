@@ -46,7 +46,7 @@ public class enemy : MonoBehaviour
         }
         else
         {
-            encounterTrigger.OverlapCollider(contactFilter, overlapResults);
+            encounterTrigger.Overlap(contactFilter, overlapResults);
         }
         foreach (Collider2D other in overlapResults)
         {

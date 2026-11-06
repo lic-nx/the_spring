@@ -27,7 +27,15 @@ public class DragBlock2D : MonoBehaviour
         audioSource.playOnAwake = false;
     }
 
-    void OnMouseDown()
+    private void Update()
+    {
+        if (!isDragging && InputHelper.GetPointerDown() && InputHelper.IsPointerOverObject(gameObject, cam))
+            BeginDrag();
+        if (isDragging && (InputHelper.GetPointerUp() || !InputHelper.GetPointerHeld()))
+            EndDrag();
+    }
+
+    void BeginDrag()
     {
         isDragging = true;
 
@@ -35,13 +43,13 @@ public class DragBlock2D : MonoBehaviour
         if (soundTake != null && YG2.saves.EffectMusicEnabled)
         audioSource.PlayOneShot(soundTake, 0.5f);
 
-        Vector2 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mouseWorldPos = cam.ScreenToWorldPoint(InputHelper.GetScreenPosition());
         offset = rb.position - mouseWorldPos;
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
 
-    void OnMouseUp()
+    void EndDrag()
     {
         isDragging = false;
 
@@ -49,15 +57,20 @@ public class DragBlock2D : MonoBehaviour
         if (soundTake != null && YG2.saves.EffectMusicEnabled)
             audioSource.PlayOneShot(soundRelease, 0.5f);
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         player_move._instance?.OnWorldChanged();
+    }
+
+    private void OnDisable()
+    {
+        isDragging = false;
     }
 
     void FixedUpdate()
     {
         if (!isDragging) return;
 
-        Vector2 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mouseWorldPos = cam.ScreenToWorldPoint(InputHelper.GetScreenPosition());
         Vector2 targetPos = mouseWorldPos + offset;
 
         Vector2 newPos = Vector2.MoveTowards(

@@ -152,7 +152,7 @@ public class PotDragManager : MonoBehaviour
         }
         
         // Сразу ставим призрак под курсор
-        SetGhostPosition(Input.mousePosition);
+        SetGhostPosition(InputHelper.GetScreenPosition());
         
         // Показываем зоны для горшков
         if (DropZoneManager.Instance != null)
@@ -184,7 +184,7 @@ public class PotDragManager : MonoBehaviour
          if (_currentMovingPot != null)
          {
              // Drag the entire pot (including its children like flowers)
-             Vector3 screenPos = Input.mousePosition;
+             Vector3 screenPos = InputHelper.GetScreenPosition();
              screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
              Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
              worldPos.z = _currentMovingPot.transform.position.z;
@@ -193,7 +193,7 @@ public class PotDragManager : MonoBehaviour
          else if (_currentGhost != null)
          {
              // For new pots, use the ghost
-             SetGhostPosition(Input.mousePosition);
+             SetGhostPosition(InputHelper.GetScreenPosition());
          }
      }
     
@@ -223,15 +223,15 @@ public class PotDragManager : MonoBehaviour
     /// <summary>
     /// Пытается разместить новый горшок в зоне под курсором.
     /// Вызывается из PotGhostDragHandler при левом клике.
-    /// Использует Input.mousePosition для надёжной проверки зон,
+    /// Использует InputHelper.GetScreenPosition() для надёжной проверки зон,
     /// как было в старом рабочем коде.
     /// </summary>
     public void TryPlacePot()
     {
         // Конвертируем экранные координаты в мировые для проверки коллайдеров зон
-        // Используем Input.mousePosition напрямую (как в старом коде),
+        // Используем InputHelper.GetScreenPosition() напрямую (как в старом коде),
         // что гарантирует корректную конвертацию в мировые координаты
-        Vector3 screenPos = Input.mousePosition;
+        Vector3 screenPos = InputHelper.GetScreenPosition();
         screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
         Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
         worldPos.z = 0f;
@@ -294,7 +294,7 @@ public class PotDragManager : MonoBehaviour
      /// </summary>
       public void TryPlaceExistingPot(Pot pot)
       {
-          Vector3 screenPos = Input.mousePosition;
+          Vector3 screenPos = InputHelper.GetScreenPosition();
           screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
           Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
           worldPos.z = 0f;

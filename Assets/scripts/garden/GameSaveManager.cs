@@ -31,8 +31,8 @@ public class GameSaveManager : MonoBehaviour
     public bool loadOnSceneLoad = true;
 
     private bool _loadScheduled = false;
-    private int _pendingSceneHandle = int.MinValue;
-    private int _loadedSceneHandle = int.MinValue;
+    private SceneHandle _pendingSceneHandle = SceneHandle.None;
+    private SceneHandle _loadedSceneHandle = SceneHandle.None;
 
     private void Awake()
     {
@@ -64,7 +64,7 @@ public class GameSaveManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        _loadedSceneHandle = int.MinValue;
+        _loadedSceneHandle = SceneHandle.None;
         if (loadOnSceneLoad) RequestLoad();
     }
 
@@ -78,7 +78,7 @@ public class GameSaveManager : MonoBehaviour
         _instance.ScheduleLoad(SceneManager.GetActiveScene().handle);
     }
 
-    private void ScheduleLoad(int sceneHandle)
+    private void ScheduleLoad(SceneHandle sceneHandle)
     {
         if (_loadScheduled && _pendingSceneHandle == sceneHandle) return;
         _loadScheduled = true;
@@ -86,7 +86,7 @@ public class GameSaveManager : MonoBehaviour
         StartCoroutine(LoadAfterFrame(sceneHandle));
     }
 
-    private IEnumerator LoadAfterFrame(int sceneHandle)
+    private IEnumerator LoadAfterFrame(SceneHandle sceneHandle)
     {
         // Ждём кадр, чтобы все зоны успели зарегистрироваться в DropZoneManager (Start).
         yield return null;
