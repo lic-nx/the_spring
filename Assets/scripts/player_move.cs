@@ -82,6 +82,8 @@ public class player_move : MonoBehaviour
     private Rigidbody2D rb;
     private CapsuleCollider2D capsule;
 
+    public Collider2D BodyCollider => capsule;
+
     public void change_enabled()
     {
         Debug.Log("change enabled");

@@ -6,7 +6,6 @@ public class enemy : MonoBehaviour
 {
     private bool encounterResolved;
     private Collider2D encounterTrigger;
-    private CircleCollider2D encounterCircle;
     private bool pollForPlayerContacts;
     private ContactFilter2D contactFilter;
     private readonly List<Collider2D> overlapResults = new List<Collider2D>(8);
@@ -18,7 +17,6 @@ public class enemy : MonoBehaviour
             if (ownCollider.isTrigger)
             {
                 encounterTrigger = ownCollider;
-                encounterCircle = ownCollider as CircleCollider2D;
                 break;
             }
         }
@@ -37,17 +35,8 @@ public class enemy : MonoBehaviour
             return;
 
         overlapResults.Clear();
-        if (encounterCircle != null)
-        {
-            Vector3 scale = encounterCircle.transform.lossyScale;
-            float radius = encounterCircle.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y));
-            Vector2 center = encounterCircle.transform.TransformPoint(encounterCircle.offset);
-            Physics2D.OverlapCircle(center, radius, contactFilter, overlapResults);
-        }
-        else
-        {
-            encounterTrigger.Overlap(contactFilter, overlapResults);
-        }
+        // Query both colliders at their physics poses. Transforms may be ahead of Physics2D.
+        encounterTrigger.Overlap(contactFilter, overlapResults);
         foreach (Collider2D other in overlapResults)
         {
             if (TryResolveEncounter(other))
