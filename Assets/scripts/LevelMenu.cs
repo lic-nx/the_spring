@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using TMPro;
 using YG;
 using System;
-using System.IO; 
 using UnityEngine.Rendering.PostProcessing;
 
 using UnityEngine;
@@ -12,8 +11,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using YG;
-using System.Collections.Generic;
-using System.IO;
 
 public class LevelMenu : MonoBehaviour
 {
@@ -26,12 +23,9 @@ public class LevelMenu : MonoBehaviour
     public GameObject openLevel;
     private const string FALLBACK_SCENE_NAME = "sorry_not_founded"; // имя сцены если нет уровня
     private static bool isFallbackLoading = false;
-    private List<string> sceneList = new List<string>(); // список сцен из файла
-    private const string SCENE_LIST_PATH = "Assets/scripts/SceneList.txt"; // relative to project root
 
     private void Awake()
     {
-        LoadSceneList();
         ButtonsToArray();
         int unlockedLevel = YG2.saves.UnlockedLevel;
         int CompletedLevel = YG2.saves.CompletedLevel;
@@ -70,34 +64,6 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
-    // Load scene names from the external text file. Each line should contain the exact scene name.
-    private void LoadSceneList()
-    {
-        try
-        {
-            string fullPath = Path.Combine(Application.dataPath, "..", SCENE_LIST_PATH);
-            if (File.Exists(fullPath))
-            {
-                var lines = File.ReadAllLines(fullPath);
-                sceneList.Clear();
-                foreach (var line in lines)
-                {
-                    var trimmed = line.Trim();
-                    if (!string.IsNullOrEmpty(trimmed)) sceneList.Add(trimmed);
-                }
-                Debug.Log($"Loaded {sceneList.Count} scene names from {SCENE_LIST_PATH}");
-            }
-            else
-            {
-                Debug.LogWarning($"Scene list file not found at {fullPath}. Falling back to empty list.");
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error loading scene list: {e.Message}");
-        }
-    }
-
     void ButtonsToArray()
     {
         int childCount = levelButtons.transform.childCount;
@@ -116,30 +82,28 @@ public class LevelMenu : MonoBehaviour
 
     public void OpenLevel(int buttonIndex)
     {
-        buttonIndex = buttonIndex - 1;
-        // buttonIndex is expected to be 0‑based from the UI button click
-        if (buttonIndex < 0 || buttonIndex >= sceneList.Count)
+        if (!TryLoadLevel(buttonIndex))
         {
-            Debug.LogWarning($"Invalid level index {buttonIndex}. Loading fallback.");
-            LoadFallbackScene();
-            return;
-        }
-        string sceneName = sceneList[buttonIndex];
-        Debug.LogWarning($" level index {buttonIndex}. scenename = {sceneName}");
-        int buildIndex = SceneUtility.GetBuildIndexByScenePath(sceneName);
-        if (buildIndex >= 0)
-        {
-            // Check for a tutorial with matching numeric suffix if it exists
-            string tutorialName = $"tutorial_{sceneName}"; // assumes numeric suffix matches button order
-            int tutorIndex = SceneUtility.GetBuildIndexByScenePath(tutorialName);
-            if (tutorIndex >= 0) SceneManager.LoadScene(tutorialName);
-            else SceneManager.LoadScene(sceneName);
-        }
-        else
-        {
-            Debug.LogWarning($"Scene '{sceneName}' not found in Build Settings. Loading fallback.");
+            Debug.LogWarning($"Level {buttonIndex} is not included in the build.");
             LoadFallbackScene();
         }
+    }
+
+    internal static bool TryLoadLevel(int levelNumber)
+    {
+        if (levelNumber < 1)
+            return false;
+
+        int level = SceneUtility.GetBuildIndexByScenePath($"Assets/Scenes/level_{levelNumber}.unity");
+        if (level < 0)
+            return false;
+
+        int tutorial = SceneUtility.GetBuildIndexByScenePath($"Assets/Scenes/tutorial_level_{levelNumber}.unity");
+        if (tutorial < 0)
+            tutorial = SceneUtility.GetBuildIndexByScenePath($"Assets/Scenes/tutorial_{levelNumber}.unity");
+
+        SceneManager.LoadScene(tutorial >= 0 ? tutorial : level);
+        return true;
     }
 
     private void LoadFallbackScene()

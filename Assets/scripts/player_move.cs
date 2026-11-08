@@ -43,7 +43,7 @@ public class player_move : MonoBehaviour
 
     [Header("Отладка: подсветка триггеров")]
     [Tooltip("Показывать состояние триггеров цветом (зелёный — цель, красный — занят, жёлтый — запрещённый угол, серый — временный кулдаун, чёрный — перекрыт препятствием, белый — свободен)")]
-    public bool showTriggerDebugColors = true;
+    public bool showTriggerDebugColors;
     public Color targetTriggerColor = new Color(0.1f, 1f, 0.1f, 0.85f);
     public Color occupiedTriggerColor = new Color(1f, 0.15f, 0.15f, 0.85f);
     public Color angleBlockedTriggerColor = new Color(1f, 0.9f, 0.1f, 0.85f);

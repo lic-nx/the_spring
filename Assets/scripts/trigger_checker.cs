@@ -20,6 +20,13 @@ public class Trigger_checker : MonoBehaviour
     private Color lastDebugColor;
     private bool hasDebugColor;
 
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+            spriteRenderer.forceRenderingOff = true;
+    }
+
     private void Update()
     {
         if (occupants.Count == 0)
@@ -50,10 +57,6 @@ public class Trigger_checker : MonoBehaviour
 
     public void SetDebugColor(Color color)
     {
-        if (spriteRenderer == null)
-        {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-        }
         if (spriteRenderer == null) return;
 
         if (!hasOriginalColor)
@@ -65,6 +68,7 @@ public class Trigger_checker : MonoBehaviour
         if (hasDebugColor && lastDebugColor == color) return;
 
         spriteRenderer.color = color;
+        spriteRenderer.forceRenderingOff = false;
         lastDebugColor = color;
         hasDebugColor = true;
     }
@@ -74,6 +78,7 @@ public class Trigger_checker : MonoBehaviour
         if (spriteRenderer == null || !hasOriginalColor || !hasDebugColor) return;
 
         spriteRenderer.color = originalColor;
+        spriteRenderer.forceRenderingOff = true;
         hasDebugColor = false;
     }
 

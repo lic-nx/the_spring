@@ -24157,7 +24157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2981034737013730080, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: showTriggerDebugColors
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3041934112464998794, guid: 9a86ccafdca6faa45898e760d7af8c2c, type: 3}
       propertyPath: m_Color.a

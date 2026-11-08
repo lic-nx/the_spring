@@ -2947,7 +2947,7 @@ MonoBehaviour:
   max_angle: 120
   probeLength: 1
   probeWidth: 0.2
-  showTriggerDebugColors: 1
+  showTriggerDebugColors: 0
   targetTriggerColor: {r: 0.1, g: 1, b: 0.1, a: 0.85}
   occupiedTriggerColor: {r: 1, g: 0.15, b: 0.15, a: 0.85}
   angleBlockedTriggerColor: {r: 1, g: 0.9, b: 0.1, a: 0.85}
