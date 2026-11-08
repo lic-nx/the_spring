@@ -103,7 +103,7 @@ public class GameSaveManager : MonoBehaviour
     public static void RequestLoad()
     {
         EnsureExists();
-        _instance.ScheduleLoad(SceneManager.GetActiveScene().handle);
+        _instance.ScheduleLoad((int)SceneManager.GetActiveScene().handle.GetRawData());
     }
 
     private void ScheduleLoad(int sceneHandle)

@@ -65,6 +65,92 @@ public class Line_rendered : MonoBehaviour
             FullRebuild(); //здесь надо заменить на апдейт только хвоста, но я не понимаю, почему он косячит с этим
     }
 
+    public void RetractHead(Vector2 headPosition)
+    {
+        if (controlPoints.Count == 0)
+        {
+            controlPoints.Add(headPosition);
+            FullRebuild();
+            return;
+        }
+
+        if (controlPoints.Count == 1)
+        {
+            controlPoints[0] = headPosition;
+            dirtyFullRebuild = true;
+            FullRebuild();
+            return;
+        }
+
+        int bestSegment = -1;
+
+        for (int i = controlPoints.Count - 1; i >= 1; i--)
+        {
+            Vector2 start = controlPoints[i - 1];
+            Vector2 end = controlPoints[i];
+            Vector2 segment = end - start;
+            float lengthSqr = segment.sqrMagnitude;
+            float t = lengthSqr > 0.000001f
+                ? Vector2.Dot(headPosition - start, segment) / lengthSqr
+                : 0f;
+
+            if (t >= 0f && t <= 1f)
+            {
+                bestSegment = i;
+                break;
+            }
+        }
+
+        if (bestSegment < 0)
+        {
+            float bestDistance = float.PositiveInfinity;
+
+            for (int i = 1; i < controlPoints.Count; i++)
+            {
+                Vector2 start = controlPoints[i - 1];
+                Vector2 end = controlPoints[i];
+                Vector2 segment = end - start;
+                float lengthSqr = segment.sqrMagnitude;
+                float t = lengthSqr > 0.000001f
+                    ? Mathf.Clamp01(Vector2.Dot(headPosition - start, segment) / lengthSqr)
+                    : 0f;
+                Vector2 closest = start + segment * t;
+                float distance = (headPosition - closest).sqrMagnitude;
+
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    bestSegment = i;
+                }
+            }
+        }
+
+        if (bestSegment <= 0)
+        {
+            controlPoints.Clear();
+            controlPoints.Add(headPosition);
+        }
+        else
+        {
+            if (controlPoints.Count > bestSegment)
+            {
+                controlPoints.RemoveRange(bestSegment, controlPoints.Count - bestSegment);
+            }
+
+            if ((controlPoints[^1] - headPosition).sqrMagnitude > 0.0001f)
+            {
+                controlPoints.Add(headPosition);
+            }
+            else
+            {
+                controlPoints[^1] = headPosition;
+            }
+        }
+
+        dirtyFullRebuild = true;
+        FullRebuild();
+    }
+
     // Фиксирует сегмент (добавляет новую точку ПЕРЕД головой)
     public void TryCommitSegment(Vector2 headPosition)
     {

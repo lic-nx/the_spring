@@ -4,7 +4,13 @@ using UnityEngine.UI;
 using TMPro;
 using YG;
 using System;
-using System.Collections.Generic;
+using UnityEngine.Rendering.PostProcessing;
+
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
+using YG;
 
 public class LevelMenu : MonoBehaviour
 {
@@ -17,11 +23,9 @@ public class LevelMenu : MonoBehaviour
     public GameObject openLevel;
     private const string FALLBACK_SCENE_NAME = "sorry_not_founded"; // имя сцены если нет уровня
     private static bool isFallbackLoading = false;
-    private List<string> sceneList = new List<string>();
 
     private void Awake()
     {
-        LoadSceneList();
         ButtonsToArray();
         int unlockedLevel = YG2.saves.UnlockedLevel;
         int CompletedLevel = YG2.saves.CompletedLevel;
@@ -60,12 +64,6 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
-    private void LoadSceneList()
-    {
-        sceneList = LevelSceneCatalog.GetLevelScenes();
-        Debug.Log($"Loaded {sceneList.Count} level scenes from Build Settings.");
-    }
-
     void ButtonsToArray()
     {
         int childCount = levelButtons.transform.childCount;
@@ -84,27 +82,28 @@ public class LevelMenu : MonoBehaviour
 
     public void OpenLevel(int buttonIndex)
     {
-        buttonIndex = buttonIndex - 1;
-        // buttonIndex is expected to be 0‑based from the UI button click
-        if (buttonIndex < 0 || buttonIndex >= sceneList.Count)
+        if (!TryLoadLevel(buttonIndex))
         {
-            Debug.LogWarning($"Invalid level index {buttonIndex}. Loading fallback.");
-            LoadFallbackScene();
-            return;
-        }
-        string sceneName = sceneList[buttonIndex];
-        Debug.LogWarning($" level index {buttonIndex}. scenename = {sceneName}");
-        if (Application.CanStreamedLevelBeLoaded(sceneName))
-        {
-            string tutorialName = LevelSceneCatalog.GetTutorialScene(sceneName);
-            if (!string.IsNullOrEmpty(tutorialName)) SceneManager.LoadScene(tutorialName);
-            else SceneManager.LoadScene(sceneName);
-        }
-        else
-        {
-            Debug.LogWarning($"Scene '{sceneName}' not found in Build Settings. Loading fallback.");
+            Debug.LogWarning($"Level {buttonIndex} is not included in the build.");
             LoadFallbackScene();
         }
+    }
+
+    internal static bool TryLoadLevel(int levelNumber)
+    {
+        if (levelNumber < 1)
+            return false;
+
+        int level = SceneUtility.GetBuildIndexByScenePath($"Assets/Scenes/level_{levelNumber}.unity");
+        if (level < 0)
+            return false;
+
+        int tutorial = SceneUtility.GetBuildIndexByScenePath($"Assets/Scenes/tutorial_level_{levelNumber}.unity");
+        if (tutorial < 0)
+            tutorial = SceneUtility.GetBuildIndexByScenePath($"Assets/Scenes/tutorial_{levelNumber}.unity");
+
+        SceneManager.LoadScene(tutorial >= 0 ? tutorial : level);
+        return true;
     }
 
     private void LoadFallbackScene()

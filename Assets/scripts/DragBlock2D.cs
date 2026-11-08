@@ -30,6 +30,7 @@ public class DragBlock2D : MonoBehaviour
     void OnMouseDown()
     {
         isDragging = true;
+        player_move._instance?.OnObstacleRemoved(gameObject);
 
         // ✅ 4. Вызываем метод у экземпляра (audioSource), а не у класса
         if (soundTake != null && YG2.saves.EffectMusicEnabled)
@@ -38,7 +39,7 @@ public class DragBlock2D : MonoBehaviour
         Vector2 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
         offset = rb.position - mouseWorldPos;
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
 
     void OnMouseUp()
@@ -49,7 +50,7 @@ public class DragBlock2D : MonoBehaviour
         if (soundTake != null && YG2.saves.EffectMusicEnabled)
             audioSource.PlayOneShot(soundRelease, 0.5f);
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         player_move._instance?.OnWorldChanged();
     }
 
