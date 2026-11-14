@@ -1,11 +1,11 @@
 {
-    "idSave": 1329,
-    "UnlockedLevel": 2,
-    "CompletedLevel": 1,
+    "idSave": 1378,
+    "UnlockedLevel": 3,
+    "CompletedLevel": 2,
     "MusicEnabled": 1,
     "ReachedIndex": 0,
     "EffectMusicEnabled": true,
-    "Coins": 220,
+    "Coins": 200,
     "occupiedZones": [
         {
             "zoneId": "PotZone (4)",
@@ -75,18 +75,6 @@
                 "flowerId": "70050dc5-dbea-44fc-af2a-81d856783ee8"
             },
             {
-                "potId": "95b747ee-00aa-4478-b86d-b903db0b2127",
-                "spriteName": "Pot_Base_Green_T",
-                "zoneId": "PotZone (7)",
-                "position": {
-                    "x": -1.6347016096115112,
-                    "y": -7.813794136047363,
-                    "z": 0.7400000095367432
-                },
-                "isOccupied": true,
-                "flowerId": "b757a926-c7b2-468f-bf8d-6cadb224e328"
-            },
-            {
                 "potId": "1ac09c20-166f-42e9-89f9-f71b7350c674",
                 "spriteName": "Pot_Base_Blue_T",
                 "zoneId": "PotZone (8)",
@@ -97,6 +85,18 @@
                 },
                 "isOccupied": true,
                 "flowerId": "32da0496-882a-4a88-92cf-5776026585bc"
+            },
+            {
+                "potId": "95b747ee-00aa-4478-b86d-b903db0b2127",
+                "spriteName": "Pot_Base_Green_T",
+                "zoneId": "PotZone (7)",
+                "position": {
+                    "x": -1.6347016096115112,
+                    "y": -7.813794136047363,
+                    "z": 0.7400000095367432
+                },
+                "isOccupied": false,
+                "flowerId": ""
             }
         ],
         "flowers": [
@@ -158,25 +158,6 @@
                 "hasGivenSun": true
             },
             {
-                "flowerId": "b757a926-c7b2-468f-bf8d-6cadb224e328",
-                "prefabName": "Flower",
-                "spriteName": "flower_6",
-                "position": {
-                    "x": -1.709701657295227,
-                    "y": -7.338794231414795,
-                    "z": 0.320000022649765
-                },
-                "currentStageIndex": 1,
-                "timeSinceLastWatering": 5.001476287841797,
-                "timeSinceLastSunGeneration": 0.0,
-                "needWater": false,
-                "needFertilize": false,
-                "isFullyGrown": true,
-                "careEventCount": 0,
-                "growthConditionsName": "test2",
-                "hasGivenSun": true
-            },
-            {
                 "flowerId": "32da0496-882a-4a88-92cf-5776026585bc",
                 "prefabName": "Flower",
                 "spriteName": "flower_6",
@@ -196,12 +177,12 @@
                 "hasGivenSun": true
             }
         ],
-        "currency": 220
+        "currency": 200
     },
     "inventory": [
         {
             "seedId": "Ромашка",
-            "quantity": 1
+            "quantity": 7
         }
     ]
 }
