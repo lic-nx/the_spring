@@ -287,6 +287,7 @@ public class GameSaveManager : MonoBehaviour
             needWater = flower.NeedWater,
             needFertilize = flower.NeedFertilize,
             isFullyGrown = flower.IsFullyGrown,
+            maturityPresentationDismissed = flower.MaturityPresentationDismissed,
             careEventCount = flower.CareEventCount,
             growthConditionsName = flower.GrowthConditionsName,
             hasGivenSun = flower.HasGivenSun
