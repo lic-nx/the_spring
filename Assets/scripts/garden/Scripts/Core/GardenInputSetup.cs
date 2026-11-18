@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 /// them on the "plant" layer) but prevents them from intercepting pointer events.
 /// Without this, a flower growing in a foreground pot steals the click from a pot
 /// that stands behind it, so that pot cannot be dragged or dropped into its zone.
+/// Also ensures a Physics2DRaycaster exists for garden world-object pointer clicks.
 /// </summary>
 public static class GardenInputSetup
 {
@@ -17,6 +18,8 @@ public static class GardenInputSetup
 
     public static void EnsureConfigured()
     {
+        EnsurePhysics2DRaycaster();
+
         int plantLayer = LayerMask.NameToLayer("plant");
         if (plantLayer < 0)
         {
@@ -35,6 +38,21 @@ public static class GardenInputSetup
 
             raycaster.eventMask = mask & ~plantBit;
             Debug.Log($"[GardenInputSetup] Excluded 'plant' layer from raycaster on '{raycaster.gameObject.name}'.");
+        }
+    }
+
+    private static void EnsurePhysics2DRaycaster()
+    {
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            return;
+        }
+
+        if (mainCamera.GetComponent<Physics2DRaycaster>() == null)
+        {
+            mainCamera.gameObject.AddComponent<Physics2DRaycaster>();
+            Debug.Log($"[GardenInputSetup] Added Physics2DRaycaster to '{mainCamera.gameObject.name}'.");
         }
     }
 }

@@ -19,6 +19,7 @@ public class Trigger_checker : MonoBehaviour
     private bool hasOriginalColor;
     private Color lastDebugColor;
     private bool hasDebugColor;
+    private bool sunInteractionStarted;
 
     private void Awake()
     {
@@ -97,6 +98,10 @@ public class Trigger_checker : MonoBehaviour
     {
         if (other.CompareTag("sun"))
         {
+            if (sunInteractionStarted || player_move._instance == null || !player_move._instance.enabled)
+                return;
+
+            sunInteractionStarted = true;
             Debug.Log("is sun");
             Debug.Log("Object name: " + other.name);
             Debug.Log("find sun = " + other.transform.position);
@@ -111,9 +116,18 @@ public class Trigger_checker : MonoBehaviour
 
     private IEnumerator HandleSunInteraction(Transform sunTransform)
     {
-        yield return flower._instance.rotate_flower_to_sun(sunTransform.position);
+        if (player_move._instance == null || !player_move._instance.enabled)
+            yield break;
 
-        player_move._instance.is_sun();
+        if (flower._instance != null && sunTransform != null)
+        {
+            yield return flower._instance.rotate_flower_to_sun(sunTransform.position);
+        }
+
+        if (player_move._instance != null && player_move._instance.enabled)
+        {
+            player_move._instance.is_sun();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -132,6 +146,7 @@ public class Trigger_checker : MonoBehaviour
     {
         occupants.Clear();
         SyncLegacyState();
+        sunInteractionStarted = false;
     }
 
     private bool ShouldIgnore(Collider2D other)
