@@ -33,6 +33,7 @@ namespace YG
         public bool needWater;
         public bool needFertilize;
         public bool isFullyGrown;
+        public bool maturityPresentationDismissed;
         public int careEventCount;
         public string growthConditionsName;
         public bool hasGivenSun;

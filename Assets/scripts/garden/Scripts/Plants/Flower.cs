@@ -23,6 +23,7 @@ public class Flower : MonoBehaviour, IPointerClickHandler
     private bool _needWater;
     private bool _needFertilize;
     private bool _isFullyGrown;
+    private bool _maturityPresentationDismissed;
     private int _careEventCount;
     private int _currentStageIndex;
     private bool _hasGivenSun;
@@ -54,6 +55,7 @@ public class Flower : MonoBehaviour, IPointerClickHandler
         _currentStageIndex = 0;
         _careEventCount = 0;
         _isFullyGrown = _conditions.StageSprites == null || _conditions.StageSprites.Length <= 1;
+        _maturityPresentationDismissed = false;
         _timeSinceLastWatering = 0f;
         _timeSinceLastSunGeneration = 0f;
         _hasGivenSun = false;
@@ -133,6 +135,7 @@ public class Flower : MonoBehaviour, IPointerClickHandler
         if (Conditions.StageSprites == null || Conditions.StageSprites.Length == 0)
         {
             _isFullyGrown = true;
+            UpdateMaturityPresentation();
             return;
         }
 
@@ -221,11 +224,11 @@ public class Flower : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left || !_isFullyGrown) return;
+        if (eventData.button != PointerEventData.InputButton.Left || !_isFullyGrown || _maturityPresentationDismissed) return;
 
-        // Acknowledging a grown flower dismisses only the rotating highlight.
-        if (_maturityHighlight != null)
-            _maturityHighlight.SetActive(false);
+        _maturityPresentationDismissed = true;
+        UpdateMaturityPresentation();
+        SaveState();
     }
 
     private void ApplySunSprite()
@@ -321,8 +324,9 @@ public class Flower : MonoBehaviour, IPointerClickHandler
 
     private void UpdateMaturityPresentation()
     {
-        if (_maturityHighlight != null) _maturityHighlight.SetActive(_isFullyGrown);
-        if (_flowerNamePlate != null) _flowerNamePlate.SetActive(_isFullyGrown);
+        bool show = _isFullyGrown && !_maturityPresentationDismissed;
+        if (_maturityHighlight != null) _maturityHighlight.SetActive(show);
+        if (_flowerNamePlate != null) _flowerNamePlate.SetActive(show);
     }
 
     /// <summary>
@@ -399,6 +403,7 @@ public class Flower : MonoBehaviour, IPointerClickHandler
     public bool NeedWater => _needWater;
     public bool NeedFertilize => _needFertilize;
     public bool IsFullyGrown => _isFullyGrown;
+    public bool MaturityPresentationDismissed => _maturityPresentationDismissed;
     public int CareEventCount => _careEventCount;
     public string GrowthConditionsName => _conditions != null ? _conditions.name : string.Empty;
     public bool HasGivenSun => _hasGivenSun;
@@ -431,6 +436,7 @@ public class Flower : MonoBehaviour, IPointerClickHandler
         _needWater = data.needWater;
         _needFertilize = data.needFertilize;
         _isFullyGrown = data.isFullyGrown;
+        _maturityPresentationDismissed = data.maturityPresentationDismissed;
         _careEventCount = data.careEventCount;
         _hasGivenSun = data.hasGivenSun;
 
