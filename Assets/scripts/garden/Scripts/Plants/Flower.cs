@@ -306,7 +306,7 @@ public class Flower : MonoBehaviour, IPointerClickHandler
             nameText.fontSizeMin = 2f;
             nameText.fontSizeMax = 6f;
             nameText.fontSize = 6f;
-            nameText.enableWordWrapping = false;
+            nameText.textWrappingMode = TextWrappingModes.NoWrap;
             nameText.overflowMode = TextOverflowModes.Overflow;
             nameText.color = Color.white;
             nameText.rectTransform.sizeDelta = new Vector2(3.3f, 0.8f);

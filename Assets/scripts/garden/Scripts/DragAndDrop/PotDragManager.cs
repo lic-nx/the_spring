@@ -85,6 +85,9 @@ public class PotDragManager : MonoBehaviour
         {
             Debug.LogError("[PotDragManager] Camera.main не найдена!");
         }
+
+        // Flowers must not steal pointer events from pots placed behind them.
+        GardenInputSetup.EnsureConfigured();
         
         // Создаём или находим отдельный overlay-Canvas для призраков.
         // Общий с SeedDragManager (по имени), чтобы не плодить канвасы.
@@ -115,6 +118,9 @@ public class PotDragManager : MonoBehaviour
         
         _currentPotSprite = potSprite;
         _isDragging = true;
+
+        // Dim flowers and ignore their colliders while the player aims at a zone.
+        FlowerDragPresentation.Begin();
         
         // Создаём UI-призрак как дочерний элемент overlay-Canvas
         _currentGhost = Instantiate(potGhostPrefab, _ghostCanvas.transform);
@@ -294,7 +300,12 @@ public class PotDragManager : MonoBehaviour
               Destroy(_currentGhost);
               _currentGhost = null;
           }
-          
+
+          if (_isDragging)
+          {
+              FlowerDragPresentation.End();
+          }
+
           _isDragging = false;
           _currentPotSprite = null;
           

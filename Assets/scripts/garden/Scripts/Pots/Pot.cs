@@ -59,6 +59,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
     {
         _mainCamera = Camera.main;
         _collider = GetComponent<Collider2D>();
+        GardenInputSetup.EnsureConfigured();
         
         Debug.Log($"[Pot] Initialized. Collider: {_collider != null}, Camera: {_mainCamera != null}");
         
@@ -72,6 +73,14 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
     }
 
     // Метод Start больше не нужен, удаляем его
+
+    private void OnDestroy()
+    {
+        if (_isDragging)
+        {
+            FlowerDragPresentation.End();
+        }
+    }
 
     // ===== Логика работы с зоной =====
     public void SetCurrentZone(iPotDropArea zone)
@@ -239,6 +248,9 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         {
             DropZoneManager.Instance.SetZonesVisibility(true);
         }
+
+        // Dim foreground flowers so the target zone behind them is reachable.
+        FlowerDragPresentation.Begin();
         
         Debug.Log($"[Pot] OnBeginDrag: {gameObject.name}");
     }
@@ -317,6 +329,9 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         {
             DropZoneManager.Instance.SetZonesVisibility(false);
         }
+
+        // Restore flower visuals/colliders after drag placement is resolved.
+        FlowerDragPresentation.End();
         
         // Restore action menu if it was active before dragging
         if (_wasMenuActiveBeforeDrag)
