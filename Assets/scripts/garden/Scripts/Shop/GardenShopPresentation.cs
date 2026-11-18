@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>Replaces the legacy shop widgets with the greenhouse shelf presentation.</summary>
+/// <summary>Displays the garden shop in a bounded product panel.</summary>
 public sealed class GardenShopPresentation : MonoBehaviour
 {
     private const string DecorName = "GardenShopDecor";
@@ -16,6 +17,7 @@ public sealed class GardenShopPresentation : MonoBehaviour
     private Sprite _activeTabSprite;
     private Sprite _inactiveTabSprite;
     private SeedItem _roseSeed;
+    private readonly List<GameObject> _hiddenInventoryShelves = new List<GameObject>();
 
     public static void Install(GameObject shopPanel, Shop shop)
     {
@@ -32,14 +34,41 @@ public sealed class GardenShopPresentation : MonoBehaviour
 
     private void OnEnable()
     {
+        HideInventoryShelves();
         if (_seedContent != null)
             ShowSeeds();
+    }
+
+    private void OnDisable()
+    {
+        foreach (GameObject shelf in _hiddenInventoryShelves)
+            if (shelf != null) shelf.SetActive(true);
+        _hiddenInventoryShelves.Clear();
+    }
+
+    private void HideInventoryShelves()
+    {
+        foreach (InventoryUIManager inventory in Object.FindObjectsByType<InventoryUIManager>(FindObjectsSortMode.None))
+        {
+            foreach (Transform container in inventory.shelfContainers)
+            {
+                if (container == null || container.parent == null) continue;
+                GameObject shelf = container.parent.gameObject;
+                if (!shelf.activeSelf) continue;
+                _hiddenInventoryShelves.Add(shelf);
+                shelf.SetActive(false);
+            }
+        }
     }
 
     private void Build()
     {
         RectTransform panelRect = GetComponent<RectTransform>();
-        Stretch(panelRect);
+        panelRect.anchorMin = new Vector2(0f, 1f);
+        panelRect.anchorMax = new Vector2(1f, 1f);
+        panelRect.pivot = new Vector2(0.5f, 1f);
+        panelRect.anchoredPosition = new Vector2(0f, -240f);
+        panelRect.sizeDelta = new Vector2(-128f, 600f);
         panelRect.localScale = Vector3.one;
 
         Image backdrop = GetComponent<Image>();
@@ -65,11 +94,11 @@ public sealed class GardenShopPresentation : MonoBehaviour
         _activeTabSprite = Resources.Load<Sprite>("UI/UI_Button_Green");
         _inactiveTabSprite = Resources.Load<Sprite>("UI/UI_Button_Orange");
 
-        Button seedTab = CreateTabButton(decor.transform, "SeedsTab", new Vector2(245f, -300f), Resources.Load<Sprite>("UI/UI_Flower"));
+        Button seedTab = CreateTabButton(decor.transform, "SeedsTab", new Vector2(-240f, 50f), Resources.Load<Sprite>("UI/UI_Flower"));
         _seedTabBackground = seedTab.GetComponent<Image>();
         seedTab.onClick.AddListener(ShowSeeds);
 
-        Button potTab = CreateTabButton(decor.transform, "PotsTab", new Vector2(405f, -300f), Resources.Load<Sprite>("Greenhouse/Texures/Pot_Base_Green_T"));
+        Button potTab = CreateTabButton(decor.transform, "PotsTab", new Vector2(-80f, 50f), Resources.Load<Sprite>("Greenhouse/Texures/Pot_Base_Green_T"));
         _potTabBackground = potTab.GetComponent<Image>();
         potTab.onClick.AddListener(ShowPots);
 
@@ -81,11 +110,11 @@ public sealed class GardenShopPresentation : MonoBehaviour
         BuildSeedShop(_seedContent.transform);
         BuildPotShop(_potContent.transform);
         ShowSeeds();
+        if (isActiveAndEnabled) HideInventoryShelves();
     }
 
     private void BuildSeedShop(Transform parent)
     {
-        Sprite shelfSprite = Resources.Load<Sprite>("Greenhouse/Texures/Shelf_T");
         Sprite bagSprite = Resources.Load<Sprite>("Greenhouse/Texures/SeedsBag_T");
         Sprite roseSticker = Resources.Load<Sprite>("Greenhouse/Texures/FlowerSeed_Rose");
 
@@ -93,14 +122,11 @@ public sealed class GardenShopPresentation : MonoBehaviour
             ? _shop.availableSeedsForSale[0]
             : null;
 
-        CreateImage(parent, "ShelfRack", shelfSprite, new Vector2(0f, -940f), new Vector2(1000f, 394f));
-
-        const float firstShelfY = -770f;
-        const float secondShelfY = -1045f;
+        const float rowSpacing = 270f;
         float[] columns = { -280f, 0f, 280f };
         for (int row = 0; row < 2; row++)
         {
-            float shelfY = row == 0 ? firstShelfY : secondShelfY;
+            float rowY = -145f - row * rowSpacing;
             for (int column = 0; column < columns.Length; column++)
             {
                 int slotIndex = row * columns.Length + column;
@@ -108,8 +134,8 @@ public sealed class GardenShopPresentation : MonoBehaviour
                 CreateSeedSlot(
                     parent,
                     $"SeedSlot_{slotIndex}",
-                    new Vector2(columns[column], shelfY + 140f),
-                    new Vector2(columns[column], shelfY - 40f),
+                    new Vector2(columns[column], rowY),
+                    new Vector2(columns[column], rowY - 110f),
                     bagSprite,
                     isRoseSlot ? roseSticker : null,
                     isRoseSlot);
@@ -141,13 +167,9 @@ public sealed class GardenShopPresentation : MonoBehaviour
 
     private void BuildPotShop(Transform parent)
     {
-        Sprite shelfSprite = Resources.Load<Sprite>("Greenhouse/Texures/Shelf_T");
-        CreateImage(parent, "ShelfRack", shelfSprite, new Vector2(0f, -940f), new Vector2(1000f, 394f));
-
         if (_shop == null || _shop.PotItems == null) return;
 
-        const float firstShelfY = -770f;
-        const float secondShelfY = -1045f;
+        const float rowSpacing = 270f;
         float[] columns = { -280f, 0f, 280f };
         int visibleCount = Mathf.Min(_shop.PotItems.Count, 6);
         for (int index = 0; index < visibleCount; index++)
@@ -157,8 +179,8 @@ public sealed class GardenShopPresentation : MonoBehaviour
 
             int row = index / columns.Length;
             int column = index % columns.Length;
-            float shelfY = row == 0 ? firstShelfY : secondShelfY;
-            Image potImage = CreateImage(parent, $"PotSlot_{index}", potSprite, new Vector2(columns[column], shelfY + 105f), new Vector2(230f, 230f));
+            float rowY = -145f - row * rowSpacing;
+            Image potImage = CreateImage(parent, $"PotSlot_{index}", potSprite, new Vector2(columns[column], rowY), new Vector2(230f, 230f));
             potImage.raycastTarget = true;
             Button button = potImage.gameObject.AddComponent<Button>();
             button.targetGraphic = potImage;
@@ -223,6 +245,7 @@ public sealed class GardenShopPresentation : MonoBehaviour
     private Button CreateTabButton(Transform parent, string name, Vector2 position, Sprite iconSprite)
     {
         Image background = CreateImage(parent, name, _inactiveTabSprite, position, new Vector2(140f, 100f));
+        background.rectTransform.anchorMin = background.rectTransform.anchorMax = new Vector2(1f, 1f);
         background.raycastTarget = true;
         Button button = background.gameObject.AddComponent<Button>();
         button.targetGraphic = background;

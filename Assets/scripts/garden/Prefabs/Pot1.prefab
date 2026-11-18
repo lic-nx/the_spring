@@ -225,6 +225,7 @@ MonoBehaviour:
   flowerAttachment: {fileID: 7993713528907741771}
   zoneAttachmentPoint: {fileID: 5408459892329044821}
   highlightIndicator: {fileID: 7519338984924372449}
+  dropCheckRadius: 1.25
   actionMenu: {fileID: 0}
 --- !u!50 &8745614651672568966
 Rigidbody2D:

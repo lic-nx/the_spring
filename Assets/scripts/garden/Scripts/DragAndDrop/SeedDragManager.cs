@@ -60,6 +60,10 @@ public class SeedDragManager : MonoBehaviour
         // Создаём UI-призрак как последний дочерний элемент Canvas (поверх всего UI)
         _currentGhost = Instantiate(seedGhostPrefab, _canvas.transform);
         _currentGhost.transform.SetAsLastSibling();
+        CanvasGroup ghostGroup = _currentGhost.GetComponent<CanvasGroup>();
+        if (ghostGroup == null) ghostGroup = _currentGhost.AddComponent<CanvasGroup>();
+        ghostGroup.blocksRaycasts = false;
+        ghostGroup.interactable = false;
         
         SeedGhostUI ghostUI = _currentGhost.GetComponent<SeedGhostUI>();
         if (ghostUI != null)
@@ -111,22 +115,26 @@ public class SeedDragManager : MonoBehaviour
     {
         if (_currentGhost == null) return;
     
-        // Конвертируем экранные координаты в мировые для проверки коллайдеров
-        Vector3 screenPos = eventData.position;
-        screenPos.z = Mathf.Abs(_mainCamera.transform.position.z);
-        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(screenPos);
-        worldPos.z = 0f;
-        
-        // OverlapPointAll надёжнее нулевого Raycast: в точке могут одновременно
-        // находиться коллайдеры зоны, цветка и самого горшка.
         Pot targetPot = null;
-        Collider2D[] hitColliders = Physics2D.OverlapPointAll(worldPos);
-        foreach (Collider2D hitCollider in hitColliders)
+        if (_mainCamera != null)
         {
-            targetPot = hitCollider.GetComponentInParent<Pot>();
-            if (targetPot != null)
+            Physics2D.SyncTransforms();
+            Ray pointerRay = _mainCamera.ScreenPointToRay(eventData.position);
+            RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(pointerRay, Mathf.Infinity);
+            foreach (RaycastHit2D hit in hits)
+            {
+                // A flower is parented to its pot, but its leaves, glow and suns
+                // must not turn the whole plant into a seed drop target.
+                if (hit.collider.GetComponentInParent<Flower>() != null) continue;
+
+                Pot candidate = hit.collider.GetComponentInParent<Pot>();
+                if (candidate == null || candidate.CurrentFlower != null) continue;
+
+                targetPot = candidate;
                 break;
+            }
         }
+
 
         if (targetPot != null)
         {

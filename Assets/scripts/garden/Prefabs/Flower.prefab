@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8527338425644544300}
   - component: {fileID: 5946690511005789470}
   - component: {fileID: 9154321987654321001}
+  - component: {fileID: 9154321987654321002}
   m_Layer: 0
   m_Name: Square
   m_TagString: Untagged
@@ -199,7 +200,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 4.3, y: 3.74}
+  m_Size: {x: 1.5, y: 1.5}
   m_EdgeRadius: 0
 
 --- !u!114 &9154321987654321001
@@ -214,6 +215,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99eddef9f4ae61640bad40881439ab38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SunCollector
+  spawnRadius: 4
+  minimumSpawnRadius: 2
+
+--- !u!114 &9154321987654321002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941828806543945569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027392dbd0380c2419b647c32b3ee420, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  rotationSpeed: 15
 
 --- !u!1 &3568869196729007490
 GameObject:

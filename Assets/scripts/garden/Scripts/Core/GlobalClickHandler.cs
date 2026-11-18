@@ -1,55 +1,51 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 public class GlobalClickHandler : MonoBehaviour
 {
-    private Camera _mainCamera;
-
-    private void Awake()
-    {
-        _mainCamera = Camera.main;
-    }
+    private readonly List<RaycastResult> _hits = new List<RaycastResult>();
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+#if ENABLE_INPUT_SYSTEM
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
         {
-            bool isOverUI = EventSystem.current.IsPointerOverGameObject();
-            bool isOverPotMenu = IsPointerOverPotActionMenu();
-            bool isOverPot = IsPointerOverPot();
-
-            // Если клик НЕ по меню горшка и НЕ по горшку — скрываем меню
-            if (!isOverPotMenu && !isOverPot)
-            {
-                PotActionMenuPool.Instance?.ReturnAllMenus();
-            }
+            HandlePointerDown(Touchscreen.current.primaryTouch.position.ReadValue());
+            return;
         }
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            HandlePointerDown(Mouse.current.position.ReadValue());
+#else
+        if (InputHelper.GetPointerDown())
+            HandlePointerDown(InputHelper.GetScreenPosition());
+#endif
     }
 
-    private bool IsPointerOverPotActionMenu()
+    public void HandlePointerDown(Vector2 screenPosition)
     {
-        if (PotActionMenuPool.Instance == null)
-            return false;
+        PotActionMenuPool pool = PotActionMenuPool.Instance;
+        if (pool == null) return;
 
-        return PotActionMenuPool.Instance.IsPointerOverAnyMenu(Input.mousePosition);
-    }
-
-    private bool IsPointerOverPot()
-    {
-        if (_mainCamera == null)
-            _mainCamera = Camera.main;
-
-        Vector2 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-
-        if (hit.collider != null)
+        _hits.Clear();
+        if (EventSystem.current != null)
         {
-            Pot pot = hit.collider.GetComponent<Pot>();
-            if (pot != null)
-            {
-                return true;
-            }
+            var pointer = new PointerEventData(EventSystem.current) { position = screenPosition };
+            EventSystem.current.RaycastAll(pointer, _hits);
         }
-        return false;
+
+        if (_hits.Count > 0)
+        {
+            GameObject hit = _hits[0].gameObject;
+            if (hit.GetComponentInParent<PotActionMenu>() != null) return;
+            // A pot handles its own click: toggle this menu or open another one.
+            if (hit.GetComponentInParent<Flower>() == null && hit.GetComponentInParent<Pot>() != null)
+                return;
+        }
+
+        pool.ReturnAllMenus();
     }
 }

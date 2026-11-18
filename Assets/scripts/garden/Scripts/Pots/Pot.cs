@@ -1,11 +1,17 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using YG;
 
 public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private Transform flowerAttachment;
     [SerializeField] private Transform zoneAttachmentPoint;
+
+    [Header("Размещение горшка")]
+    [Tooltip("Радиус поиска зоны вокруг центра горшка в мировых единицах.")]
+    [SerializeField, Min(0f)] private float dropCheckRadius = 1.25f;
+
     private Flower currentFlower;
     public Flower CurrentFlower => currentFlower;
     private iPotDropArea currentZone;
@@ -51,6 +57,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
     private Collider2D _collider;
     private bool _isDragging = false;
     private Vector3 _dragOffset;
+    private SortingGroup _depthSortingGroup;
     private int _baseSortingOrder;
     private int _originalSortingOrder;
     private bool _wasMenuActiveBeforeDrag = false;
@@ -69,10 +76,33 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
             _originalColor = _mySpriteRenderer.color;
             _baseSortingOrder = _mySpriteRenderer.sortingOrder;
             _originalSortingOrder = _mySpriteRenderer.sortingOrder;
+            _depthSortingGroup = GetComponent<SortingGroup>();
+            if (_depthSortingGroup == null) _depthSortingGroup = gameObject.AddComponent<SortingGroup>();
+            _depthSortingGroup.sortingLayerID = _mySpriteRenderer.sortingLayerID;
+            RefreshDepthSorting();
         }
     }
 
-    // Метод Start больше не нужен, удаляем его
+    private void LateUpdate()
+    {
+        RefreshDepthSorting();
+    }
+
+    private void RefreshDepthSorting()
+    {
+        if (_depthSortingGroup == null) return;
+        if (_isDragging)
+        {
+            _depthSortingGroup.sortingOrder = 32000;
+            return;
+        }
+
+        float baseY = zoneAttachmentPoint != null
+            ? zoneAttachmentPoint.position.y
+            : _mySpriteRenderer.bounds.min.y;
+        // Keep normal plants below the tools' drag order (100).
+        _depthSortingGroup.sortingOrder = Mathf.Clamp(50 - Mathf.RoundToInt(baseY * 3f), 1, 90);
+    }
 
     private void OnDestroy()
     {
@@ -144,11 +174,9 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         SpriteRenderer flowerRenderer = flower.GetComponent<SpriteRenderer>();
         if (_mySpriteRenderer == null || flowerRenderer == null) return;
 
-        // Keep the flower on its original visible order (the greenhouse background
-        // hides sprites at negative orders) and raise only the pot above it.
-        flowerRenderer.sortingLayerID = _mySpriteRenderer.sortingLayerID;
-        flowerRenderer.sortingOrder = _baseSortingOrder;
-        _mySpriteRenderer.sortingOrder = _baseSortingOrder + 1;
+        // Keep the glow above the background, followed by the flower and the pot.
+        flower.SetSortingLayerAndOrder(_mySpriteRenderer.sortingLayerID, _baseSortingOrder);
+        _mySpriteRenderer.sortingOrder = _baseSortingOrder + 3;
         _originalSortingOrder = _mySpriteRenderer.sortingOrder;
     }
 
@@ -240,7 +268,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         // Bring to front
         if (_mySpriteRenderer != null)
         {
-            _mySpriteRenderer.sortingOrder = 100;
+            RefreshDepthSorting();
         }
         
         // Show drop zones
@@ -271,6 +299,7 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
     {
         if (!_isDragging) return;
         
+        OnDrag(eventData);
         _isDragging = false;
         
         // Re-enable collider
@@ -285,9 +314,17 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
             _mySpriteRenderer.sortingOrder = _originalSortingOrder;
         }
         
-        // Check if dropped in a valid zone
-        Vector3 worldPoint = ScreenToWorld(eventData.position);
-        Collider2D[] hits = Physics2D.OverlapPointAll(worldPoint);
+        // Search nearby zones from the visible pot centre, nearest first.
+        Vector3 potCenter = _mySpriteRenderer != null && _mySpriteRenderer.sprite != null
+            ? _mySpriteRenderer.bounds.center
+            : transform.position;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(potCenter, Mathf.Max(0f, dropCheckRadius));
+        System.Array.Sort(hits, (left, right) =>
+        {
+            float leftDistance = ((Vector2)potCenter - left.ClosestPoint(potCenter)).sqrMagnitude;
+            float rightDistance = ((Vector2)potCenter - right.ClosestPoint(potCenter)).sqrMagnitude;
+            return leftDistance.CompareTo(rightDistance);
+        });
         
         bool placed = false;
         iPotDropArea originalZone = currentZone;
@@ -422,6 +459,11 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
 
             SaveState();
         }
+    }
+
+    internal void OnActionMenuClosed(PotActionMenu menu)
+    {
+        if (currentActionMenu == menu) currentActionMenu = null;
     }
 
     public void HideActionMenu()

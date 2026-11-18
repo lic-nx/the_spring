@@ -209,16 +209,16 @@ public static class GardenNavigation
         panelObject.transform.SetParent(canvasTransform, false);
         RectTransform panelRect = panelObject.GetComponent<RectTransform>();
         SetCorner(panelRect, TextAnchor.UpperRight, new Vector2(-34f, -34f));
-        panelRect.sizeDelta = new Vector2(380f, 126f);
+        panelRect.sizeDelta = new Vector2(380f, 140f);
 
         Image panelImage = panelObject.GetComponent<Image>();
         panelImage.sprite = Resources.Load<Sprite>("UI/UI_Rectangle");
         panelImage.color = Color.white;
-        panelImage.preserveAspect = true;
+        panelImage.preserveAspect = false;
         panelImage.raycastTarget = false;
 
-        CreatePanelIcon(panelObject.transform, "Plus", Resources.Load<Sprite>("UI/UI_Plus_Colored"), new Vector2(-157f, 0f), new Vector2(54f, 54f));
-        CreatePanelIcon(panelObject.transform, "Sun", Resources.Load<Sprite>("Greenhouse/Texures/Sun_Coin"), new Vector2(150f, 0f), new Vector2(92f, 92f));
+        CreatePanelIcon(panelObject.transform, "Plus", Resources.Load<Sprite>("UI/UI_Plus_Colored"), new Vector2(-190f, 0f), new Vector2(50f, 50f));
+        CreatePanelIcon(panelObject.transform, "Sun", Resources.Load<Sprite>("Greenhouse/Texures/Sun_Coin"), new Vector2(104f, 0f), new Vector2(140f, 140f));
 
         if (existingAmount == null)
         {
@@ -239,11 +239,15 @@ public static class GardenNavigation
 
         RectTransform textRect = existingAmount.rectTransform;
         textRect.anchorMin = textRect.anchorMax = textRect.pivot = new Vector2(0.5f, 0.5f);
-        textRect.anchoredPosition = new Vector2(4f, 0f);
-        textRect.sizeDelta = new Vector2(210f, 88f);
+        textRect.anchoredPosition = new Vector2(-48f, 0f);
+        textRect.sizeDelta = new Vector2(210f, 100f);
         textRect.localScale = Vector3.one;
         existingAmount.alignment = TextAlignmentOptions.Center;
-        existingAmount.fontSize = 54f;
+        existingAmount.enableAutoSizing = true;
+        existingAmount.fontSizeMin = 32f;
+        existingAmount.fontSizeMax = 66f;
+        existingAmount.fontSize = 66f;
+        existingAmount.textWrappingMode = TextWrappingModes.NoWrap;
         existingAmount.fontStyle = FontStyles.Bold;
         existingAmount.color = Color.white;
         existingAmount.raycastTarget = false;

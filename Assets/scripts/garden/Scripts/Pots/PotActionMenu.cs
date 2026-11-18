@@ -22,6 +22,7 @@ public class PotActionMenu : MonoBehaviour
     {
         ApplyActionIcon(deleteButton, "Greenhouse/Texures/Cross_T");
         ApplyActionIcon(replaceSpriteButton, "Greenhouse/Texures/Pencil_T");
+        BringToFront();
 
         if (deleteButton != null)
         {
@@ -133,8 +134,15 @@ public class PotActionMenu : MonoBehaviour
         targetPot = pot;
     }
 
+    private void BringToFront()
+    {
+        foreach (SpriteRenderer renderer in GetComponentsInChildren<SpriteRenderer>(true))
+            renderer.sortingLayerName = "Level UI";
+    }
+
     public void ResetTargetPot()
     {
+        if (targetPot != null) targetPot.OnActionMenuClosed(this);
         targetPot = null;
         HideSpriteReplacePanel();
     }
@@ -194,6 +202,7 @@ public class PotActionMenu : MonoBehaviour
             return;
         }
 
+        BringToFront();
         spriteReplacePanel.SetActive(true);
         isSpritePanelVisible = true;
     }

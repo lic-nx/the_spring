@@ -41,6 +41,9 @@ public class Flower : MonoBehaviour, IPointerClickHandler
 
         EnsureMaturityPresentation();
         ApplySunSprite();
+        SpriteRenderer flowerRenderer = GetComponent<SpriteRenderer>();
+        if (flowerRenderer != null)
+            SetSortingLayerAndOrder(flowerRenderer.sortingLayerID, flowerRenderer.sortingOrder);
     }
 
     public void Initialize(GrowthConditions conditions)
@@ -95,7 +98,7 @@ public class Flower : MonoBehaviour, IPointerClickHandler
         }
 
         // 2. Генерация солнца (таймер не тикает, пока у цветка есть нерешённая потребность)
-        if (_isFullyGrown && !_needWater && !_needFertilize)
+        if (_isFullyGrown && !_needWater && !_needFertilize && !_hasGivenSun)
         {
             _timeSinceLastSunGeneration += Time.deltaTime;
             if (_timeSinceLastSunGeneration >= Conditions.SunGenerationInterval)
@@ -214,6 +217,8 @@ public class Flower : MonoBehaviour, IPointerClickHandler
 
     private void SpawnSunIcon()
     {
+        if (_hasGivenSun) return;
+
         if (sunIconObj != null)
         {
             sunIconObj.SetActive(true);
@@ -272,9 +277,16 @@ public class Flower : MonoBehaviour, IPointerClickHandler
         SpriteRenderer highlightRenderer = _maturityHighlight.GetComponent<SpriteRenderer>();
         highlightRenderer.sprite = Resources.Load<Sprite>("Greenhouse/Texures/HighLight");
         highlightRenderer.sortingLayerID = sortingLayerId;
-        // The greenhouse background covers negative sorting orders. The highlight
-        // can share the flower's base order while the pot is rendered above both.
         highlightRenderer.sortingOrder = sortingOrder;
+
+        // The plant layer is excluded from pointer raycasts to keep pots draggable.
+        // The bloom remains clickable only while its maturity announcement is visible.
+        _maturityHighlight.layer = LayerMask.NameToLayer("Default");
+        CircleCollider2D bloomCollider = _maturityHighlight.GetComponent<CircleCollider2D>();
+        if (bloomCollider == null)
+            bloomCollider = _maturityHighlight.AddComponent<CircleCollider2D>();
+        bloomCollider.radius = 1.1f;
+        bloomCollider.isTrigger = true;
 
         Transform existingPlate = transform.Find("FlowerNamePlate");
         if (existingPlate == null)
@@ -296,6 +308,15 @@ public class Flower : MonoBehaviour, IPointerClickHandler
         plateRenderer.sprite = Resources.Load<Sprite>("Greenhouse/Texures/HeadLine_Green");
         plateRenderer.sortingLayerID = sortingLayerId;
         plateRenderer.sortingOrder = sortingOrder + 2;
+        BoxCollider2D plateCollider = _flowerNamePlate.GetComponent<BoxCollider2D>();
+        if (plateCollider == null)
+            plateCollider = _flowerNamePlate.AddComponent<BoxCollider2D>();
+        plateCollider.isTrigger = true;
+        if (plateRenderer.sprite != null)
+        {
+            plateCollider.size = plateRenderer.sprite.bounds.size;
+            plateCollider.offset = plateRenderer.sprite.bounds.center;
+        }
 
         TextMeshPro nameText = _flowerNamePlate.GetComponentInChildren<TextMeshPro>(true);
         if (nameText != null)
@@ -320,6 +341,41 @@ public class Flower : MonoBehaviour, IPointerClickHandler
 
         _maturityHighlight.SetActive(false);
         _flowerNamePlate.SetActive(false);
+    }
+
+    public void SetSortingLayerAndOrder(int sortingLayerId, int baseOrder)
+    {
+        SpriteRenderer flowerRenderer = GetComponent<SpriteRenderer>();
+        if (flowerRenderer != null)
+        {
+            flowerRenderer.sortingLayerID = sortingLayerId;
+            flowerRenderer.sortingOrder = baseOrder + 2;
+        }
+
+        SpriteRenderer highlightRenderer = _maturityHighlight.GetComponent<SpriteRenderer>();
+        highlightRenderer.sortingLayerID = sortingLayerId;
+        highlightRenderer.sortingOrder = baseOrder + 1;
+
+        SpriteRenderer plateRenderer = _flowerNamePlate.GetComponent<SpriteRenderer>();
+        plateRenderer.sortingLayerID = sortingLayerId;
+        plateRenderer.sortingOrder = baseOrder + 4;
+
+        TextMeshPro nameText = _flowerNamePlate.GetComponentInChildren<TextMeshPro>(true);
+        if (nameText != null)
+        {
+            nameText.sortingLayerID = sortingLayerId;
+            nameText.sortingOrder = baseOrder + 5;
+        }
+
+        if (sunIconObj != null)
+        {
+            SpriteRenderer sunRenderer = sunIconObj.GetComponent<SpriteRenderer>();
+            if (sunRenderer != null)
+            {
+                sunRenderer.sortingLayerID = sortingLayerId;
+                sunRenderer.sortingOrder = baseOrder + 6;
+            }
+        }
     }
 
     private void UpdateMaturityPresentation()

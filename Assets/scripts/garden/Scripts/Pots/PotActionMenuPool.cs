@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class PotActionMenuPool : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class PotActionMenuPool : MonoBehaviour
         Instance = this;
 
         InitializePool();
+        if (Object.FindAnyObjectByType<GlobalClickHandler>() == null)
+            gameObject.AddComponent<GlobalClickHandler>();
     }
 
     private void InitializePool()
@@ -84,20 +87,19 @@ public class PotActionMenuPool : MonoBehaviour
 
     public bool IsPointerOverAnyMenu(Vector2 screenPosition)
     {
-        foreach (var menu in allMenus)
+        if (EventSystem.current == null) return false;
+
+        PointerEventData pointer = new PointerEventData(EventSystem.current)
         {
-            if (menu.gameObject.activeSelf)
-            {
-                RectTransform rectTransform = menu.GetComponent<RectTransform>();
-                if (rectTransform != null &&
-                    RectTransformUtility.RectangleContainsScreenPoint(
-                        rectTransform,
-                        screenPosition,
-                        null))
-                {
-                    return true;
-                }
-            }
+            position = screenPosition
+        };
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, results);
+        foreach (RaycastResult result in results)
+        {
+            PotActionMenu menu = result.gameObject.GetComponentInParent<PotActionMenu>();
+            if (menu != null && allMenus.Contains(menu) && menu.gameObject.activeInHierarchy)
+                return true;
         }
         return false;
     }
