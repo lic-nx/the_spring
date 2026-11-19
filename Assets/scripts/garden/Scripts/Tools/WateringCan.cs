@@ -10,6 +10,8 @@ using UnityEngine;
 /// ТРЕБОВАНИЯ К ОБЪЕКТУ:
 /// 1. Collider2D (НЕ триггер!) — для работы EventSystem
 /// 2. Слой "plant" должен быть назначен коллайдерам цветов
+/// 3. dragSortingOrder должен быть больше 90 (например 100), так как горшки
+///    используют SortingGroup с порядком до 90 — иначе лейка окажется за растениями
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class WateringCan : WorldDraggable

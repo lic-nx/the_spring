@@ -84,7 +84,7 @@ public class WorldDraggable : MonoBehaviour,
         transform.position = new Vector3(
             worldPoint.x + _dragOffset.x,
             worldPoint.y + _dragOffset.y,
-            0f
+            1f
         );
 
         OnDragging();

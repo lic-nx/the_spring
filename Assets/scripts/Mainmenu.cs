@@ -28,6 +28,12 @@ public class Mainmenu : Button_sound_controller
         PlayMusicWithDelay(soundClip, delay, () => SceneManager.LoadScene("levelSelection"));
     }
 
+    public void Garden()
+    {
+        float delay = soundClip ? soundClip.length + 0.1f : 0.1f;
+        PlayMusicWithDelay(soundClip, delay, () => SceneManager.LoadScene("Garden"));
+    }
+
     public void ExitGame()
     {
         float delay = soundClip ? soundClip.length + 0.1f : 0.1f;

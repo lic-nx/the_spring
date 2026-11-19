@@ -27,50 +27,50 @@ public static class GardenNavigation
             GardenShopPresentation.Install(panelController.ShopPanel, shop);
 
         DisableLegacyShopButtons(canvas);
-        Button shopButton = GetOrCreateButton(canvas.transform, "GardenShopButton");
-        shopButton.onClick.RemoveAllListeners();
-        if (panelController != null)
-            shopButton.onClick.AddListener(panelController.ShowHidePanel);
+        // Button shopButton = GetOrCreateButton(canvas.transform, "GardenShopButton");
+        // shopButton.onClick.RemoveAllListeners();
+        // if (panelController != null)
+        //     shopButton.onClick.AddListener(panelController.ShowHidePanel);
 
-        shopButton.gameObject.SetActive(true);
-        DisableDuplicateGeneratedButtons(canvas, shopButton, "GardenShopButton");
-        StyleIconButton(
-            shopButton,
-            new Vector2(34f, -34f),
-            Resources.Load<Sprite>("UI/UI_Button_Green"),
-            Resources.Load<Sprite>("UI/UI_ShoppingCart"),
-            new Vector2(118f, 118f),
-            new Vector2(92f, 92f),
-            TextAnchor.UpperLeft);
+        // shopButton.gameObject.SetActive(true);
+        // DisableDuplicateGeneratedButtons(canvas, shopButton, "GardenShopButton");
+        // StyleIconButton(
+        //     shopButton,
+        //     new Vector2(34f, -34f),
+        //     Resources.Load<Sprite>("UI/UI_Button_Green"),
+        //     Resources.Load<Sprite>("UI/UI_ShoppingCart"),
+        //     new Vector2(118f, 118f),
+        //     new Vector2(92f, 92f),
+        //     TextAnchor.UpperLeft);
 
-        Button flowersButton = GetOrCreateButton(canvas.transform, "GardenFlowersButton");
-        flowersButton.onClick.RemoveAllListeners();
-        StyleIconButton(
-            flowersButton,
-            new Vector2(166f, -34f),
-            Resources.Load<Sprite>("UI/UI_Button_Orange"),
-            Resources.Load<Sprite>("UI/UI_Flower"),
-            new Vector2(118f, 118f),
-            new Vector2(88f, 88f),
-            TextAnchor.UpperLeft);
-        flowersButton.transition = Selectable.Transition.None;
-        flowersButton.interactable = false;
-        flowersButton.image.color = Color.white;
+        // Button flowersButton = GetOrCreateButton(canvas.transform, "GardenFlowersButton");
+        // flowersButton.onClick.RemoveAllListeners();
+        // StyleIconButton(
+        //     flowersButton,
+        //     new Vector2(166f, -34f),
+        //     Resources.Load<Sprite>("UI/UI_Button_Orange"),
+        //     Resources.Load<Sprite>("UI/UI_Flower"),
+        //     new Vector2(118f, 118f),
+        //     new Vector2(88f, 88f),
+        //     TextAnchor.UpperLeft);
+        // flowersButton.transition = Selectable.Transition.None;
+        // flowersButton.interactable = false;
+        // flowersButton.image.color = Color.white;
 
-        Button homeButton = GetOrCreateButton(canvas.transform, "GardenHomeButton");
-        homeButton.onClick.RemoveAllListeners();
-        homeButton.onClick.AddListener(ReturnToMenu);
-        StyleIconButton(
-            homeButton,
-            new Vector2(-34f, 34f),
-            Resources.Load<Sprite>("UI/UI_Button_Orange"),
-            Resources.Load<Sprite>("UI/UI_Home"),
-            new Vector2(126f, 126f),
-            new Vector2(92f, 92f),
-            TextAnchor.LowerRight);
+        // Button homeButton = GetOrCreateButton(canvas.transform, "GardenHomeButton");
+        // homeButton.onClick.RemoveAllListeners();
+        // homeButton.onClick.AddListener(ReturnToMenu);
+        // StyleIconButton(
+        //     homeButton,
+        //     new Vector2(-34f, 34f),
+        //     Resources.Load<Sprite>("UI/UI_Button_Orange"),
+        //     Resources.Load<Sprite>("UI/UI_Home"),
+        //     new Vector2(126f, 126f),
+        //     new Vector2(92f, 92f),
+        //     TextAnchor.LowerRight);
 
         HideLegacyCurrencyUi(canvas);
-        ConfigureCurrencyPanel(canvas.transform);
+        // ConfigureCurrencyPanel(canvas.transform);
     }
 
     private static void DisableLegacyShopButtons(Canvas canvas)
