@@ -21,7 +21,14 @@ public class Line_rendered : MonoBehaviour
 
     private List<Vector2> controlPoints = new();
     private List<Vector2> smoothPoints = new();
-    private List<Vector2> placedLeafPositions = new();
+
+    private class PlacedLeaf
+    {
+        public Vector2 position;
+        public GameObject instance;
+    }
+
+    private readonly List<PlacedLeaf> placedLeaves = new();
 
     private bool dirtyFullRebuild = true;
 
@@ -63,6 +70,93 @@ public class Line_rendered : MonoBehaviour
             FullRebuild();
         else
             FullRebuild(); //здесь надо заменить на апдейт только хвоста, но я не понимаю, почему он косячит с этим
+    }
+
+    public void RetractHead(Vector2 headPosition)
+    {
+        if (controlPoints.Count == 0)
+        {
+            controlPoints.Add(headPosition);
+            FullRebuild();
+            return;
+        }
+
+        if (controlPoints.Count == 1)
+        {
+            controlPoints[0] = headPosition;
+            dirtyFullRebuild = true;
+            FullRebuild();
+            return;
+        }
+
+        int bestSegment = -1;
+
+        for (int i = controlPoints.Count - 1; i >= 1; i--)
+        {
+            Vector2 start = controlPoints[i - 1];
+            Vector2 end = controlPoints[i];
+            Vector2 segment = end - start;
+            float lengthSqr = segment.sqrMagnitude;
+            float t = lengthSqr > 0.000001f
+                ? Vector2.Dot(headPosition - start, segment) / lengthSqr
+                : 0f;
+
+            if (t >= 0f && t <= 1f)
+            {
+                bestSegment = i;
+                break;
+            }
+        }
+
+        if (bestSegment < 0)
+        {
+            float bestDistance = float.PositiveInfinity;
+
+            for (int i = 1; i < controlPoints.Count; i++)
+            {
+                Vector2 start = controlPoints[i - 1];
+                Vector2 end = controlPoints[i];
+                Vector2 segment = end - start;
+                float lengthSqr = segment.sqrMagnitude;
+                float t = lengthSqr > 0.000001f
+                    ? Mathf.Clamp01(Vector2.Dot(headPosition - start, segment) / lengthSqr)
+                    : 0f;
+                Vector2 closest = start + segment * t;
+                float distance = (headPosition - closest).sqrMagnitude;
+
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    bestSegment = i;
+                }
+            }
+        }
+
+        if (bestSegment <= 0)
+        {
+            controlPoints.Clear();
+            controlPoints.Add(headPosition);
+        }
+        else
+        {
+            if (controlPoints.Count > bestSegment)
+            {
+                controlPoints.RemoveRange(bestSegment, controlPoints.Count - bestSegment);
+            }
+
+            if ((controlPoints[^1] - headPosition).sqrMagnitude > 0.0001f)
+            {
+                controlPoints.Add(headPosition);
+            }
+            else
+            {
+                controlPoints[^1] = headPosition;
+            }
+        }
+
+        dirtyFullRebuild = true;
+        FullRebuild();
+        PruneLeavesBeyondHead();
     }
 
     // Фиксирует сегмент (добавляет новую точку ПЕРЕД головой)
@@ -185,9 +279,9 @@ public class Line_rendered : MonoBehaviour
                 Vector2 candidate = Vector2.Lerp(last, current, s / (float)steps);
 
                 bool canPlace = true;
-                foreach (var placed in placedLeafPositions)
+                foreach (var placed in placedLeaves)
                 {
-                    if (Vector2.Distance(candidate, placed) < minLeafDistance)
+                    if (Vector2.Distance(candidate, placed.position) < minLeafDistance)
                     {
                         canPlace = false;
                         break;
@@ -197,7 +291,6 @@ public class Line_rendered : MonoBehaviour
                 if (canPlace)
                 {
                     PlaceLeafAt(candidate);
-                    placedLeafPositions.Add(candidate);
                     return;
                 }
             }
@@ -217,7 +310,76 @@ public class Line_rendered : MonoBehaviour
         float angle = Mathf.Clamp(Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg - 90f, -60f, 60f);
         leaf.transform.rotation = Quaternion.Euler(0, 0, angle);
 
+        placedLeaves.Add(new PlacedLeaf { position = pos, instance = leaf });
+
         StartCoroutine(ScaleTo(leaf.transform, Vector3.one * 1.5f, leafGrowthDuration));
+    }
+
+    private void PruneLeavesBeyondHead()
+    {
+        if (placedLeaves.Count == 0 || smoothPoints.Count == 0)
+        {
+            RemoveAllLeaves();
+            return;
+        }
+
+        float keepThreshold = Mathf.Max(0.05f, minLeafDistance * 0.5f);
+
+        for (int i = placedLeaves.Count - 1; i >= 0; i--)
+        {
+            PlacedLeaf leaf = placedLeaves[i];
+            if (leaf == null || leaf.instance == null)
+            {
+                placedLeaves.RemoveAt(i);
+                continue;
+            }
+
+            if (DistanceToPolyline(leaf.position, smoothPoints) > keepThreshold)
+            {
+                Destroy(leaf.instance);
+                placedLeaves.RemoveAt(i);
+            }
+        }
+    }
+
+    private void RemoveAllLeaves()
+    {
+        for (int i = placedLeaves.Count - 1; i >= 0; i--)
+        {
+            if (placedLeaves[i] != null && placedLeaves[i].instance != null)
+            {
+                Destroy(placedLeaves[i].instance);
+            }
+        }
+        placedLeaves.Clear();
+    }
+
+    private static float DistanceToPolyline(Vector2 point, List<Vector2> polyline)
+    {
+        if (polyline == null || polyline.Count == 0)
+            return float.PositiveInfinity;
+
+        float best = (point - polyline[0]).sqrMagnitude;
+        for (int i = 1; i < polyline.Count; i++)
+        {
+            float dist = DistanceToSegmentSqr(point, polyline[i - 1], polyline[i]);
+            if (dist < best)
+                best = dist;
+        }
+
+        return Mathf.Sqrt(best);
+    }
+
+    private static float DistanceToSegmentSqr(Vector2 point, Vector2 a, Vector2 b)
+    {
+        Vector2 ab = b - a;
+        float lengthSqr = ab.sqrMagnitude;
+        if (lengthSqr < 0.000001f)
+            return (point - a).sqrMagnitude;
+
+        float t = Mathf.Clamp01(Vector2.Dot(point - a, ab) / lengthSqr);
+        Vector2 closest = a + ab * t;
+        return (point - closest).sqrMagnitude;
     }
 
     /* =========================
@@ -247,14 +409,22 @@ public class Line_rendered : MonoBehaviour
 
     private IEnumerator ScaleTo(Transform t, Vector3 target, float duration)
     {
+        if (t == null)
+            yield break;
+
         Vector3 start = t.localScale;
         float time = 0f;
         while (time < duration)
         {
+            if (t == null)
+                yield break;
+
             t.localScale = Vector3.Lerp(start, target, time / duration);
             time += Time.deltaTime;
             yield return null;
         }
-        t.localScale = target;
+
+        if (t != null)
+            t.localScale = target;
     }
 }

@@ -36,6 +36,7 @@ Material:
     - _Movable: 0
     m_Colors: []
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &6579706740187298995
 MonoBehaviour:
   m_ObjectHideFlags: 11

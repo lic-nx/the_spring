@@ -43,6 +43,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MovableMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Obj:
         m_Texture: {fileID: 2800000, guid: 4f470d005ecba18408163c5f9d80aef3, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -72,6 +76,10 @@ Material:
     - _BUILTIN_ZTest: 4
     - _BUILTIN_ZWrite: 1
     - _BUILTIN_ZWriteControl: 0
+    - _Crushed: 0
+    - _Movable: 0
+    - _Radius: 0
     - _Scale: 0
     m_Colors: []
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

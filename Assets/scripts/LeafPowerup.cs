@@ -37,8 +37,7 @@ public class LeafPowerup : MonoBehaviour
         }
 
         player_move player = other.GetComponentInParent<player_move>();
-        Collider2D bodyCollider = player != null ? player.GetComponent<Collider2D>() : null;
-        if (other == bodyCollider)
+        if (player != null && other == player.BodyCollider)
             AttachProtection(player);
     }
 

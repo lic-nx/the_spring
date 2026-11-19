@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,13 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -130,7 +126,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!50 &10967994
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -141,8 +137,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -197,15 +193,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 135304967080424605, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.01
+      value: 0.009357693
       objectReference: {fileID: 0}
     - target: {fileID: 135304967080424605, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.01
+      value: 0.009357693
       objectReference: {fileID: 0}
     - target: {fileID: 135304967080424605, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.01
+      value: 0.009357693
       objectReference: {fileID: 0}
     - target: {fileID: 135304967080424605, guid: 5e407ec0d357374458b446d684a59293, type: 3}
       propertyPath: m_LocalPosition.x
@@ -371,7 +367,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!50 &136421575
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -382,8 +378,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1000
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -413,7 +409,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!50 &155414464
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -424,8 +420,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -653,11 +649,11 @@ PrefabInstance:
       value: 5.2077346
       objectReference: {fileID: 0}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9edb298be29f6d8429378fb2de3ccf70, type: 2}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 44706e763d5dadb45aa84832a13dab71, type: 2}
     - target: {fileID: 7780282668928198452, guid: 18365ed471e81d14689a404e086ab724, type: 3}
@@ -1506,7 +1502,7 @@ PrefabInstance:
       value: 3.9701037
       objectReference: {fileID: 0}
     - target: {fileID: 6226062455939924213, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 44706e763d5dadb45aa84832a13dab71, type: 2}
     - target: {fileID: 7088683984169726648, guid: caa6caf9ebfa2fa4cb0172fbb559b65f, type: 3}
@@ -2083,11 +2079,11 @@ PrefabInstance:
       value: 2.6038198
       objectReference: {fileID: 0}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 959c62388e559c24eaaa581b10ce5af3, type: 2}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 44706e763d5dadb45aa84832a13dab71, type: 2}
     - target: {fileID: 7780282668928198452, guid: 18365ed471e81d14689a404e086ab724, type: 3}
@@ -2583,11 +2579,11 @@ PrefabInstance:
       value: 4.0842233
       objectReference: {fileID: 0}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9edb298be29f6d8429378fb2de3ccf70, type: 2}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 44706e763d5dadb45aa84832a13dab71, type: 2}
     - target: {fileID: 7780282668928198452, guid: 18365ed471e81d14689a404e086ab724, type: 3}
@@ -3541,11 +3537,11 @@ PrefabInstance:
       value: 4.01666
       objectReference: {fileID: 0}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9edb298be29f6d8429378fb2de3ccf70, type: 2}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 44706e763d5dadb45aa84832a13dab71, type: 2}
     - target: {fileID: 7780282668928198452, guid: 18365ed471e81d14689a404e086ab724, type: 3}
@@ -4461,11 +4457,11 @@ PrefabInstance:
       value: 4.9914513
       objectReference: {fileID: 0}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9edb298be29f6d8429378fb2de3ccf70, type: 2}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 44706e763d5dadb45aa84832a13dab71, type: 2}
     - target: {fileID: 7780282668928198452, guid: 18365ed471e81d14689a404e086ab724, type: 3}
@@ -5376,11 +5372,11 @@ PrefabInstance:
       value: 4.8113236
       objectReference: {fileID: 0}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 959c62388e559c24eaaa581b10ce5af3, type: 2}
     - target: {fileID: 6284446755480884491, guid: 18365ed471e81d14689a404e086ab724, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 44706e763d5dadb45aa84832a13dab71, type: 2}
     - target: {fileID: 7780282668928198452, guid: 18365ed471e81d14689a404e086ab724, type: 3}
@@ -6916,7 +6912,7 @@ PrefabInstance:
       value: 3.6394596
       objectReference: {fileID: 0}
     - target: {fileID: 8895600407157484084, guid: b1023a179df04ea4d9bfe06dfa0a8f21, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 37016a0a7d9b74c4f896d1575962a07e, type: 2}
     m_RemovedComponents: []
@@ -6948,6 +6944,7 @@ GameObject:
   m_IsActive: 1
 --- !u!212 &1154345397
 SpriteRenderer:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6963,6 +6960,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6984,9 +6986,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: d00154622ec330a4285a4bc21ebb38f7, type: 3}
   m_Color: {r: 0.48627448, g: 0.94509804, b: 1, a: 0.80784315}
   m_FlipX: 0
@@ -6996,8 +7000,8 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!4 &1154345398
 Transform:
   m_ObjectHideFlags: 0
@@ -7084,7 +7088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8942069764695933964, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8942069764695933964, guid: 389590de02a553a4fa9348b9fd9077e7, type: 3}
       propertyPath: m_Offset.x
@@ -7163,6 +7167,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -7416,7 +7421,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!50 &1718387243
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7427,8 +7432,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -7859,6 +7864,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1935923996
 SpriteRenderer:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7874,6 +7880,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -7895,9 +7906,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 43e7e6725c8e3f442b09d756e2165e4d, type: 3}
   m_Color: {r: 0.4811321, g: 0.44708973, b: 0.44708973, a: 1}
   m_FlipX: 1
@@ -7907,8 +7920,8 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!4 &1973330536 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3062190051990939641, guid: 18365ed471e81d14689a404e086ab724, type: 3}

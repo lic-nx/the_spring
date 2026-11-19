@@ -22,6 +22,22 @@ public class flower : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (player_move._instance != null)
+        {
+            player_move._instance.OnFlowerTriggerEnter(other);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (player_move._instance != null)
+        {
+            player_move._instance.OnFlowerTriggerExit(other);
+        }
+    }
+
 
     public void player_change_enabled()
     {

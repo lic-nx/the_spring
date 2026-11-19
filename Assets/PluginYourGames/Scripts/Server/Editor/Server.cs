@@ -32,7 +32,9 @@ namespace YG.EditorScr
                 if (PluginPrefs.GetInt(InfoYG.FIRST_STARTUP_KEY) != 0 &&
                     SessionState.GetBool(LOAD_COMPLETE_KEY, false) == false)
                 {
-                    LoadServerInfo();
+                    // Use cached metadata at startup. The version window can refresh it on demand.
+                    SessionState.SetBool(LOAD_COMPLETE_KEY, true);
+                    ServerInfo.DoActionLoadServerInfo();
                 }
             };
         }

@@ -27,13 +27,13 @@ namespace YG
         public string flowerId;
         public string prefabName;
         public string spriteName;
-        public Vector3 position;
         public int currentStageIndex;
         public float timeSinceLastWatering;
         public float timeSinceLastSunGeneration;
         public bool needWater;
         public bool needFertilize;
         public bool isFullyGrown;
+        public bool maturityPresentationDismissed;
         public int careEventCount;
         public string growthConditionsName;
         public bool hasGivenSun;
@@ -44,8 +44,7 @@ namespace YG
     {
         public List<PotSaveData> pots = new List<PotSaveData>();
         public List<FlowerSaveData> flowers = new List<FlowerSaveData>();
-        public int currency;
-        public System.DateTime lastSaveTime;
+        public long lastSaveUtcTicks;
     }
 
     [System.Serializable]
