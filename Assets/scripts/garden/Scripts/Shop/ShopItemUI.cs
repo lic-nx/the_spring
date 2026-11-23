@@ -7,10 +7,16 @@ public class ShopItemUI : MonoBehaviour
 {
     [Header("UI Элементы (назначаются в префабе)")]
     public Image iconImage;
+    public Image stickerImage;      // Наклейка с видом семени на мешке
     public TMP_Text nameText;
     public TMP_Text priceText;
     public TMP_Text quantityText;
     public Button buyButton;
+    public GameObject seedCountBadge; // Фон счётчика семян
+
+    // Имена используются только как запасной вариант для префабов, где поля выше не назначены
+    private const string StickerObjectName = "FlowerSticker";
+    private const string CountBadgeObjectName = "SeedCountBadge";
 
     private object _currentItem;
     private Action _onBuyAction;
@@ -28,17 +34,20 @@ public class ShopItemUI : MonoBehaviour
         _currentItem = item;
         _onBuyAction = onBuyCallback;
 
-        // 1. Обработка ИКОНКИ (Спрайта)
-        Sprite targetSprite = null;
-        if (item is SeedItem seed) 
+        // 1. Обработка ИКОНКИ И НАКЛЕЙКИ
+        // Для семян спрайт мешка остаётся из префаба, а seedSprite уходит на наклейку.
+        Sprite stickerSprite = null;
+        bool isSeed = item is SeedItem;
+
+        if (item is SeedItem seed)
         {
-            targetSprite = seed.seedSprite;
-            Debug.Log($"[ShopItemUI] Распознан SeedItem. Спрайт: {(targetSprite != null ? targetSprite.name : "null")}");
+            stickerSprite = seed.seedSprite;
+            Debug.Log($"[ShopItemUI] Распознан SeedItem. Спрайт наклейки: {(stickerSprite != null ? stickerSprite.name : "null")}");
         }
-        else if (item is Sprite sprite) 
+        else if (item is Sprite sprite)
         {
-            targetSprite = sprite;
-            Debug.Log($"[ShopItemUI] Распознан Sprite (горшок). Спрайт: {(targetSprite != null ? targetSprite.name : "null")}");
+            if (iconImage != null) iconImage.sprite = sprite;
+            Debug.Log($"[ShopItemUI] Распознан Sprite (горшок). Спрайт: {(sprite != null ? sprite.name : "null")}");
         }
         else
         {
@@ -47,18 +56,16 @@ public class ShopItemUI : MonoBehaviour
 
         if (iconImage != null)
         {
-            iconImage.sprite = targetSprite;
-            iconImage.enabled = (targetSprite != null);
-            if (item is SeedItem seedVisual)
-                GardenSeedVisuals.Apply(iconImage, quantityText, seedVisual.seedSprite);
-            else
-                GardenSeedVisuals.Clear(iconImage, quantityText);
+            iconImage.enabled = iconImage.sprite != null;
             Debug.Log($"[ShopItemUI] IconImage обновлён. Включён: {iconImage.enabled}");
         }
         else
         {
             Debug.LogWarning("[ShopItemUI] Ссылка на iconImage не назначена в инспекторе!");
         }
+
+        ApplySticker(stickerSprite, isSeed);
+        ApplyCountBadge(isSeed);
 
         // 2. Обработка ИМЕНИ
         string itemName = "Неизвестно";
@@ -123,6 +130,51 @@ public class ShopItemUI : MonoBehaviour
         }
         
         Debug.Log($"[ShopItemUI] Setup завершён успешно для: {itemName}");
+    }
+
+    /// <summary>
+    /// Ставит спрайт семени на наклейку префаба. Размер и положение наклейки задаются в префабе.
+    /// </summary>
+    private void ApplySticker(Sprite stickerSprite, bool showSticker)
+    {
+        Image sticker = stickerImage;
+        if (sticker == null && iconImage != null)
+        {
+            Transform stickerTransform = iconImage.transform.Find(StickerObjectName);
+            if (stickerTransform != null) sticker = stickerTransform.GetComponent<Image>();
+        }
+
+        if (sticker == null)
+        {
+            if (showSticker)
+                Debug.LogWarning("[ShopItemUI] В префабе не найдена наклейка (stickerImage). Спрайт семени не будет показан.");
+            return;
+        }
+
+        if (showSticker)
+        {
+            sticker.sprite = stickerSprite;
+            sticker.enabled = stickerSprite != null;
+        }
+        else
+        {
+            sticker.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Бейдж счётчика показываем только у семян; у горшков он скрыт.
+    /// </summary>
+    private void ApplyCountBadge(bool showBadge)
+    {
+        GameObject badge = seedCountBadge;
+        if (badge == null && quantityText != null && quantityText.transform.parent != null)
+        {
+            Transform badgeTransform = quantityText.transform.parent.Find(CountBadgeObjectName);
+            if (badgeTransform != null) badge = badgeTransform.gameObject;
+        }
+
+        if (badge != null) badge.SetActive(showBadge);
     }
 
     private void HandleInventoryChange(SeedItem changedSeed, int newQuantity)

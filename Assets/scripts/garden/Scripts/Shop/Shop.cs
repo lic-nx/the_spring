@@ -6,7 +6,7 @@ public class Shop : MonoBehaviour
     public static Shop Instance { get; private set; }
 
     [Header("Настройки магазина")]
-    public List<SeedItem> availableSeedsForSale;
+    public List<SeedItem> availableSeedsForSale; // семена на продажу 
     
     [Header("Список горшков (Спрайты)")]
     [SerializeField] private List<Sprite> potItems = new List<Sprite>();

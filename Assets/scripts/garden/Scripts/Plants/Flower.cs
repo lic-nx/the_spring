@@ -6,6 +6,8 @@ using YG;
 
 public class Flower : MonoBehaviour, IPointerClickHandler
 {
+    private const int FlowerSpriteOrderOffset = 2;
+
     [SerializeField] private GrowthConditions _conditions;
     [SerializeField] private GameObject wateringIconObj;
     [SerializeField] private GameObject fertilizingIconObj;
@@ -349,7 +351,7 @@ public class Flower : MonoBehaviour, IPointerClickHandler
         if (flowerRenderer != null)
         {
             flowerRenderer.sortingLayerID = sortingLayerId;
-            flowerRenderer.sortingOrder = baseOrder + 2;
+            flowerRenderer.sortingOrder = baseOrder + FlowerSpriteOrderOffset;
         }
 
         SpriteRenderer highlightRenderer = _maturityHighlight.GetComponent<SpriteRenderer>();
@@ -376,6 +378,14 @@ public class Flower : MonoBehaviour, IPointerClickHandler
                 sunRenderer.sortingOrder = baseOrder + 6;
             }
         }
+    }
+
+    /// <summary>
+    /// Sets the layer and an exact order for the flower sprite, keeping the relative order of the other visuals.
+    /// </summary>
+    public void SetSortingLayerAndSpriteOrder(int sortingLayerId, int spriteOrder)
+    {
+        SetSortingLayerAndOrder(sortingLayerId, spriteOrder - FlowerSpriteOrderOffset);
     }
 
     private void UpdateMaturityPresentation()

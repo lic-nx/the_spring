@@ -10,13 +10,10 @@ public static class GardenSeedVisuals
 
     public static void Apply(Image iconImage, TMP_Text quantityText, Sprite flowerSticker)
     {
-        if (iconImage != null)
-        {
-            iconImage.sprite = Resources.Load<Sprite>("Greenhouse/Texures/SeedsBag_T");
-            iconImage.preserveAspect = true;
-            iconImage.enabled = iconImage.sprite != null;
-            CreateOrUpdateSticker(iconImage, flowerSticker);
-        }
+        if (iconImage.sprite == null) iconImage.sprite = Resources.Load<Sprite>("Greenhouse/Texures/SeedsBag_T");
+        iconImage.preserveAspect = true;
+        iconImage.enabled = iconImage.sprite != null;
+        CreateOrUpdateSticker(iconImage, flowerSticker);
 
         if (quantityText != null)
             CreateOrUpdateCounter(quantityText);

@@ -5,6 +5,9 @@ using YG;
 
 public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    private const int PotSpriteOrder = 5;
+    private const int PlantedFlowerSpriteOrder = PotSpriteOrder + 2;
+
     [SerializeField] private Transform flowerAttachment;
     [SerializeField] private Transform zoneAttachmentPoint;
 
@@ -174,9 +177,9 @@ public class Pot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDrag
         SpriteRenderer flowerRenderer = flower.GetComponent<SpriteRenderer>();
         if (_mySpriteRenderer == null || flowerRenderer == null) return;
 
-        // Keep the glow above the background, followed by the flower and the pot.
-        flower.SetSortingLayerAndOrder(_mySpriteRenderer.sortingLayerID, _baseSortingOrder);
-        _mySpriteRenderer.sortingOrder = _baseSortingOrder + 3;
+        // Keep the pot behind the flower and its visuals.
+        flower.SetSortingLayerAndSpriteOrder(_mySpriteRenderer.sortingLayerID, PlantedFlowerSpriteOrder);
+        _mySpriteRenderer.sortingOrder = PotSpriteOrder;
         _originalSortingOrder = _mySpriteRenderer.sortingOrder;
     }
 

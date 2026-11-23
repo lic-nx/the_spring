@@ -12,21 +12,21 @@ public static class GardenNavigation
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void ConfigureGardenHud()
     {
-        if (SceneManager.GetActiveScene().name != GardenSceneName) return;
+        // if (SceneManager.GetActiveScene().name != GardenSceneName) return;
 
-        Canvas canvas = Object.FindObjectOfType<Canvas>();
-        if (canvas == null)
-        {
-            Debug.LogError("[GardenNavigation] Canvas not found; Garden HUD was not configured.");
-            return;
-        }
+        // Canvas canvas = Object.FindObjectOfType<Canvas>();
+        // if (canvas == null)
+        // {
+        //     Debug.LogError("[GardenNavigation] Canvas not found; Garden HUD was not configured.");
+        //     return;
+        // }
 
-        PanelSkript panelController = Object.FindObjectOfType<PanelSkript>();
-        Shop shop = Object.FindObjectOfType<Shop>();
-        if (panelController != null && panelController.ShopPanel != null)
-            GardenShopPresentation.Install(panelController.ShopPanel, shop);
+        // PanelSkript panelController = Object.FindObjectOfType<PanelSkript>();
+        // Shop shop = Object.FindObjectOfType<Shop>();
+        // if (panelController != null && panelController.ShopPanel != null)
+        //     GardenShopPresentation.Install(panelController.ShopPanel, shop);
 
-        DisableLegacyShopButtons(canvas);
+        // DisableLegacyShopButtons(canvas);
         // Button shopButton = GetOrCreateButton(canvas.transform, "GardenShopButton");
         // shopButton.onClick.RemoveAllListeners();
         // if (panelController != null)
@@ -69,25 +69,25 @@ public static class GardenNavigation
         //     new Vector2(92f, 92f),
         //     TextAnchor.LowerRight);
 
-        HideLegacyCurrencyUi(canvas);
+        // HideLegacyCurrencyUi(canvas);
         // ConfigureCurrencyPanel(canvas.transform);
     }
 
-    private static void DisableLegacyShopButtons(Canvas canvas)
-    {
-        int index = 0;
-        foreach (Button button in canvas.GetComponentsInChildren<Button>(true))
-        {
-            for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
-            {
-                if (button.onClick.GetPersistentMethodName(i) != nameof(PanelSkript.ShowHidePanel)) continue;
+    // private static void DisableLegacyShopButtons(Canvas canvas)
+    // {
+    //     int index = 0;
+    //     foreach (Button button in canvas.GetComponentsInChildren<Button>(true))
+    //     {
+    //         for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
+    //         {
+    //             if (button.onClick.GetPersistentMethodName(i) != nameof(PanelSkript.ShowHidePanel)) continue;
 
-                button.gameObject.name = $"LegacyGardenShopButton_{index++}";
-                button.gameObject.SetActive(false);
-                break;
-            }
-        }
-    }
+    //             button.gameObject.name = $"LegacyGardenShopButton_{index++}";
+    //             button.gameObject.SetActive(false);
+    //             break;
+    //         }
+    //     }
+    // }
 
     private static void DisableDuplicateGeneratedButtons(Canvas canvas, Button activeButton, string objectName)
     {
