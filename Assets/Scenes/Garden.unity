@@ -5780,13 +5780,13 @@ MonoBehaviour:
   m_Padding:
     m_Left: 80
     m_Right: 0
-    m_Top: 80
+    m_Top: 150
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 70, y: 70}
-  m_Spacing: {x: 50, y: 60}
+  m_Spacing: {x: 150, y: 150}
   m_Constraint: 1
   m_ConstraintCount: 4
 --- !u!114 &1871279189

@@ -7,7 +7,7 @@ public class ShopItemUI : MonoBehaviour
 {
     [Header("UI Элементы (назначаются в префабе)")]
     public Image iconImage;
-    public Image stickerImage;      // Наклейка с видом семени на мешке
+    public GameObject stickerImage;      // Наклейка с видом семени на мешке
     public TMP_Text nameText;
     public TMP_Text priceText;
     public TMP_Text quantityText;
@@ -35,14 +35,12 @@ public class ShopItemUI : MonoBehaviour
         _onBuyAction = onBuyCallback;
 
         // 1. Обработка ИКОНКИ И НАКЛЕЙКИ
-        // Для семян спрайт мешка остаётся из префаба, а seedSprite уходит на наклейку.
-        Sprite stickerSprite = null;
+        // Для семян спрайт мешка остаётся из префаба, а наклейка берётся из переданного SeedItem.seedSprite.
         bool isSeed = item is SeedItem;
 
         if (item is SeedItem seed)
         {
-            stickerSprite = seed.seedSprite;
-            Debug.Log($"[ShopItemUI] Распознан SeedItem. Спрайт наклейки: {(stickerSprite != null ? stickerSprite.name : "null")}");
+            Debug.Log($"[ShopItemUI] Распознан SeedItem. Спрайт наклейки: {(seed.seedSprite != null ? seed.seedSprite.name : "null")}");
         }
         else if (item is Sprite sprite)
         {
@@ -64,7 +62,7 @@ public class ShopItemUI : MonoBehaviour
             Debug.LogWarning("[ShopItemUI] Ссылка на iconImage не назначена в инспекторе!");
         }
 
-        ApplySticker(stickerSprite, isSeed);
+        ApplySticker(item, isSeed);
         ApplyCountBadge(isSeed);
 
         // 2. Обработка ИМЕНИ
@@ -133,21 +131,40 @@ public class ShopItemUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Ставит спрайт семени на наклейку префаба. Размер и положение наклейки задаются в префабе.
+    /// Ставит на мешок наклейку с спрайтом из переданного SeedItem.seedSprite.
     /// </summary>
-    private void ApplySticker(Sprite stickerSprite, bool showSticker)
+    private void ApplySticker(object item, bool showSticker)
     {
-        Image sticker = stickerImage;
+        Sprite stickerSprite = (item as SeedItem)?.seedSprite;
+
+        Image sticker = stickerImage != null ? stickerImage.GetComponent<Image>() : null;
         if (sticker == null && iconImage != null)
         {
             Transform stickerTransform = iconImage.transform.Find(StickerObjectName);
             if (stickerTransform != null) sticker = stickerTransform.GetComponent<Image>();
         }
 
+        // Если в префабе наклейки нет, создаём её прямо на мешке.
+        if (sticker == null && showSticker && iconImage != null)
+        {
+            GameObject stickerObject = new GameObject(StickerObjectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            stickerObject.layer = iconImage.gameObject.layer;
+            stickerObject.transform.SetParent(iconImage.transform, false);
+
+            RectTransform stickerRect = stickerObject.GetComponent<RectTransform>();
+            stickerRect.anchorMin = new Vector2(0.27f, 0.34f);
+            stickerRect.anchorMax = new Vector2(0.73f, 0.70f);
+            stickerRect.offsetMin = stickerRect.offsetMax = Vector2.zero;
+
+            sticker = stickerObject.GetComponent<Image>();
+            sticker.preserveAspect = true;
+            sticker.raycastTarget = false;
+        }
+
         if (sticker == null)
         {
             if (showSticker)
-                Debug.LogWarning("[ShopItemUI] В префабе не найдена наклейка (stickerImage). Спрайт семени не будет показан.");
+                Debug.LogWarning("[ShopItemUI] Не удалось создать наклейку: спрайт семени не будет показан.");
             return;
         }
 
@@ -155,10 +172,13 @@ public class ShopItemUI : MonoBehaviour
         {
             sticker.sprite = stickerSprite;
             sticker.enabled = stickerSprite != null;
+            sticker.gameObject.SetActive(stickerSprite != null);
+            Debug.Log($"[ShopItemUI] Наклейка на мешке: {(stickerSprite != null ? stickerSprite.name : "null")}");
         }
         else
         {
             sticker.enabled = false;
+            sticker.gameObject.SetActive(false);
         }
     }
 
