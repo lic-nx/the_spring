@@ -16,7 +16,7 @@ public class ShopItemUI : MonoBehaviour
 
     // Имена используются только как запасной вариант для префабов, где поля выше не назначены
     private const string StickerObjectName = "FlowerSticker";
-    private const string CountBadgeObjectName = "SeedCountBadge";
+    private const string CountBadgeObjectName = "CountImage";
 
     private object _currentItem;
     private Action _onBuyAction;
@@ -29,7 +29,10 @@ public class ShopItemUI : MonoBehaviour
         Debug.Log($"[ShopItemUI] Вызван Setup. Тип переданного объекта: {item?.GetType().Name ?? "null"}");
         
         if (_currentItem is SeedItem && InventoryManager.Instance != null)
+        {
             InventoryManager.Instance.OnItemQuantityChanged -= HandleInventoryChange;
+            InventoryManager.Instance.OnInventoryRefreshed -= HandleInventoryRefreshed;
+        }
 
         _currentItem = item;
         _onBuyAction = onBuyCallback;
@@ -63,7 +66,6 @@ public class ShopItemUI : MonoBehaviour
         }
 
         ApplySticker(item, isSeed);
-        ApplyCountBadge(isSeed);
 
         // 2. Обработка ИМЕНИ
         string itemName = "Неизвестно";
@@ -93,22 +95,39 @@ public class ShopItemUI : MonoBehaviour
         }
 
         // 4. Обработка КОЛИЧЕСТВА (Есть только у семян в инвентаре)
-        if (quantityText != null)
+        if (item is SeedItem seedQty)
         {
-            if (item is SeedItem seedQty)
+            if (quantityText != null)
             {
                 quantityText.enabled = true;
+                Debug.Log("[ShopItemUI] QuantityText включён.");
+            }
+
+            if (InventoryManager.Instance != null)
+            {
+                // OnItemQuantityChanged — при покупке/трате,
+                // OnInventoryRefreshed — после загрузки сохранения (GameSaveManager).
                 InventoryManager.Instance.OnItemQuantityChanged += HandleInventoryChange;
+                InventoryManager.Instance.OnInventoryRefreshed += HandleInventoryRefreshed;
+                Debug.Log("[ShopItemUI] Подписка на события инвентаря выполнена.");
                 UpdateQuantityText(seedQty);
-                Debug.Log($"[ShopItemUI] QuantityText включён. Подписка на OnItemQuantityChanged выполнена.");
             }
             else
             {
-                // Если параметра нет (например, это горшок), зануляем и скрываем
+                Debug.LogWarning("[ShopItemUI] InventoryManager.Instance равен null. Количество будет обновлено позже.");
+                UpdateCountBadge(false);
+            }
+        }
+        else
+        {
+            // Если это горшок, скрываем и текст, и бейдж счётчика.
+            if (quantityText != null)
+            {
                 quantityText.text = "";
                 quantityText.enabled = false;
                 Debug.Log($"[ShopItemUI] Объект не является SeedItem. QuantityText скрыт и очищен.");
             }
+            UpdateCountBadge(false);
         }
 
         // 5. Назначение действия покупки
@@ -183,17 +202,27 @@ public class ShopItemUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Бейдж счётчика показываем только у семян; у горшков он скрыт.
+    /// Находит фон счётчика в префабе seed (поле инспектора может быть не назначено).
     /// </summary>
-    private void ApplyCountBadge(bool showBadge)
+    private GameObject ResolveCountBadge()
     {
-        GameObject badge = seedCountBadge;
-        if (badge == null && quantityText != null && quantityText.transform.parent != null)
-        {
-            Transform badgeTransform = quantityText.transform.parent.Find(CountBadgeObjectName);
-            if (badgeTransform != null) badge = badgeTransform.gameObject;
-        }
+        if (seedCountBadge != null) return seedCountBadge;
 
+        // В префабе CountImage является родителем quantityText.
+        Transform parent = quantityText != null ? quantityText.transform.parent : null;
+        if (parent != null && parent.name == CountBadgeObjectName)
+            return parent.gameObject;
+
+        Transform found = transform.Find(CountBadgeObjectName);
+        return found != null ? found.gameObject : null;
+    }
+
+    /// <summary>
+    /// Бейдж счётчика показываем только у семян, и только когда их больше 0.
+    /// </summary>
+    private void UpdateCountBadge(bool showBadge)
+    {
+        GameObject badge = ResolveCountBadge();
         if (badge != null) badge.SetActive(showBadge);
     }
 
@@ -208,14 +237,30 @@ public class ShopItemUI : MonoBehaviour
         }
     }
 
+    private void HandleInventoryRefreshed()
+    {
+        // GameSaveManager при загрузке вызывает ApplyInventory(), который не шлёт
+        // OnItemQuantityChanged, но шлёт OnInventoryRefreshed. Поэтому обновляемся здесь.
+        if (_currentItem is SeedItem seed)
+        {
+            Debug.Log($"[ShopItemUI] Событие OnInventoryRefreshed. Обновляем {seed.name}.");
+            UpdateQuantityText(seed);
+        }
+    }
+
     private void UpdateQuantityText(SeedItem seed)
     {
+        if (seed == null || InventoryManager.Instance == null) return;
+
+        int owned = InventoryManager.Instance.GetQuantity(seed);
         if (quantityText != null)
         {
-            int owned = InventoryManager.Instance.GetQuantity(seed);
             quantityText.text = $"{owned}";
             Debug.Log($"[ShopItemUI] QuantityText обновлён до: {owned} для {seed.name}");
         }
+
+        // Бейдж виден только если семян действительно больше 0.
+        UpdateCountBadge(owned > 0);
     }
 
     private void OnDestroy()
@@ -226,7 +271,8 @@ public class ShopItemUI : MonoBehaviour
         if (_currentItem is SeedItem seed && InventoryManager.Instance != null)
         {
             InventoryManager.Instance.OnItemQuantityChanged -= HandleInventoryChange;
-            Debug.Log($"[ShopItemUI] Отписка от OnItemQuantityChanged выполнена для {seed.name}");
+            InventoryManager.Instance.OnInventoryRefreshed -= HandleInventoryRefreshed;
+            Debug.Log($"[ShopItemUI] Отписка от событий инвентаря выполнена для {seed.name}");
         }
     }
 }
